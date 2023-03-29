@@ -1,0 +1,209 @@
+{
+  "catalogItem": {
+    "ns": "catalog/ext/test-org/actor/wf",
+    "name": "PJ①－3)虚弱高齢者見守り研究",
+    "_code": {
+      "_value": 1000117,
+      "_ver": 1
+    },
+    "inherit": {
+      "_value": 47,
+      "_ver": 1
+    },
+    "description": "平均寿命と健康寿命の差を短縮し、認知症を予防できるようなスマートエイジング社会を実現することを目指した研究であり、特に都市部の独居の身体的虚弱高齢者や軽度認知障害高齢者の身体的不活発や認知的不活発、睡眠障害に対する予防的介入や、屋内での熱疲労などの予防的な健康管理の仕組みを構築します。"
+  },
+  "template": {
+    "_code": {
+      "_value": 1000117,
+      "_ver": 1
+    },
+    "breakaway-flg": false,
+    "category": null,
+    "information-site": "",
+    "main-block": {
+      "_value": 1000115,
+      "_ver": 1
+    },
+    "other-block": null,
+    "region-alliance": [
+      {
+        "_value": 1000116,
+        "_ver": 1
+      }
+    ],
+    "statement": [
+      {
+        "title": "組織ステートメント",
+        "section": [
+          {
+            "title": "ご挨拶",
+            "content": [
+              {
+                "sentence": "PJ①－3)虚弱高齢者見守り研究の組織ステートメントです。"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "status": [
+      {
+        "status": "certified",
+        "by": {
+          "_value": 1000001,
+          "_ver": 1
+        },
+        "at": "2020-01-01T00:00:00.000+0900"
+      }
+    ],
+    "workflow": [
+      {
+        "_value": 1000120,
+        "_ver": 1
+      }
+    ]
+  },
+  "prop": [
+    {
+      "key": "breakaway-flg",
+      "type": {
+        "of": "boolean",
+        "cmatrix": null
+      },
+      "description": "離脱フラグ",
+      "isInherit": true
+    },
+    {
+      "key": "category",
+      "type": {
+        "of": "code[]",
+        "cmatrix": null,
+        "candidate": {
+          "ns": [
+            "catalog/model/category/share/actor",
+            "catalog/built_in/category/share/actor",
+            "catalog/ext/test-org/category/share/actor",
+            "catalog/model/category/supply/actor",
+            "catalog/built_in/category/supply/actor",
+            "catalog/ext/test-org/category/supply/actor"
+          ],
+          "_code": null,
+          "base": null
+        }
+      },
+      "description": null,
+      "isInherit": true
+    },
+    {
+      "key": "information-site",
+      "type": {
+        "of": "string",
+        "cmatrix": null,
+        "format": null,
+        "unit": null,
+        "candidate": null
+      },
+      "description": "情報サイト",
+      "isInherit": true
+    },
+    {
+      "key": "main-block",
+      "type": {
+        "of": "code",
+        "cmatrix": null,
+        "candidate": {
+          "ns": null,
+          "_code": null,
+          "base": {
+            "_value": 29,
+            "_ver": 1
+          }
+        }
+      },
+      "description": "アクター参加時に割り当てられたPXR-Block",
+      "isInherit": true
+    },
+    {
+      "key": "other-block",
+      "type": {
+        "of": "code[]",
+        "cmatrix": null,
+        "candidate": {
+          "ns": null,
+          "_code": null,
+          "base": {
+            "_value": 29,
+            "_ver": 1
+          }
+        }
+      },
+      "description": "他アクターから引き継いだPXR-Blockの配列",
+      "isInherit": true
+    },
+    {
+      "key": "region-alliance",
+      "type": {
+        "of": "code[]",
+        "cmatrix": null,
+        "candidate": {
+          "ns": null,
+          "_code": null,
+          "base": {
+            "_value": 48,
+            "_ver": 1
+          }
+        }
+      },
+      "description": "参加している領域運営サービスプロバイダーコード配列",
+      "isInherit": true
+    },
+    {
+      "key": "statement",
+      "type": {
+        "of": "item[]",
+        "cmatrix": null,
+        "candidate": {
+          "ns": null,
+          "_code": [
+            {
+              "_value": 61,
+              "_ver": 1
+            }
+          ],
+          "base": null
+        }
+      },
+      "description": "組織ステートメント",
+      "isInherit": true
+    },
+    {
+      "key": "status",
+      "type": {
+        "of": "inner[]",
+        "inner": "CertStatus",
+        "cmatrix": null,
+        "candidate": null
+      },
+      "description": "認定の履歴",
+      "isInherit": true
+    },
+    {
+      "key": "workflow",
+      "type": {
+        "of": "code[]",
+        "cmatrix": null,
+        "candidate": {
+          "ns": null,
+          "_code": null,
+          "base": {
+            "_value": 46,
+            "_ver": 1
+          }
+        }
+      },
+      "description": "ワークフロー定義の配列",
+      "isInherit": true
+    }
+  ],
+  "attribute": null
+}

@@ -1,0 +1,202 @@
+{
+  "catalogItem": {
+    "ns": "catalog/ext/test-org/thing/actor_1000070",
+    "name": "発話",
+    "_code": {
+      "_value": 1000104,
+      "_ver": 1
+    },
+    "inherit": {
+      "_value": 55,
+      "_ver": 1
+    },
+    "description": "テスト用リージョンステートメントCのモノ（発話）の定義です。"
+  },
+  "template": {
+    "_code": {
+      "_value": 1000104,
+      "_ver": 1
+    },
+    "acquired_time": {
+      "index": "4_2_2_2",
+      "value": null
+    },
+    "app": null,
+    "code": {
+      "index": "4_1_2",
+      "value": {
+        "_value": 1000104,
+        "_ver": 1
+      }
+    },
+    "env": [
+      {
+        "index": "4_3_1",
+        "value": {
+          "id": "",
+          "code": {
+            "_value": 1000354,
+            "_ver": 1
+          }
+        }
+      }
+    ],
+    "id": {
+      "index": "4_1_1",
+      "value": null
+    },
+    "sourceId": null,
+    "utterance_URI": {
+      "index": "4_2_3_2_1",
+      "value": null
+    },
+    "utterance_UUID": {
+      "index": "4_2_3_1_1",
+      "value": null
+    },
+    "wf": null
+  },
+  "prop": [
+    {
+      "key": "acquired_time",
+      "type": {
+        "of": "string",
+        "cmatrix": {
+          "index": "4_2_2_2",
+          "reserved": false
+        },
+        "format": {
+          "_value": 6,
+          "_ver": 1
+        },
+        "unit": null,
+        "candidate": null
+      },
+      "description": "レコーダー取得時刻",
+      "isInherit": false
+    },
+    {
+      "key": "app",
+      "type": {
+        "of": "inner",
+        "inner": "App",
+        "cmatrix": null,
+        "candidate": null
+      },
+      "description": "イベントを発生させたアプリケーションプロバイダー",
+      "isInherit": true
+    },
+    {
+      "key": "code",
+      "type": {
+        "of": "item",
+        "_code": {
+          "_value": 28,
+          "_ver": 1
+        },
+        "cmatrix": null,
+        "candidate": null
+      },
+      "description": "モノ種別",
+      "isInherit": true
+    },
+    {
+      "key": "env",
+      "type": {
+        "of": "item[]",
+        "cmatrix": {
+          "index": "4_3_(n)",
+          "reserved": false
+        },
+        "candidate": {
+          "ns": [
+            "catalog/model/env/thing/*",
+            "catalog/built_in/env/thing/*",
+            "catalog/ext/test-org/env/thing/*"
+          ],
+          "_code": null,
+          "base": null
+        }
+      },
+      "description": "モノ環境の配列",
+      "isInherit": true
+    },
+    {
+      "key": "id",
+      "type": {
+        "of": "item",
+        "_code": {
+          "_value": 27,
+          "_ver": 1
+        },
+        "cmatrix": null,
+        "candidate": null
+      },
+      "description": "モノ識別子",
+      "isInherit": true
+    },
+    {
+      "key": "sourceId",
+      "type": {
+        "of": "string",
+        "cmatrix": null,
+        "format": null,
+        "unit": null,
+        "candidate": null
+      },
+      "description": "モノのソースID",
+      "isInherit": true
+    },
+    {
+      "key": "utterance_URI",
+      "type": {
+        "of": "string",
+        "cmatrix": {
+          "index": "4_2_3_2_1",
+          "reserved": false
+        },
+        "format": null,
+        "unit": null,
+        "candidate": null
+      },
+      "description": "発話データURI",
+      "isInherit": false
+    },
+    {
+      "key": "utterance_UUID",
+      "type": {
+        "of": "string",
+        "cmatrix": {
+          "index": "4_2_3_1_1",
+          "reserved": false
+        },
+        "format": null,
+        "unit": null,
+        "candidate": null
+      },
+      "description": "発話データUUID",
+      "isInherit": false
+    },
+    {
+      "key": "wf",
+      "type": {
+        "of": "inner",
+        "inner": "Wf",
+        "cmatrix": null,
+        "candidate": null
+      },
+      "description": "イベントを発生させたワークフロープロバイダー",
+      "isInherit": true
+    }
+  ],
+  "attribute": [
+    {
+      "key": {
+        "_value": 1000131,
+        "_ver": 1
+      },
+      "value": null,
+      "description": null
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+[
+  {
+    "catalogItem": {
+      "ns": "catalog/ext/test-org/setting/actor/pxr-root/actor_1000001",
+      "name": "流通制御組織：アクター個別設定",
+      "_code": {
+        "_value": 1000362,
+        "_ver": 1
+      },
+      "inherit": {
+        "_value": 130,
+        "_ver": 1
+      },
+      "description": "流通制御組織による流通制御組織のアクター個別設定の定義です。"
+    },
+    "template": {
+      "_code": {
+        "_value": 1000362,
+        "_ver": 1
+      },
+      "auth": [
+        {
+          "_value": 139,
+          "_ver": 1
+        },
+        {
+          "_value": 140,
+          "_ver": 1
+        },
+        {
+          "_value": 141,
+          "_ver": 1
+        },
+        {
+          "_value": 142,
+          "_ver": 1
+        },
+        {
+          "_value": 144,
+          "_ver": 1
+        },
+        {
+          "_value": 147,
+          "_ver": 1
+        },
+        {
+          "_value": 149,
+          "_ver": 1
+        },
+        {
+          "_value": 155,
+          "_ver": 1
+        }
+      ],
+      "identification-checklist": [
+        {
+          "_value": 30019,
+          "_ver": 1
+        },
+        {
+          "_value": 30020,
+          "_ver": 1
+        },
+        {
+          "_value": 30021,
+          "_ver": 1
+        },
+        {
+          "_value": 30022,
+          "_ver": 1
+        },
+        {
+          "_value": 30035,
+          "_ver": 1
+        }
+      ],
+      "identification-document": [
+        {
+          "document": {
+            "_value": 30001,
+            "_ver": 1
+          },
+          "satisfaction-rate": 100
+        }
+      ],
+      "pxr-root-name": "流通制御サービスプロバイダー",
+      "store-distribution-ratio": null,
+      "supply-distribution-ratio": null
+    },
+    "prop": [
+      {
+        "key": "auth",
+        "type": {
+          "of": "code[]",
+          "cmatrix": null,
+          "candidate": {
+            "ns": [
+              "catalog/model/auth/*"
+            ],
+            "_code": null,
+            "base": null
+          }
+        },
+        "description": "操作権の配列",
+        "isInherit": true
+      },
+      {
+        "key": "identification-checklist",
+        "type": {
+          "of": "code[]",
+          "cmatrix": null,
+          "candidate": {
+            "ns": [
+              "catalog/model/person/item-type",
+              "catalog/built_in/person/item-type",
+              "catalog/ext/test-org/person/item-type"
+            ],
+            "_code": null,
+            "base": null
+          }
+        },
+        "description": "採用した本人性確認事項",
+        "isInherit": true
+      },
+      {
+        "key": "identification-document",
+        "type": {
+          "of": "inner[]",
+          "inner": "Identification-document",
+          "cmatrix": null,
+          "candidate": null
+        },
+        "description": "採用した本人性確認書類",
+        "isInherit": true
+      },
+      {
+        "key": "pxr-root-name",
+        "type": {
+          "of": "string",
+          "cmatrix": null,
+          "format": null,
+          "unit": null,
+          "candidate": null
+        },
+        "description": "流通制御サービスプロバイダーの呼称",
+        "isInherit": true
+      },
+      {
+        "key": "store-distribution-ratio",
+        "type": {
+          "of": "inner[]",
+          "inner": "DistributionRatio",
+          "cmatrix": null,
+          "candidate": null
+        },
+        "description": "蓄積分配比率",
+        "isInherit": true
+      },
+      {
+        "key": "supply-distribution-ratio",
+        "type": {
+          "of": "inner[]",
+          "inner": "DistributionRatio",
+          "cmatrix": null,
+          "candidate": null
+        },
+        "description": "提供分配比率",
+        "isInherit": true
+      }
+    ],
+    "attribute": null
+  }
+]

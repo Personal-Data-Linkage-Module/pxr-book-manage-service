@@ -1,0 +1,49 @@
+{
+  "catalogItem": {
+    "ns": "catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000436/share",
+    "name": "テスト用共有定義",
+    "description": "テスト用共有定義です。512",
+    "_code": {
+      "_value": 1000512,
+      "_ver": 1
+    },
+    "inherit": {
+      "_value": 40,
+      "_ver": null
+    }
+  },
+  "template": {
+    "prop": null,
+    "share": [
+      {
+        "id": "event",
+        "event": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000038,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": [
+              {
+                "code": {
+                  "_value": 1000039,
+                  "_ver": 1
+                },
+                "requireConsent": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "inner": null,
+  "attribute": null
+}

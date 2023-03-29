@@ -1,0 +1,75 @@
+{
+    "catalogItem": {
+      "ns": "catalog/ext/test-org/actor/wf/actor_1000024/workflow",
+      "name": "workflowカタログ不正 shareが空",
+      "_code": {
+        "_value": 1000017,
+        "_ver": 1
+      },
+      "inherit": {
+        "_value": 46,
+        "_ver": 1
+      },
+      "description": "テスト用ワークフローAの定義です。"
+    },
+    "template": {
+      "_code": {
+        "_value": 1000017,
+        "_ver": 1
+      },
+      "information-site": "",
+      "share": [],
+      "store": [
+        {
+          "_value": 1000006,
+          "_ver": 1
+        }
+      ]
+    },
+    "prop": [
+      {
+        "key": "information-site",
+        "type": {
+          "of": "string",
+          "cmatrix": null,
+          "format": null,
+          "unit": null,
+          "candidate": null
+        },
+        "description": "ワークフローの情報サイト"
+      },
+      {
+        "key": "share",
+        "type": {
+          "of": "code[]",
+          "cmatrix": null,
+          "candidate": {
+            "ns": null,
+            "_code": null,
+            "base": {
+              "_value": 45,
+              "_ver": 1
+            }
+          }
+        },
+        "description": "ワークフローが提供する状態共有機能の定義"
+      },
+      {
+        "key": "store",
+        "type": {
+          "of": "code[]",
+          "cmatrix": null,
+          "candidate": {
+            "ns": null,
+            "_code": null,
+            "base": {
+              "_value": 44,
+              "_ver": 1
+            }
+          }
+        },
+        "description": "ワークフローが蓄積可能なデータの定義"
+      }
+    ],
+    "attribute": null
+  }

@@ -1,0 +1,187 @@
+{
+    "catalogItem": null,
+    "template": {
+      "_code": {
+        "_value": 30001,
+        "_ver": 1
+      },
+      "item-group": [
+        {
+          "title": "氏名",
+          "item": [
+            {
+              "title": "姓名",
+              "type": {
+                "_value": 30037,
+                "_ver": 1
+              },
+              "content": null
+            }
+          ]
+        },
+        {
+          "title": "生年月日（和暦）",
+          "item": [
+            {
+              "title": "生年月日（和暦）",
+              "type": {
+                "_value": 30038,
+                "_ver": 1
+              },
+              "content": null
+            }
+          ]
+        },
+        {
+          "title": "住所",
+          "item": [
+            {
+              "title": "住所",
+              "type": {
+                "_value": 30035,
+                "_ver": 1
+              },
+              "content": null
+            }
+          ]
+        }
+      ],
+      "verification-ratio": null
+    },
+    "prop": [
+      {
+        "key": "item-group",
+        "type": {
+          "of": "inner[]",
+          "inner": "ItemGroup",
+          "cmatrix": null,
+          "candidate": null
+        },
+        "description": "個人属性グループの配列",
+        "isInherit": true
+      },
+      {
+        "key": "verification-ratio",
+        "type": {
+          "of": "number",
+          "cmatrix": null,
+          "format": null,
+          "unit": {
+            "_value": 20009,
+            "_ver": 1
+          },
+          "candidate": null
+        },
+        "description": "本人性の検証率",
+        "isInherit": true
+      }
+    ],
+    "value": [
+      {
+        "key": "item-group",
+        "value": [
+          {
+            "key": "title",
+            "value": "氏名"
+          },
+          {
+            "key": "item",
+            "value": [
+              {
+                "key": "title",
+                "value": "姓名"
+              },
+              {
+                "key": "type",
+                "value": [
+                  {
+                    "key": "_value",
+                    "value": 30037
+                  },
+                  {
+                    "key": "_ver",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "key": "content",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "item-group",
+        "value": [
+          {
+            "key": "title",
+            "value": "生年月日（和暦）"
+          },
+          {
+            "key": "item",
+            "value": [
+              {
+                "key": "title",
+                "value": "生年月日（和暦）"
+              },
+              {
+                "key": "type",
+                "value": [
+                  {
+                    "key": "_value",
+                    "value": 30038
+                  },
+                  {
+                    "key": "_ver",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "key": "content",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "item-group",
+        "value": [
+          {
+            "key": "title",
+            "value": "住所"
+          },
+          {
+            "key": "item",
+            "value": [
+              {
+                "key": "title",
+                "value": "住所"
+              },
+              {
+                "key": "type",
+                "value": [
+                  {
+                    "key": "_value",
+                    "value": 30035
+                  },
+                  {
+                    "key": "_ver",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "key": "content",
+                "value": null
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "attribute": null
+  }

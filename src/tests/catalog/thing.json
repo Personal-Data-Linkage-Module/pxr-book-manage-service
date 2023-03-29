@@ -1,0 +1,2471 @@
+[
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "鼓膜温",
+        "_code": {
+          "_value": 1000011,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（鼓膜温）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000011,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000011,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000056,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "tympanic_temperature": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "tympanic_temperature",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10001,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20001,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "鼓膜温"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000136,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "手首温度",
+        "_code": {
+          "_value": 1000012,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（手首温度）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000012,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000012,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000054,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null,
+        "wrist_temperature": {
+          "index": "4_2_2_1",
+          "value": null
+        }
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        },
+        {
+          "key": "wrist_temperature",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10001,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20001,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "手首温度"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000136,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "衣服内温度",
+        "_code": {
+          "_value": 1000013,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（衣服内温度）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000013,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "clothing_temperature": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000013,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000058,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "clothing_temperature",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10001,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20001,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "衣服内温度"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000134,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "心拍(胸)",
+        "_code": {
+          "_value": 1000039,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（心拍(胸)）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000039,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000039,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000058,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "heart_rate": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "heart_rate",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10014,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20040,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "心拍数"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000135,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "気温",
+        "_code": {
+          "_value": 1000040,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（気温）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000040,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000040,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000052,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "temperature": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "temperature",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10001,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20001,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "気温"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000134,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "湿度",
+        "_code": {
+          "_value": 1000041,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（湿度）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000041,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000041,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000052,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "humidity": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "humidity",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10001,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20009,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "湿度"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000134,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "照度",
+        "_code": {
+          "_value": 1000042,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（照度）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000042,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000042,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000052,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "illuminance": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "illuminance",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10027,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20019,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "照度"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000134,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "UV Index",
+        "_code": {
+          "_value": 1000043,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（UV Index）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000043,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000043,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000052,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "uv_index": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "uv_index",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10008,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "UV Index"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000134,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "気圧",
+        "_code": {
+          "_value": 1000044,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（気圧）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000044,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "air_pressure": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000044,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000052,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "air_pressure",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10014,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20020,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "気圧"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000134,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "騒音",
+        "_code": {
+          "_value": 1000045,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（騒音）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000045,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000045,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000052,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "noise": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "noise",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10002,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20021,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "騒音"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000134,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "3軸加速度",
+        "_code": {
+          "_value": 1000046,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（3軸加速度）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000046,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_7",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000046,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000058,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null,
+        "x-axis": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "x-axis_m": {
+          "index": "4_2_2_4",
+          "value": null
+        },
+        "y-axis": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "y-axis_m": {
+          "index": "4_2_2_5",
+          "value": null
+        },
+        "z-axis": {
+          "index": "4_2_2_3",
+          "value": null
+        },
+        "z-axis_m": {
+          "index": "4_2_2_6",
+          "value": null
+        }
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_7",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        },
+        {
+          "key": "x-axis",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10058,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20027,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "3軸加速度(X軸)"
+        },
+        {
+          "key": "x-axis_m",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_4",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10058,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20027,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "3軸加速度(X軸m)"
+        },
+        {
+          "key": "y-axis",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10058,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20027,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "3軸加速度(Y軸)"
+        },
+        {
+          "key": "y-axis_m",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_5",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10058,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20027,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "3軸加速度(Y軸m)"
+        },
+        {
+          "key": "z-axis",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_3",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10058,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20027,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "3軸加速度(Z軸)"
+        },
+        {
+          "key": "z-axis_m",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_6",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10058,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20027,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "3軸加速度(Z軸m)"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000133,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "ElectroDermal Activity",
+        "_code": {
+          "_value": 1000047,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（ElectroDermal Activity）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000047,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000047,
+            "_ver": 1
+          }
+        },
+        "electrodermal_activity": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "id": "",
+              "code": {
+                "_value": 1000054,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "electrodermal_activity",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10018,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20045,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "ElectroDermal Activity"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000135,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/thing/actor_1000004",
+        "name": "Blood Volume Pulse",
+        "_code": {
+          "_value": 1000048,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 55,
+          "_ver": 1
+        },
+        "description": "テスト用のモノ（Blood Volume Pulse）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000048,
+          "_ver": 1
+        },
+        "acquired_time": {
+          "index": "4_2_2_2",
+          "value": null
+        },
+        "app": null,
+        "blood_volume_pulse": {
+          "index": "4_2_2_1",
+          "value": null
+        },
+        "code": {
+          "index": "4_1_2",
+          "value": {
+            "_value": 1000048,
+            "_ver": 1
+          }
+        },
+        "env": [
+          {
+            "index": "4_3_1",
+            "value": {
+              "code": {
+                "_value": 1000054,
+                "_ver": 1
+              }
+            }
+          }
+        ],
+        "id": {
+          "index": "4_1_1",
+          "value": null
+        },
+        "sourceId": null,
+        "wf": null
+      },
+      "prop": [
+        {
+          "key": "acquired_time",
+          "type": {
+            "of": "string",
+            "cmatrix": {
+              "index": "4_2_2_2",
+              "reserved": false
+            },
+            "format": {
+              "_value": 6,
+              "_ver": 1
+            },
+            "unit": null,
+            "candidate": null
+          },
+          "description": "センサー取得時刻"
+        },
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "blood_volume_pulse",
+          "type": {
+            "of": "number",
+            "cmatrix": {
+              "index": "4_2_2_1",
+              "reserved": false
+            },
+            "format": {
+              "_value": 10059,
+              "_ver": 1
+            },
+            "unit": {
+              "_value": 20047,
+              "_ver": 1
+            },
+            "candidate": null
+          },
+          "description": "blood volume pulse"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 28,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ種別"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": {
+              "index": "4_3_(n)",
+              "reserved": false
+            },
+            "candidate": {
+              "ns": [
+                "catalog/model/env/thing/*",
+                "catalog/built_in/env/thing/*",
+                "catalog/ext/test-org/env/thing/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "モノ環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 27,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "モノ識別子"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "モノのソースID"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": [
+        {
+          "key": {
+            "_value": 1000135,
+            "_ver": 1
+          },
+          "value": null,
+          "description": null
+        }
+      ]
+    }
+  ]

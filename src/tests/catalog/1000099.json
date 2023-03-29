@@ -1,0 +1,162 @@
+{
+  "catalogItem": {
+    "ns": "catalog/ext/aaa-healthcare-consortium/terms-of-use/platform",
+    "name": "PF利用規約",
+    "_code": {
+      "_value": 1000099,
+      "_ver": 1
+    },
+    "inherit": {
+      "_value": 203,
+      "_ver": 1
+    },
+    "description": "PF利用規約の定義です。"
+  },
+  "template": {
+    "_code": {
+      "_value": 1001055,
+      "_ver": 42
+    },
+    "deleting-data-flag": true,
+    "period-of-re-consent": "2022-04-01T19:00:undefined.000+09:00",
+    "re-consent-flag": true,
+    "returning-data-flag": true,
+    "terms-of-use": [
+      {
+        "title": "プラットフォーム利用規約",
+        "section": [
+          {
+            "title": "第1項 規約変更4",
+            "content": [
+              {
+                "sentence": "規約～～～。規約変更4"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "prop": [
+    {
+      "key": "deleting-data-flag",
+      "type": {
+        "of": "boolean",
+        "cmatrix": null
+      },
+      "description": "Book閉鎖時削除フラグ",
+      "isInherit": true
+    },
+    {
+      "key": "period-of-re-consent",
+      "type": {
+        "of": "string",
+        "cmatrix": null,
+        "format": {
+          "_value": 6,
+          "_ver": 1
+        },
+        "unit": null,
+        "candidate": null
+      },
+      "description": "再同意期限",
+      "isInherit": true
+    },
+    {
+      "key": "re-consent-flag",
+      "type": {
+        "of": "boolean",
+        "cmatrix": null
+      },
+      "description": "再同意フラグ",
+      "isInherit": true
+    },
+    {
+      "key": "returning-data-flag",
+      "type": {
+        "of": "boolean",
+        "cmatrix": null
+      },
+      "description": "Book閉鎖時返却フラグ",
+      "isInherit": true
+    },
+    {
+      "key": "terms-of-use",
+      "type": {
+        "of": "item[]",
+        "cmatrix": null,
+        "candidate": {
+          "ns": null,
+          "_code": [
+            {
+              "_value": 61,
+              "_ver": 1
+            }
+          ],
+          "base": null
+        }
+      },
+      "description": "PF利用規約",
+      "isInherit": true
+    }
+  ],
+  "value": [
+    {
+      "key": "_code",
+      "value": [
+        {
+          "key": "_value",
+          "value": 1001055
+        },
+        {
+          "key": "_ver",
+          "value": 41
+        }
+      ]
+    },
+    {
+      "key": "deleting-data-flag",
+      "value": true
+    },
+    {
+      "key": "period-of-re-consent",
+      "value": "2022-04-01T19:00:undefined.000+09:00"
+    },
+    {
+      "key": "re-consent-flag",
+      "value": true
+    },
+    {
+      "key": "returning-data-flag",
+      "value": true
+    },
+    {
+      "key": "terms-of-use",
+      "value": [
+        {
+          "key": "title",
+          "value": "プラットフォーム利用規約"
+        },
+        {
+          "key": "section",
+          "value": [
+            {
+              "key": "title",
+              "value": "第1項 規約変更4"
+            },
+            {
+              "key": "content",
+              "value": [
+                {
+                  "key": "sentence",
+                  "value": "規約～～～。規約変更4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "attribute": null
+}

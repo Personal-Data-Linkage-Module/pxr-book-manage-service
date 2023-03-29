@@ -1,0 +1,332 @@
+{
+  "catalogItem": {
+    "ns": "catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000436/share",
+    "name": "テスト用共有定義",
+    "description": "テスト用共有定義です。511",
+    "_code": {
+      "_value": 1000511,
+      "_ver": 1
+    },
+    "inherit": {
+      "_value": 40,
+      "_ver": null
+    }
+  },
+  "template": {
+    "prop": null,
+    "share": [
+      {
+        "id": "event",
+        "event": null,
+        "thing": [
+          {
+            "code": {
+              "_value": 1000029,
+              "_ver": 1
+            },
+            "requireConsent": true
+          },
+          {
+            "code": {
+              "_value": 1000029,
+              "_ver": 2
+            },
+            "requireConsent": true
+          }
+        ],
+        "document": [
+          {
+            "code": {
+              "_value": 1000017,
+              "_ver": 1
+            },
+            "requireConsent": true
+          },
+          {
+            "code": {
+              "_value": 1000017,
+              "_ver": 2
+            },
+            "requireConsent": true
+          }
+        ]
+      },
+      {
+        "id": "event02",
+        "event": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000028,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": [
+              {
+                "code": {
+                  "_value": 1000029,
+                  "_ver": 1
+                },
+                "requireConsent": true
+              },
+              {
+                "code": {
+                  "_value": 1000029,
+                  "_ver": 2
+                },
+                "requireConsent": true
+              }
+            ]
+          },
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1001018,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": null
+          }
+        ],
+        "thing": [
+          {
+            "code": {
+              "_value": 1000029,
+              "_ver": 1
+            },
+            "requireConsent": true
+          },
+          {
+            "code": {
+              "_value": 1000030,
+              "_ver": 1
+            },
+            "requireConsent": true
+          }
+        ],
+        "document": [
+          {
+            "code": {
+              "_value": 1000027,
+              "_ver": 1
+            },
+            "requireConsent": true
+          }
+        ]
+      },
+      {
+        "id": "event03",
+        "event": null,
+        "thing": null,
+        "document": null
+      },
+      {
+        "id": "event06",
+        "event": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000018,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": null
+          },
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000118,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": [
+              {
+                "code": {
+                  "_value": 1000019,
+                  "_ver": 1
+                },
+                "requireConsent": true
+              },
+              {
+                "code": {
+                  "_value": 1000019,
+                  "_ver": 2
+                },
+                "requireConsent": false
+              }
+            ]
+          }
+        ],
+        "thing": [
+          {
+            "code": {
+              "_value": 1000019,
+              "_ver": 1
+            },
+            "requireConsent": true
+          },
+          {
+            "code": {
+              "_value": 1000019,
+              "_ver": 2
+            },
+            "requireConsent": true
+          }
+        ],
+        "document": null
+      },
+      {
+        "id": "event07",
+        "event": null,
+        "thing": [
+          {
+            "code": {
+              "_value": 1000019,
+              "_ver": 1
+            },
+            "requireConsent": true
+          },
+          {
+            "code": {
+              "_value": 1000019,
+              "_ver": 2
+            },
+            "requireConsent": true
+          }
+        ],
+        "document": null
+      },
+      {
+        "id": "event04",
+        "event": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000028,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": [
+              {
+                "code": {
+                  "_value": 1000029,
+                  "_ver": 1
+                },
+                "requireConsent": true
+              },
+              {
+                "code": {
+                  "_value": 1000029,
+                  "_ver": 2
+                },
+                "requireConsent": true
+              }
+            ]
+          }
+        ],
+        "thing": [
+          {
+            "code": {
+              "_value": 1000019,
+              "_ver": 1
+            },
+            "requireConsent": true
+          }
+        ],
+        "document": null
+      },
+      {
+        "id": "event05",
+        "event": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000028,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": null
+          }
+        ],
+        "thing": null,
+        "document": null
+      },
+      {
+        "id": "event08",
+        "event": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000028,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": [
+              {
+                "code": {
+                  "_value": 1000029,
+                  "_ver": 1
+                },
+                "requireConsent": true
+              },
+              {
+                "code": {
+                  "_value": 1000029,
+                  "_ver": 2
+                },
+                "requireConsent": true
+              }
+            ]
+          }
+        ],
+        "thing": [
+          {
+            "code": {
+              "_value": 1000019,
+              "_ver": 1
+            },
+            "requireConsent": true
+          }
+        ],
+        "document": null
+      }
+    ]
+  },
+  "inner": null,
+  "attribute": null
+}

@@ -1,0 +1,566 @@
+[
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/event/actor_1000004",
+        "name": "個人が日常生活を送る",
+        "_code": {
+          "_value": 1000008,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 53,
+          "_ver": 1
+        },
+        "description": {
+          "title": "テスト用のイベント（個人が日常生活を送る）の定義です。",
+          "section": [
+            {
+              "title": "収集時期・期間",
+              "content": {
+                "sentence": "収集時期・期間を記載します。"
+              }
+            },
+            {
+              "title": "収集場所",
+              "content": {
+                "sentence": "収集場所を記載します。"
+              }
+            },
+            {
+              "title": "収集対象者",
+              "content": {
+                "sentence": "収集対象者を記載します。"
+              }
+            },
+            {
+              "title": "収集単位",
+              "content": {
+                "sentence": "収集単位を記載します。"
+              }
+            },
+            {
+              "title": "研究目的",
+              "content": {
+                "sentence": "研究目的を記載します。"
+              }
+            },
+            {
+              "title": "収集データ種類・センサ仕様",
+              "content": {
+                "sentence": "収集データ種類・センサ仕様を記載します。"
+              }
+            },
+            {
+              "title": "収集データ数",
+              "content": {
+                "sentence": "収集データ数を記載します。"
+              }
+            },
+            {
+              "title": "１イベントの開始～終了時刻",
+              "content": {
+                "sentence": "１イベントの開始～終了時刻を記載します。"
+              }
+            }
+          ]
+        }
+      },
+      "template": {
+        "_code": {
+          "_value": 1000008,
+          "_ver": 1
+        },
+        "app": null,
+        "code": {
+          "index": "3_1_2",
+          "value": {
+            "_value": 1000008,
+            "_ver": 1
+          }
+        },
+        "end": {
+          "index": "3_2_2",
+          "value": null
+        },
+        "env": null,
+        "id": {
+          "index": "3_1_1",
+          "value": null
+        },
+        "location": {
+          "index": "3_3_1",
+          "value": null
+        },
+        "sourceId": null,
+        "start": {
+          "index": "3_2_1",
+          "value": null
+        },
+        "thing": null,
+        "wf": {
+          "code": {
+            "_value": 1000004,
+            "_ver": 1
+          },
+          "wf": {
+            "_value": 1000007,
+            "_ver": 1
+          }
+        }
+      },
+      "prop": [
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 18,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント種別"
+        },
+        {
+          "key": "end",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 20,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント終了時刻"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": null,
+            "candidate": {
+              "ns": [
+                "catalog/model/env/event/*",
+                "catalog/built_in/env/event/*",
+                "catalog/ext/test-org/env/event/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "イベント環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 17,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント識別子"
+        },
+        {
+          "key": "location",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 21,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント発生位置"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "イベントのソースID"
+        },
+        {
+          "key": "start",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 19,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント開始時刻"
+        },
+        {
+          "key": "thing",
+          "type": {
+            "of": "item[]",
+            "cmatrix": null,
+            "candidate": {
+              "ns": null,
+              "_code": [
+                {
+                  "_value": 1000011,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000012,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000013,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000039,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000040,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000041,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000042,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000043,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000044,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000045,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000046,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000047,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000048,
+                  "_ver": 1
+                }
+              ],
+              "base": null
+            }
+          },
+          "description": "モノの配列"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": null
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/event/actor_1000004",
+        "name": "個人が質問に答える",
+        "_code": {
+          "_value": 1000009,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 53,
+          "_ver": 1
+        },
+        "description": {
+          "title": "テスト用のイベント（個人が質問に答える）の定義です。",
+          "section": [
+            {
+              "title": "収集時期・期間",
+              "content": {
+                "sentence": "収集時期・期間を記載します。"
+              }
+            },
+            {
+              "title": "収集場所",
+              "content": {
+                "sentence": "収集場所を記載します。"
+              }
+            },
+            {
+              "title": "収集対象者",
+              "content": {
+                "sentence": "収集対象者を記載します。"
+              }
+            },
+            {
+              "title": "収集単位",
+              "content": {
+                "sentence": "収集単位を記載します。"
+              }
+            },
+            {
+              "title": "研究目的",
+              "content": {
+                "sentence": "研究目的を記載します。"
+              }
+            },
+            {
+              "title": "収集データ種類・センサ仕様",
+              "content": {
+                "sentence": "収集データ種類・センサ仕様を記載します。"
+              }
+            },
+            {
+              "title": "収集データ数",
+              "content": {
+                "sentence": "収集データ数を記載します。"
+              }
+            },
+            {
+              "title": "１イベントの開始～終了時刻",
+              "content": {
+                "sentence": "１イベントの開始～終了時刻を記載します。"
+              }
+            }
+          ]
+        }
+      },
+      "template": {
+        "_code": {
+          "_value": 1000009,
+          "_ver": 1
+        },
+        "app": null,
+        "code": {
+          "index": "3_1_2",
+          "value": {
+            "_value": 1000009,
+            "_ver": 1
+          }
+        },
+        "end": {
+          "index": "3_2_2",
+          "value": null
+        },
+        "env": null,
+        "id": {
+          "index": "3_1_1",
+          "value": null
+        },
+        "location": {
+          "index": "3_3_1",
+          "value": null
+        },
+        "sourceId": null,
+        "start": {
+          "index": "3_2_1",
+          "value": null
+        },
+        "thing": null,
+        "wf": {
+          "code": {
+            "_value": 1000004,
+            "_ver": 1
+          },
+          "wf": {
+            "_value": 1000007,
+            "_ver": 1
+          }
+        }
+      },
+      "prop": [
+        {
+          "key": "app",
+          "type": {
+            "of": "inner",
+            "inner": "App",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたアプリケーションプロバイダー"
+        },
+        {
+          "key": "code",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 18,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント種別"
+        },
+        {
+          "key": "end",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 20,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント終了時刻"
+        },
+        {
+          "key": "env",
+          "type": {
+            "of": "item[]",
+            "cmatrix": null,
+            "candidate": {
+              "ns": [
+                "catalog/model/env/event/*",
+                "catalog/built_in/env/event/*",
+                "catalog/ext/test-org/env/event/*"
+              ],
+              "_code": null,
+              "base": null
+            }
+          },
+          "description": "イベント環境の配列"
+        },
+        {
+          "key": "id",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 17,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント識別子"
+        },
+        {
+          "key": "location",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 21,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント発生位置"
+        },
+        {
+          "key": "sourceId",
+          "type": {
+            "of": "string",
+            "cmatrix": null,
+            "format": null,
+            "unit": null,
+            "candidate": null
+          },
+          "description": "イベントのソースID"
+        },
+        {
+          "key": "start",
+          "type": {
+            "of": "item",
+            "_code": {
+              "_value": 19,
+              "_ver": 1
+            },
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベント開始時刻"
+        },
+        {
+          "key": "thing",
+          "type": {
+            "of": "item[]",
+            "cmatrix": null,
+            "candidate": {
+              "ns": null,
+              "_code": [
+                {
+                  "_value": 1000014,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000015,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000016,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000017,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000018,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000019,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000037,
+                  "_ver": 1
+                },
+                {
+                  "_value": 1000038,
+                  "_ver": 1
+                }
+              ],
+              "base": null
+            }
+          },
+          "description": "モノの配列"
+        },
+        {
+          "key": "wf",
+          "type": {
+            "of": "inner",
+            "inner": "Wf",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "イベントを発生させたワークフロープロバイダー"
+        }
+      ],
+      "attribute": null
+    }
+  ]

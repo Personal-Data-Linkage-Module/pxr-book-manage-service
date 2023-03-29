@@ -1,0 +1,171 @@
+{
+  "catalogItem": {
+    "ns": "catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000436/share",
+    "name": "【利用申込】医療・健康サービスの利用申込機能",
+    "_code": {
+      "_value": 1000023,
+      "_ver": 1
+    },
+    "inherit": {
+      "_value": 40,
+      "_ver": 1
+    },
+    "description": "【利用申込】医療・健康サービスの利用申込機能です。022"
+  },
+  "template": {
+    "_code": {
+      "_value": 1000022,
+      "_ver": 1
+    },
+    "share": [
+      {
+        "id": "507bff6c-4842-c3d2-a288-df88698d446e",
+        "event": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000802,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": [
+              {
+                "code": {
+                  "_value": 1000803,
+                  "_ver": 1
+                },
+                "requireConsent": true
+              },
+              {
+                "code": {
+                  "_value": 1000803,
+                  "_ver": 2
+                },
+                "requireConsent": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "b87b27c1-5da8-37dd-6ee6-2c7831cf6a09",
+        "document": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1001010,
+              "_ver": 1
+            },
+            "requireConsent": true
+          },
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1001010,
+              "_ver": 2
+            },
+            "requireConsent": true
+          },
+          {
+            "code": {
+              "_value": 1001011,
+              "_ver": 1
+            },
+            "requireConsent": true
+          }
+        ]
+      },
+      {
+        "id": "69db43f2-6643-19e9-117c-4bdece4bddd7",
+        "thing": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000502,
+              "_ver": 1
+            },
+            "requireConsent": true
+          },
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 2
+              }
+            ],
+            "code": {
+              "_value": 1000502,
+              "_ver": 2
+            },
+            "requireConsent": true
+          }
+        ]
+      },
+      {
+        "id": "111971ca-42aa-241c-cd0a-c6434375f8f2",
+        "thing": [
+          {
+            "code": {
+              "_value": 1000502,
+              "_ver": 1
+            },
+            "requireConsent": true
+          }
+        ]
+      },
+      {
+        "id": "607bff6c-4842-c3d2-a288-df88698d446e",
+        "event": [
+          {
+            "sourceActor": [
+              {
+                "_value": 1000001,
+                "_ver": 1
+              }
+            ],
+            "code": {
+              "_value": 1000802,
+              "_ver": 1
+            },
+            "requireConsent": true,
+            "thing": null
+          }
+        ]
+      }
+    ]
+  },
+  "prop": [
+    {
+      "key": "share",
+      "type": {
+        "of": "inner[]",
+        "inner": "Share",
+        "cmatrix": null,
+        "candidate": null
+      },
+      "description": "状態共有機能定義",
+      "isInherit": true
+    }
+  ],
+  "attribute": null
+}

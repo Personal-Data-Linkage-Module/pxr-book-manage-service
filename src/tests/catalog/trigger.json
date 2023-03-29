@@ -1,0 +1,113 @@
+[
+    {
+        "catalogItem": {
+            "ns": "catalog/ext/aaa-healthcare-consortium/actor/wf/actor_1000438/share/trigger",
+            "name": "診療申込受付機能_共有トリガー",
+            "description": "診療申込受付機能の状態共有機能に関する共有トリガーの定義です",
+            "_code": {
+                "_value": 1000501,
+                "_ver": 1
+            },
+            "inherit": {
+                "_value": 216,
+                "_ver": null
+            }
+        },
+        "template": {
+            "prop": null,
+            "share": {
+                "_value": 1000099,
+                "_ver": 1
+            },
+            "id":["39a03074-856e-5daa-d792-9d672bb9c7ed"],
+            "startCondition": {
+                "document": [
+                    {
+                        "code": {
+                            "_value": 1000823,
+                            "_ver": 1
+                        }
+                    }
+                ],
+                "event": [
+                    {
+                        "code": {
+                            "_value": 1000811,
+                            "_ver": 1
+                        },
+                        "thing": [
+                            {
+                                "code": {
+                                    "_value": 1000814,
+                                    "_ver": 1
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "thing": [
+                    {
+                        "code": {
+                            "_value": 1000815,
+                            "_ver": 1
+                        }
+                    }
+                ],
+                "period": {
+                    "specification": "spacification",
+                    "unit": "minut",
+                    "value": 10
+                },
+                "decisionAPI": {
+                    "_value": 9999999,
+                    "_ver": 1
+                }
+            },
+            "endCondition": {
+                "document": [
+                    {
+                        "code": {
+                            "_value": 1000823,
+                            "_ver": 1
+                        }
+                    }
+                ],
+                "event": [
+                    {
+                        "code": {
+                            "_value": 1000811,
+                            "_ver": 1
+                        },
+                        "thing": [
+                            {
+                                "code": {
+                                    "_value": 1000814,
+                                    "_ver": 1
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "thing": [
+                    {
+                        "code": {
+                            "_value": 1000815,
+                            "_ver": 1
+                        }
+                    }
+                ],
+                "period": {
+                    "specification": "spacification",
+                    "unit": "minut",
+                    "value": 10
+                },
+                "decisionAPI": {
+                    "_value": 9999999,
+                    "_ver": 1
+                }
+            }
+        },
+        "inner": null,
+        "attribute": null
+    }
+]

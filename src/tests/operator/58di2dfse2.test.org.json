@@ -1,0 +1,12 @@
+{
+  "operatorId": 4,
+  "type": 0,
+  "loginId": "58di2dfse2.test.org",
+  "pxrId": "58di2dfse2.test.org",
+  "passwordChangedFlg": false,
+  "attributes": {
+    "initialPasswordExpire": "2020-09-21T18:31:14.855+0900",
+    "smsAuth": true
+  },
+  "loginProhibitedFlg": false
+}

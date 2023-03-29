@@ -1,0 +1,20 @@
+{
+    "catalogItem": {
+      "ns": "catalog/ext/test-org/category/share/actor",
+      "name": "医療機関",
+      "_code": {
+        "_value": 1000021,
+        "_ver": 1
+      },
+      "inherit": null,
+      "description": "共有先のサービス提供組織のカテゴリ（医療機関）の定義です。"
+    },
+    "template": {
+      "_code": {
+        "_value": 1000021,
+        "_ver": 1
+      }
+    },
+    "prop": null,
+    "attribute": null
+  }

@@ -1,0 +1,12 @@
+[
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/document/actor_1000004",
+        "name": "個人が質問に答える",
+        "_code": {
+          "_value": 1000000,
+          "_ver": 1
+        }
+      }
+    }
+]

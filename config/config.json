@@ -1,0 +1,26 @@
+{
+    "operatorUrl": "http://localhost:3000/operator",
+    "catalogUrl": "http://localhost:3001/catalog",
+    "identityUrl": "http://localhost:3007/identity-verificate",
+    "notificationUrl": "http://localhost:3004/notification",
+    "ctokenLedgerUrl": "http://localhost:3008/ctoken-ledger",
+    "bookOperateUrl": "http://localhost:3006/book-operate",
+    "initialPasswordExpire": 7,
+    "extName": "aaa-healthcare-consortium",
+    "pxrRootGrobalSettingNs": "catalog/ext/aaa-healthcare-consortium/setting/actor/pxr-root/actor_1000431",
+    "pxrRootNs": "catalog/ext/{extName}/actor/pxr-root",
+    "globalCatalogCode": 1000374,
+    "urlMappingCreateHtmlNs": "catalog/ext/{ext_name}/url-mapping/actor_{actorCode}/create-html-function",
+    "builtInUrlMappingCreateHtmlNs": "catalog/built_in/url-mapping/create-html-function",
+    "pxrRootActorSettingNs": "catalog/ext/{ext_name}/setting/actor/pxr-root/actor_{actorCode}",
+    "sharingRestrictionCatalogNs": "catalog/ext/{ext_name}/actor/{app_or_wf}/actor_{actor_code}/sharing-restriction",
+    "password": {
+        "initLength": 12,
+        "hashSalt": "PT4h6YUq",
+        "hashStrechCount": 5000
+    },
+    "proxyService": {
+        "proxy": "http://localhost:3003/pxr-block-proxy"
+    },
+    "timezone": "Asia/Tokyo"
+}

@@ -1,0 +1,146 @@
+[
+    {
+      "catalogItem": {
+        "ns": "catalog/ext/test-org/actor/wf/actor_1000004/share",
+        "name": "テスト用ワークフローが蓄積可能なデータ",
+        "_code": {
+          "_value": 1000099,
+          "_ver": 1
+        },
+        "inherit": {
+          "_value": 44,
+          "_ver": 1
+        },
+        "description": "テスト用ワークフローが蓄積可能なデータ定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 1000099,
+          "_ver": 1
+        },
+        "share": [
+          {
+            "document": [
+              {
+                "_value": 1000000,
+                "_ver": 1
+              }
+            ],
+            "event": [
+              {
+                "_value": 1000009,
+                "_ver": 1
+              },
+              {
+                "_value": 1000008,
+                "_ver": 1
+              }
+            ],
+            "thing": [
+              {
+                "_value": 1000010,
+                "_ver": 1
+              },
+              {
+                "_value": 1000011,
+                "_ver": 1
+              },
+              {
+                "_value": 1000012,
+                "_ver": 1
+              },
+              {
+                "_value": 1000013,
+                "_ver": 1
+              },
+              {
+                "_value": 1000014,
+                "_ver": 1
+              },
+              {
+                "_value": 1000015,
+                "_ver": 1
+              },
+              {
+                "_value": 1000016,
+                "_ver": 1
+              },
+              {
+                "_value": 1000017,
+                "_ver": 1
+              },
+              {
+                "_value": 1000018,
+                "_ver": 1
+              },
+              {
+                "_value": 1000019,
+                "_ver": 1
+              },
+              {
+                "_value": 1000037,
+                "_ver": 1
+              },
+              {
+                "_value": 1000038,
+                "_ver": 1
+              },
+              {
+                "_value": 1000039,
+                "_ver": 1
+              },
+              {
+                "_value": 1000040,
+                "_ver": 1
+              },
+              {
+                "_value": 1000041,
+                "_ver": 1
+              },
+              {
+                "_value": 1000042,
+                "_ver": 1
+              },
+              {
+                "_value": 1000043,
+                "_ver": 1
+              },
+              {
+                "_value": 1000044,
+                "_ver": 1
+              },
+              {
+                "_value": 1000045,
+                "_ver": 1
+              },
+              {
+                "_value": 1000046,
+                "_ver": 1
+              },
+              {
+                "_value": 1000047,
+                "_ver": 1
+              },
+              {
+                "_value": 1000048,
+                "_ver": 1
+              }
+            ]
+          }
+        ]
+      },
+      "prop": [
+        {
+          "key": "store",
+          "type": {
+            "of": "inner[]",
+            "inner": "Store",
+            "cmatrix": null,
+            "candidate": null
+          },
+          "description": "蓄積定義"
+        }
+      ],
+      "attribute": null
+    }
+  ]

@@ -1,0 +1,162 @@
+[
+    {
+      "catalogItem": {
+        "ns": "catalog/built_in/person/item-type",
+        "name": "姓",
+        "_code": {
+          "_value": 30019,
+          "_ver": 1
+        },
+        "inherit": null,
+        "description": "個人属性の項目種別（姓）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 30019,
+          "_ver": 1
+        }
+      },
+      "prop": null,
+      "attribute": null
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/built_in/person/item-type",
+        "name": "名",
+        "_code": {
+          "_value": 30020,
+          "_ver": 1
+        },
+        "inherit": null,
+        "description": "個人属性の項目種別（名）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 30020,
+          "_ver": 1
+        }
+      },
+      "prop": null,
+      "attribute": null
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/built_in/person/item-type",
+        "name": "性別",
+        "_code": {
+          "_value": 30021,
+          "_ver": 1
+        },
+        "inherit": null,
+        "description": "個人属性の項目種別（性別）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 30021,
+          "_ver": 1
+        }
+      },
+      "prop": null,
+      "attribute": null
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/built_in/person/item-type",
+        "name": "生年月日（西暦）",
+        "_code": {
+          "_value": 30022,
+          "_ver": 1
+        },
+        "inherit": null,
+        "description": "個人属性の項目種別（生年月日（西暦））の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 30022,
+          "_ver": 1
+        }
+      },
+      "prop": null,
+      "attribute": null
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/built_in/person/item-type",
+        "name": "住所",
+        "_code": {
+          "_value": 30035,
+          "_ver": 1
+        },
+        "inherit": null,
+        "description": "個人属性の項目種別（住所）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 30035,
+          "_ver": 1
+        }
+      },
+      "prop": null,
+      "attribute": null
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/built_in/person/item-type",
+        "name": "連絡先電話番号",
+        "_code": {
+          "_value": 30036,
+          "_ver": 1
+        },
+        "inherit": null,
+        "description": "個人属性の項目種別（連絡先電話番号）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 30036,
+          "_ver": 1
+        }
+      },
+      "prop": null,
+      "attribute": null
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/built_in/person/item-type",
+        "name": "姓名",
+        "_code": {
+          "_value": 30037,
+          "_ver": 1
+        },
+        "inherit": null,
+        "description": "個人属性の項目種別（姓名）の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 30037,
+          "_ver": 1
+        }
+      },
+      "prop": null,
+      "attribute": null
+    },
+    {
+      "catalogItem": {
+        "ns": "catalog/built_in/person/item-type",
+        "name": "生年月日（和暦）",
+        "_code": {
+          "_value": 30038,
+          "_ver": 1
+        },
+        "inherit": null,
+        "description": "個人属性の項目種別（生年月日（和暦））の定義です。"
+      },
+      "template": {
+        "_code": {
+          "_value": 30038,
+          "_ver": 1
+        }
+      },
+      "prop": null,
+      "attribute": null
+    }
+  ]
