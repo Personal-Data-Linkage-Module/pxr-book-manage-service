@@ -1,0 +1,106 @@
+get:
+  tags:
+    - "未同意規約取得（個人）"
+  summary: 未同意規約を取得します。
+  description: |
+    ## API概要
+    個人が、以下に示す未同意の規約と定義を取得します
+    - PF規約
+    - Region規約
+    - 蓄積定義
+    - 共有定義
+    ### 【認可条件】
+    - 個人であること
+      - 個人はBook開設APIで追加する必要があります
+        - pxr-book-manage-service の [POST: /] API を実行
+    ### （注意事項）
+    - 【確認中】
+  responses:
+    200:
+      description: 未同意規約取得に成功したときの結果オブジェクト
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NotAgreedTermsOfUse"
+components:
+  schemas:
+    TermsOfUse:
+      description: 規約のカタログオブジェクト
+      type: object
+      properties:
+        platform:
+          description: PF利用規約のカタログオブジェクト
+          type: object
+          properties:
+            _code:
+              description: PF利用規約のカタログ項目コード
+              oneOf:
+                - $ref: "book-manage.yml#/components/schemas/CodeObject"
+            expireAt:
+              description: 規約の再同意を受け付ける期間
+        region:
+          type: array
+          description: Region利用規約のカタログオブジェクト
+          items:
+            type: object
+            properties:
+              actor:
+                description: 【確認中】
+                type: object
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+              region:
+                description: 【確認中】
+                type: object
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+              _code:
+                description: PF利用規約のカタログ項目コード
+                type: object
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+              expireAt:
+                type: object
+                description: 規約の再同意を受け付ける期間
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+    NotAgreedTermsOfUse:
+      description: 【確認中】
+      type: object
+      properties:
+        TermOfUse:
+          type: object
+          description: 【確認中】
+          $ref: "#/components/schemas/TermsOfUse"
+        store:
+          description: 未同意の蓄積定義カタログリスト
+          type: array
+          items:
+            type: object
+            properties:
+              actor:
+                type: object
+                description: 【確認中】
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+              app:
+                type: object
+                description: 【確認中】
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+              _code:
+                type: object
+                description: 【確認中】
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+        share:
+          description: 未同意の共有定義カタログリスト
+          type: array
+          items:
+            type: object
+            properties:
+              actor:
+                type: object
+                description: 【確認中】
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+              app:
+                type: object
+                description: 【確認中】
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+              _code:
+                type: object
+                description: 【確認中】
+                $ref: "book-manage.yml#/components/schemas/CodeObject"

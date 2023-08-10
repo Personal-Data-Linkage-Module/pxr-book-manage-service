@@ -1,0 +1,45 @@
+post:
+  tags:
+    - "Region利用規約同意"
+  summary: Region利用規約の再同意を行います
+  description: |
+    ## API概要
+    個人が、領域運営SPによるRegion利用規約に対して同意します。
+    ### 【認可条件】
+    - 個人であること
+      - 個人はBook開設APIで追加する必要があります
+        - pxr-book-manage-service の [POST: /] API を実行
+    ### （注意事項）
+    - 本APIは、Region利用規約の再同意をするときに利用します
+  requestBody:
+    description: Region利用規約同意の要求オブジェクト
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/PostIndTermOfUseRegionReqDto"
+  responses:
+    200:
+      description: Region利用規約同意の応答オブジェクト
+      content:
+        application/json:
+          schema:
+            $ref: "book-manage.yml#/components/schemas/OkResponse"
+components:
+  schemas:
+    PostIndTermOfUseRegionReqDto:
+      description: Region利用規約同意の要求オブジェクト
+      type: object
+      properties:
+        actor:
+          type: object
+          description: 領域運営SPに紐づくアクターのカタログ項目コード
+          $ref: "book-manage.yml#/components/schemas/CodeObject"
+        region:
+          type: object
+          description: アクターに紐づくRegionのカタログ項目コード
+          $ref: "book-manage.yml#/components/schemas/CodeObject"
+        _code:
+          type: object
+          description: 同意対象のRegion利用規約のカタログ項目コード
+          $ref: "book-manage.yml#/components/schemas/CodeObject"

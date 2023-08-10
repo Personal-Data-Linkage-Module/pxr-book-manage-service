@@ -1,0 +1,39 @@
+post:
+  tags:
+    - "PF利用規約同意"
+  summary: PF利用規約の再同意を行います
+  description: |
+    ## API概要
+    個人が、流通制御SPによるPF利用規約に対して同意します。
+    ### 【認可条件】
+    - 個人であること
+      - 個人はBook開設APIで追加する必要があります
+        - pxr-book-manage-service の [POST: /] API を実行
+    ### （注意事項）
+    - 初回のPF利用規約同意は、Book開設APIを実行した時に行われています
+    - 本APIは、PF利用規約の再同意をするときに利用します
+      - 最新のPF利用規約に対して再同意する必要があります
+  requestBody:
+    description: PF利用規約同意の要求オブジェクト
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/PostIndTermOfUsePlatformReqDto"
+  responses:
+    200:
+      description: PF利用規約同意に成功したときの応答オブジェクト
+      content:
+        application/json:
+          schema:
+            $ref: "book-manage.yml#/components/schemas/OkResponse"
+components:
+  schemas:
+    PostIndTermOfUsePlatformReqDto:
+      description: PF利用規約同意の要求オブジェクト
+      type: object
+      properties:
+        _code:
+          description: 同意対象のPF利用規約のカタログ項目コード
+          type: object
+          $ref: "book-manage.yml#/components/schemas/CodeObject"

@@ -1,0 +1,96 @@
+post:
+  tags:
+    - "データ共有定義追加（共有同意）"
+  summary: データ共有定義を追加します
+  description: |
+    ## API概要
+    個人が、アプリケーションによるデータ共有定義に対して同意し、データ共有の開始を許可します。
+    ### 【認可条件】
+    - 個人であること
+      - 個人はBook開設APIで追加する必要があります
+        - pxr-book-manage-service の [POST: /] API を実行
+    ### （注意事項）
+    - データ蓄積定義の作成と更新は、アプリケーションPの運営メンバーにより下記のAPIで行われます。
+      - pxr-catalog-update-service の [POST: /catalog-update/data-operation/]API
+    - データ共有定義の取得は、個人により下記のAPIで行われます。
+      - 【確認中】
+  requestBody:
+    description: データ共有定義追加の要求オブジェクト
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/PostDataShareReqDto"
+  responses:
+    200:
+      description: データ共有定義追加の応答オブジェクト
+      content:
+        application/json:
+          schema:
+            $ref: "book-manage.yml#/components/schemas/OkResponse"
+components:
+  schemas:
+    PostDataShareReqDto:
+      description: データ共有定義追加の要求オブジェクト
+      type: object
+      properties:
+        actor:
+          description: アプリケーションPに紐づくアクターのカタログ項目コード
+          type: object
+          $ref: "book-manage.yml#/components/schemas/CodeObject"
+        wf:
+          description: ※未使用のパラメータです
+          type: object
+          deprecated: true
+          $ref: "book-manage.yml#/components/schemas/CodeObject"
+        app:
+          description: アクターに紐づくアプリケーションのカタログ項目コード
+          type: object
+          $ref: "book-manage.yml#/components/schemas/CodeObject"
+        share:
+          description: アプリケーションに紐づく蓄積定義のカタログ項目コード
+          type: object
+          $ref: "book-manage.yml#/components/schemas/CodeObject"
+        shareCatalogId:
+          description: 共有定義のID
+          type: string
+        excludeDocument:
+          description: 蓄積対象外ドキュメント
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: object
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+        ExcludeEvent:
+          description: 蓄積対象外イベント
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: object
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+              ExcludeThing:
+                type: array
+                description: 蓄積対象外モノ
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: object
+                      $ref: "book-manage.yml#/components/schemas/CodeObject"
+        ExcludeThing:
+          type: array
+          description: 蓄積対象外モノ
+          items:
+            type: object
+            properties:
+              code:
+                type: object
+                $ref: "book-manage.yml#/components/schemas/CodeObject"
+      required:
+        - "actor"
+        - "app"
+        - "share"
+        - "shareCatalogId"

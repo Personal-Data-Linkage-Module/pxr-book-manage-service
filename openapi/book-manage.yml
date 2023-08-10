@@ -1,0 +1,53 @@
+openapi: '3.0.2'
+info:
+  title: pxr-book-manage-service
+  version: '1.0'
+  description: |
+    ## サービス概要
+    My-Condition-Book（略称：MCB）を管理するサービスです。
+    ### 管理データのステータス
+    #### MCBのステータス
+    - 0: 通常（利用可能な状態）
+    - 1: 再同意待ち（利用規約が更新されて再同意が必要な利用不可な状態）
+    - 2: 差し押さえ（流通制御SPの運営メンバにより明示的に無効化された利用不可な状態）
+    - 3: 終了（本人の操作に基づいてMCBを終了した利用不可な状態）
+    ### （注意事項）
+    - 本サービスのAPIを利用するためには、pxr-operator-serviceによる認証を通過している必要があります。
+    - 運用環境においては、本サービスのAPIへのアクセスはpxr-block-proxy経由で行う必要があります。
+  license:
+    name: MIT
+    url: https://licenses.opensource.jp/MIT/MIT.html
+servers:
+  - url: "/book-manage"
+paths:
+  /:
+    $ref: "book-manage_.yml"
+  /settings/store/:
+    $ref: "book-manage_settings_store.yml"
+  /settings/share/:
+    $ref: "book-manage_settings_share.yml"
+  /term_of_use/request/list/:
+    $ref: "book-manage_term_of_use_request_list.yml"
+  /term_of_use/platform/:
+    $ref: "book-manage_term_of_use_platform.yml"
+  /term_of_use/region/:
+    $ref: "book-manage_term_of_use_region.yml"
+components:
+  schemas:
+    CodeObject:
+      description: カタログコード
+      type: object
+      properties:
+        _value:
+          description: カタログコード値
+          type: number
+        _ver:
+          description: カタログバージョン値
+          type: number
+      required:
+        - "_code"
+        - "_ver"
+    OkResponse:
+      type: object
+      properties:
+        result: { type: string, example: "success" }

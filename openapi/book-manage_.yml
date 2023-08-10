@@ -1,0 +1,233 @@
+post:
+  tags:
+    - "Book開設"
+  summary: MCBを開設します
+  description: |
+    ## API概要
+    流通制御SPが、MCB開設申請を行った個人の本人性確認結果に基づき、MCBを開設します。
+    ### 【認可条件】
+    - 流通制御SPの運営メンバーであること
+      - 流通制御SPの運営メンバーは下記のAPIで追加  
+        pxr-operator-service の [POST: /operator] API をオペレータ種別(type=3)で実l行
+  requestBody:
+    description: MCB開設の要求オブジェクト
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/PostBookOpenReqDto"
+        examples:
+          "MCB開設（最小限の設定）":
+            $ref: "#/components/examples/MCB開設（最小限の設定）"
+  responses:
+    200:
+      description: MCB開設の結果オブジェクト
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PostBookOpenResDto"
+components:
+  schemas:
+    PostBookOpenReqDto:
+      type: object
+      description: MCB開設の要求オブジェクト
+      properties:
+        pxrId:
+          description: |
+            MCBに紐づく個人を識別するための個人識別子
+            （注意事項）
+            - 外部IDP連携設定（下記のカタログ設定）によって、pxrId、loginId、idServiceFlg に設定すべき値が変わります。
+              - カタログ名前空間 [catalog/ext/<ext_name>/setting/global] の use_id_connect 要素
+            - use_id_connect: false （⇒ 外部IDP連携OFF）
+              - pxrId: 任意の文字列
+                - 利用済みのPxR-IDを設定した場合はエラーとなります。既にMCB閉鎖済みのPxR-IDも重複チェックの対象となります。
+              - loginId: null
+            - use_id_connect: true （⇒ 外部IDP連携ON）
+              - idServiceFlg: true （⇒ 外部IDPアカウントあり）
+                - pxrId: 外部IDPアカウントの個人識別子
+                - loginId: null
+              - idServiceFlg: false （⇒ 外部IDPアカウントなし）
+                - pxrId: null
+                - loginId: 任意の文字列
+            （補足）
+            - 2023年7月現在、開発コミュニティでは外部IDPとの連携処理をプラグイン化する機能開発を進めています。
+          type: string
+        loginId:
+          description: |
+            個人が外部IDPにログインするために利用する個人識別子
+            （注意事項）
+            - pxrIdの（注意事項）を参照
+            （補足）
+            - 2023年7月現在、開発コミュニティでは外部IDPとの連携処理をプラグイン化する機能開発を進めています。
+          type: string
+        userId:
+          description: ※未使用のパラメータです
+          deprecated: true
+          type: string
+        idServiceFlg:
+          description: |
+            個人が外部IDPのアカウントを保有しているかどうか（true:保有している false:保有していない）
+            （注意事項）
+            - pxrIdの（注意事項）を参照
+            （補足）
+            - 2023年7月現在、開発コミュニティでは外部IDPとの連携処理をプラグイン化する機能開発を進めています。
+          type: boolean
+        attributes:
+          description: ※未使用のパラメータです
+          deprecated: true
+          type: object
+        appendix:
+          description:  ※未使用のパラメータです
+          deprecated: true
+          type: object
+        identification:
+          description: |
+            本人性確認書類の配列
+            - 指定する本人性確認書類は、カタログ項目として定義されている必要があります。
+              - カタログ名前空間 [catalog/built_in/person/identification] または [catalog/ext/<ext_name>/person/identification]
+            - 本人性確認書類のカタログテンプレートに使用した本人性確認書類の券面事項を設定したオブジェクトを配列要素として設定してください。
+              - カタログテンプレートは、pxr-catalog-service の [GET: /catalog/:code]API で取得したレスポンスオブジェクトのtemplateプロパティ値として取得することが可能です。
+            （注意事項１：本人性確認書類の充足率チェック）
+            - 指定する本人性確認書類の充足率の合計が100以上になる必要があります。
+              - 充足率は、カタログ項目（流通制御SPのアクター固有設定）の identification-document 配列要素の satisfaction-rate で設定されます。
+                - カタログ名前空間 [catalog/ext/<ext_name>/setting/actor/pxr-root/{アクターコード}]
+              - 充足率の加算条件は、指定した本人性確認書類のコードが、上記の要素のカタログ（_valueおよびver）と一致することです。
+            （注意事項２：本人性確認事項のチェック）
+            - 指定する本人性確認書類に含まれる本人性確認事項のtypeが、カタログ項目として定義されている必要があります。
+              - カタログ名前空間 [catalog/built_in/person/item-type] または [catalog/ext/<ext_name>/person/item-type]
+          type: array
+          items:
+            $ref: "#/components/schemas/identification"
+        userInformation:
+          description: |
+            利用者管理情報
+            - 利用者管理情報のオブジェクト構造は本人性確認書類と同じですが、位置づけが異なります。利用者管理情報は、本人性確認書類以外の申込情報を格納するためのパラメータです。
+              - 申込情報がない場合でも（注意事項）の設定のみ必要となりますのでご注意ください。
+            - 指定する利用者管理情報は、カタログ項目として定義されている必要があります。
+              - カタログ名前空間 [catalog/ext/<ext_name>/person/user-information/actor_<pxr_root_actor_code>]
+            - 利用者管理情報のカタログテンプレートに使用した申込情報の記載事項を設定したオブジェクトを配列要素として設定してください。
+              - カタログテンプレートは、pxr-catalog-service の [GET: /catalog/:code]API で取得したレスポンスオブジェクトのtemplateプロパティ値として取得することが可能です。
+            （注意事項）
+            - 下記のプロパティに「SMS通知が可能な個人の電話番号」の設定が必要です。
+              - userInformation.['item-group']['item'] 配列の要素で type._value が 下記のカタログコード値と一致する要素のcontentプロパティ
+                - 設定ファイル [book-manage-service-container.yaml]-[default.yml]-[phoneNumberCode]
+              - SMS通知を利用しない場合は、空文字列を設定してください。
+            - 電話番号を設定することで、[/book-manage/sms/open]API の呼び出しでMCB開設通知をSMS送信することができます。
+              - なお、SMS通知処理は、[src\common\Sms_Stub.ts]-[sendMessage]に実行環境に合わせて実装する必要があります。
+          oneOf:
+            - $ref: "#/components/schemas/identification"
+        platform_terms_of_use:
+          description: |
+            プラットフォーム利用規約のカタログコード
+            - 個人が同意したプラットフォーム利用規約のカタログコードを設定
+            （注意事項）
+            - 指定するプラットフォーム利用規約のバージョン（platform_terms_of_use._ver）として、API呼び出し時点で最新のバージョンを指定する必要があります。
+              - プラットフォーム利用規約の最新バージョンを、下記APIで確認することができます。
+                - pxr-catalog-service [GET: /catalog/:code]
+          oneOf:
+            - $ref: "book-manage.yml#/components/schemas/CodeObject"
+      required:
+        - "identification"
+        - "userInformation"
+        - "platform_terms_of_use"
+    identification:
+      description: |
+        本人性確認書類または利用者管理情報
+      type: object
+      properties:
+        _code:
+          description: 本人性確認書類または利用者管理情報のカタログコード
+          oneOf:
+            - $ref: "book-manage.yml#/components/schemas/CodeObject"
+        item-group:
+          description: 項目グループの配列
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemGroup"
+      required:
+        - "_code"
+        - "item-group"
+    ItemGroup:
+      description: |
+        項目グループ
+        ※1つ以上の項目をグループ化します。
+        本人性確認書類の氏名欄が姓、名が2つの入力欄から構成されるような場合を想定して定義されています。
+      type: object
+      properties:
+        title:
+          description: 項目グループの名称
+          type: string
+        item:
+          description: 項目の配列
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+      required:
+        - "title"
+        - "item"
+    Item:
+      type: object
+      description: |
+        項目
+        ※本人性確認書類の券面に記載された項目を表します。
+        例えば運転免許証の氏名欄などが相当します。
+      properties:
+        title:
+          description: 項目の名称
+          type: string
+        type:
+          description:  項目の種別
+          type: object
+          $ref: "book-manage.yml#/components/schemas/CodeObject"
+        content:
+          description: |
+            項目の記入内容
+          oneOf:
+            - type: string
+            - type: boolean
+            - type: number
+        changeable-flag:
+          description:  ※未使用のパラメータです
+          deprecated: true
+          type: boolean
+      required:
+        - "title"
+        - "type"
+    PostBookOpenResDto:
+      description: MCB開設の結果オブジェクト
+      type: object
+      properties:
+        pxrId:
+          description: MCBに紐づく個人を識別するための個人識別子
+          type: string
+        loginId:
+          description: 個人がPxR-Root-Blockへログインする際に利用する個人識別子
+          type: string
+        initialPassword:
+          description: |
+            初回パスワード
+            - MCB開設処理の中で自動生成されます
+            - 初回パスワードの有効期限内にpxr-operator-serviceのオペレーター更新APIでパスワード変更を行う必要があります
+              - 有効期限はoperator-service-container.yamlのconfig.jsonのinitial_password_expireで設定します（単位:日）
+          type: string
+        attributes:
+          description: ※未使用のパラメータです
+          deprecated: true
+          type: object
+        appendix:
+          description: ※未使用のパラメータです
+          deprecated: true
+          type: object
+        identifyCode:
+          description: ※未使用のパラメータです
+          deprecated: true
+          type: string
+  examples:
+    MCB開設（最小限の設定）:
+      description: |-
+        最小限の設定でMCBを開設するためのサンプルです。
+        主な設定項目は以下の通り。
+        - PxR-ID
+        - 本人性確認書類（充足率100%の運転免許証を設定）
+        - 利用者管理情報（電話番号に空文字列を設定）
+      value: 【確認中】
