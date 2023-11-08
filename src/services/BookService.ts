@@ -63,6 +63,8 @@ export default class BookService {
 
                 // 検索条件リストの初期化
                 bookDto.setUserId(userInfo.getUserId());
+                bookDto.setApp(userInfo.appCatalogCode ? { _value: userInfo.appCatalogCode } : null);
+                bookDto.setWf(null);
 
                 // Blockコードを取得
                 const blockCode: number = await this.getBlockCode(userInfo.getActorCatalogCode(), dto);

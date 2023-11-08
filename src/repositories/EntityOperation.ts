@@ -36,6 +36,7 @@ import StoppedRegion from './postgres/StoppedRegion';
 import { Document, Event, Thing } from '../resources/dto/PostStoreEventNotificateReqDto';
 import StoreEventNotificateHistory from './postgres/StoreEventNotificateHistory';
 import e = require('express');
+import { ResponseCode } from '../common/ResponseCode';
 /* eslint-enable */
 
 /**
@@ -74,14 +75,28 @@ export default class EntityOperation {
      * @param bookId
      * @param userId
      */
-    static async getUserIdCooperateRecordFromUserId (userId: string): Promise<UserIdCooperate> {
+    static async getUserIdCooperateRecordFromUserId (userId: string, app: number, wf: number): Promise<UserIdCooperate> {
+        if (!app && !wf) {
+            throw new AppError(Message.EMPTY_WF_AND_APP, ResponseCode.BAD_REQUEST);
+        } else if (app && wf) {
+            throw new AppError(Message.SET_WF_AND_APP, ResponseCode.BAD_REQUEST);
+        }
         const connection = await connectDatabase();
         const repository = getRepository(UserIdCooperate, connection.name);
-        const entity = repository.createQueryBuilder('user_id_cooperate')
+        let entity = repository.createQueryBuilder('user_id_cooperate')
             .where('user_id_cooperate.is_disabled = :is_disabled', { is_disabled: false })
             .andWhere('user_id_cooperate.user_id = :user_id', { user_id: userId });
-        const result = await entity.getRawOne();
-        return result ? new UserIdCooperate(result) : null;
+        if (app) {
+            entity = entity.andWhere('user_id_cooperate.app_catalog_code = :app_catalog_code', { app_catalog_code: app });
+        }
+        if (wf) {
+            entity = entity.andWhere('user_id_cooperate.wf_catalog_code = :wf_catalog_code', { wf_catalog_code: wf });
+        }
+        const result = await entity.getRawMany();
+        if (!result || result.length !== 1) {
+            throw new AppError(Message.COULD_NOT_SPECIFY_USER_BOOK, ResponseCode.BAD_REQUEST);
+        }
+        return new UserIdCooperate(result[0]);
     }
 
     /**

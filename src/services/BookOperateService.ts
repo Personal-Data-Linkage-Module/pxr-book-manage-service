@@ -8,6 +8,10 @@ import Operator from '../resources/dto/OperatorReqDto';
 import OperatorDomain from '../domains/OperatorDomain';
 import ProxyRequestDomain from '../domains/ProxyRequestDomain';
 import ProxyService from './ProxyService';
+import AppError from '../common/AppError';
+import Config from '../common/Config';
+import { ResponseCode } from '../common/ResponseCode';
+const Message = Config.ReadConfig('./config/message.json');
 /* eslint-enable */
 
 /**
@@ -21,6 +25,9 @@ export default class BookOperateService {
      * @param operator
      */
     static async doLinkingGetBook (blockCode: number, body: {}, operator: OperatorDomain): Promise<any> {
+        if (!body['app']) {
+            throw new AppError(Message.EMPTY_WF_AND_APP, ResponseCode.BAD_REQUEST);
+        }
         // 送信データを生成
         const data = JSON.stringify(body);
 

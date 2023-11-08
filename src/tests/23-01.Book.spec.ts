@@ -1676,5 +1676,361 @@ describe('book-mange API', () => {
                 throw err;
             }
         });
+        describe('利用者ID重複対応追加ケース', () => {
+            // DoRequestメソッドのmock化
+            const doRequet = require('../common/DoRequest');
+            const mockDoPostRequest = jest.spyOn(doRequet, 'doPostRequest');
+            afterAll(async () => {
+                mockDoPostRequest.mockRestore();
+            });
+            beforeEach(async () => {
+                await common.executeSqlFile('initialData.sql');
+                await common.executeSqlFile('initialBookSearchPerson.sql');
+                mockDoPostRequest.mockClear();
+            });
+            describe('正常系', () => {
+                test('利用者ID連携テーブルに 同じuserIdの利用者が存在しない', async () => {
+                    operatorService = new StubOperatorServer(200, '437a5cbc10da802a887f5e057c88fdc64a927332871ad2a987dfcb7d224e7e00');
+                    catalogService = new StubCatalogServerGetBook(200);
+                    proxyService = new StubProxyBookServer(200);
+                    const response = await supertest(expressApp)
+                        .post(Url.bookURI)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: JSON.stringify(Session.pxrRootInd2) })
+                        .send({
+                            type: 'event',
+                            identifier: null,
+                            updatedAt: null,
+                            condition: null
+                        });
+                    try {
+                        expect(response.status).toBe(200);
+                        const bookSearchApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                        expect(bookSearchApiInfo.length).toBe(2);
+                        const requestBody1 = JSON.parse(bookSearchApiInfo[0][1]['body']);
+                        expect(requestBody1['userId']).toBe('userid03');
+                        expect(requestBody1['app']['_value']).toBe(1000481);
+                        expect(requestBody1['wf']).toBe(null);
+                        const requestBody2 = JSON.parse(bookSearchApiInfo[1][1]['body']);
+                        expect(requestBody2['userId']).toBe('userid04');
+                        expect(requestBody2['app']['_value']).toBe(1000461);
+                        expect(requestBody2['wf']).toBe(null);
+                    } catch (err) {
+                        console.log(response.body);
+                        throw err;
+                    }
+                });
+                test('利用者ID連携テーブルに 同じアクターの別APPに 同じuserIdの利用者が存在する', async () => {
+                    await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.user_id_cooperate
+                        (
+                            book_id,
+                            actor_catalog_code, actor_catalog_version,
+                            app_catalog_code, app_catalog_version,
+                            wf_catalog_code, wf_catalog_version,
+                            user_id,
+                            status,
+                            is_disabled,
+                            created_by,
+                            created_at,
+                            updated_by,
+                            updated_at
+                        )
+                        VALUES
+                        (
+                            2,
+                            1000004,1,
+                            1000482,1,
+                            null,null,
+                            'userid03',
+                            1,
+                            false,
+                            'pxr_user',
+                            NOW(),
+                            'pxr_user',
+                            NOW()
+                        );
+                    `);
+                    operatorService = new StubOperatorServer(200, '437a5cbc10da802a887f5e057c88fdc64a927332871ad2a987dfcb7d224e7e00');
+                    catalogService = new StubCatalogServerGetBook(200);
+                    proxyService = new StubProxyBookServer(200);
+                    const response = await supertest(expressApp)
+                        .post(Url.bookURI)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: JSON.stringify(Session.pxrRootInd2) })
+                        .send({
+                            type: 'event',
+                            identifier: null,
+                            updatedAt: null,
+                            condition: null
+                        });
+                    try {
+                        expect(response.status).toBe(200);
+                        const bookSearchApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                        expect(bookSearchApiInfo.length).toBe(3);
+                        for (const apiInfo of bookSearchApiInfo) {
+                            const requestBody = JSON.parse(apiInfo[1]['body']);
+                            if (requestBody['app'] && requestBody['app']['_value'] === 1000461) {
+                                expect(requestBody['userId']).toBe('userid04');
+                                expect(requestBody['wf']).toBe(null);
+                            } else if (requestBody['app'] && requestBody['app']['_value'] === 1000481) {
+                                expect(requestBody['userId']).toBe('userid03');
+                                expect(requestBody['wf']).toBe(null);
+                            } else {
+                                expect(requestBody['userId']).toBe('userid03');
+                                expect(requestBody['app']['_value']).toBe(1000482);
+                                expect(requestBody['wf']).toBe(null);
+                            }
+                        }
+                    } catch (err) {
+                        console.log(response.body);
+                        throw err;
+                    }
+                });
+                test('利用者ID連携テーブルに 別のアクターのAPPに 同じuserIdの利用者が存在する', async () => {
+                    await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.user_id_cooperate
+                        (
+                            book_id,
+                            actor_catalog_code, actor_catalog_version,
+                            app_catalog_code, app_catalog_version,
+                            wf_catalog_code, wf_catalog_version,
+                            user_id,
+                            status,
+                            is_disabled,
+                            created_by,
+                            created_at,
+                            updated_by,
+                            updated_at
+                        )
+                        VALUES
+                        (
+                            2,
+                            1000104,1,
+                            1000487,1,
+                            null,null,
+                            'userid04',
+                            1,
+                            false,
+                            'pxr_user',
+                            NOW(),
+                            'pxr_user',
+                            NOW()
+                        );
+                    `);
+                    operatorService = new StubOperatorServer(200, '437a5cbc10da802a887f5e057c88fdc64a927332871ad2a987dfcb7d224e7e00');
+                    catalogService = new StubCatalogServerGetBook(200);
+                    proxyService = new StubProxyBookServer(200);
+                    const response = await supertest(expressApp)
+                        .post(Url.bookURI)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: JSON.stringify(Session.pxrRootInd2) })
+                        .send({
+                            type: 'event',
+                            identifier: null,
+                            updatedAt: null,
+                            condition: null
+                        });
+                    try {
+                        expect(response.status).toBe(200);
+                        const bookSearchApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                        expect(bookSearchApiInfo.length).toBe(3);
+                        for (const apiInfo of bookSearchApiInfo) {
+                            const requestBody = JSON.parse(apiInfo[1]['body']);
+                            if (requestBody['app'] && requestBody['app']['_value'] === 1000461) {
+                                expect(requestBody['userId']).toBe('userid04');
+                                expect(requestBody['wf']).toBe(null);
+                            } else if (requestBody['app'] && requestBody['app']['_value'] === 1000481) {
+                                expect(requestBody['userId']).toBe('userid03');
+                                expect(requestBody['wf']).toBe(null);
+                            } else {
+                                expect(requestBody['userId']).toBe('userid04');
+                                expect(requestBody['app']['_value']).toBe(1000487);
+                                expect(requestBody['wf']).toBe(null);
+                            }
+                        }
+                    } catch (err) {
+                        console.log(response.body);
+                        throw err;
+                    }
+                });
+                test('利用者ID連携テーブルに 別の個人の 同じアクターの別APPに 同じuserIdの利用者が存在する', async () => {
+                    await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.user_id_cooperate
+                        (
+                            book_id,
+                            actor_catalog_code, actor_catalog_version,
+                            app_catalog_code, app_catalog_version,
+                            wf_catalog_code, wf_catalog_version,
+                            user_id,
+                            status,
+                            is_disabled,
+                            created_by,
+                            created_at,
+                            updated_by,
+                            updated_at
+                        )
+                        VALUES
+                        (
+                            1,
+                            1000004,1,
+                            1000483,1,
+                            null,null,
+                            'userid03',
+                            1,
+                            false,
+                            'pxr_user',
+                            NOW(),
+                            'pxr_user',
+                            NOW()
+                        );
+                    `);
+                    operatorService = new StubOperatorServer(200, '437a5cbc10da802a887f5e057c88fdc64a927332871ad2a987dfcb7d224e7e00');
+                    catalogService = new StubCatalogServerGetBook(200);
+                    proxyService = new StubProxyBookServer(200);
+                    const response = await supertest(expressApp)
+                        .post(Url.bookURI)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: JSON.stringify(Session.pxrRootInd2) })
+                        .send({
+                            type: 'event',
+                            identifier: null,
+                            updatedAt: null,
+                            condition: null
+                        });
+                    try {
+                        expect(response.status).toBe(200);
+                        const bookSearchApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                        expect(bookSearchApiInfo.length).toBe(2);
+                        const requestBody1 = JSON.parse(bookSearchApiInfo[0][1]['body']);
+                        expect(requestBody1['userId']).toBe('userid03');
+                        expect(requestBody1['app']['_value']).toBe(1000481);
+                        expect(requestBody1['wf']).toBe(null);
+                        const requestBody2 = JSON.parse(bookSearchApiInfo[1][1]['body']);
+                        expect(requestBody2['userId']).toBe('userid04');
+                        expect(requestBody2['app']['_value']).toBe(1000461);
+                        expect(requestBody2['wf']).toBe(null);
+                    } catch (err) {
+                        console.log(response.body);
+                        throw err;
+                    }
+                });
+                test('利用者ID連携テーブルに 別の個人の 別のアクターのAPPに 同じuserIdの利用者が存在する', async () => {
+                    await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.user_id_cooperate
+                        (
+                            book_id,
+                            actor_catalog_code, actor_catalog_version,
+                            app_catalog_code, app_catalog_version,
+                            wf_catalog_code, wf_catalog_version,
+                            user_id,
+                            status,
+                            is_disabled,
+                            created_by,
+                            created_at,
+                            updated_by,
+                            updated_at
+                        )
+                        VALUES
+                        (
+                            1,
+                            1000104,1,
+                            1000487,1,
+                            null,null,
+                            'userid04',
+                            1,
+                            false,
+                            'pxr_user',
+                            NOW(),
+                            'pxr_user',
+                            NOW()
+                        );
+                    `);
+                    operatorService = new StubOperatorServer(200, '437a5cbc10da802a887f5e057c88fdc64a927332871ad2a987dfcb7d224e7e00');
+                    catalogService = new StubCatalogServerGetBook(200);
+                    proxyService = new StubProxyBookServer(200);
+                    const response = await supertest(expressApp)
+                        .post(Url.bookURI)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: JSON.stringify(Session.pxrRootInd2) })
+                        .send({
+                            type: 'event',
+                            identifier: null,
+                            updatedAt: null,
+                            condition: null
+                        });
+                    try {
+                        expect(response.status).toBe(200);
+                        const bookSearchApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                        expect(bookSearchApiInfo.length).toBe(2);
+                        const requestBody1 = JSON.parse(bookSearchApiInfo[0][1]['body']);
+                        expect(requestBody1['userId']).toBe('userid03');
+                        expect(requestBody1['app']['_value']).toBe(1000481);
+                        expect(requestBody1['wf']).toBe(null);
+                        const requestBody2 = JSON.parse(bookSearchApiInfo[1][1]['body']);
+                        expect(requestBody2['userId']).toBe('userid04');
+                        expect(requestBody2['app']['_value']).toBe(1000461);
+                        expect(requestBody2['wf']).toBe(null);
+                    } catch (err) {
+                        console.log(response.body);
+                        throw err;
+                    }
+                });
+            });
+            describe('異常系', () => {
+                test('Book運用API呼び出しのリクエストに app が設定されていない（利用者ID連携のテーブルで不正な状態を作成）', async () => {
+                    await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.user_id_cooperate
+                        (
+                            book_id,
+                            actor_catalog_code, actor_catalog_version,
+                            app_catalog_code, app_catalog_version,
+                            wf_catalog_code, wf_catalog_version,
+                            user_id,
+                            status,
+                            is_disabled,
+                            created_by,
+                            created_at,
+                            updated_by,
+                            updated_at
+                        )
+                        VALUES
+                        (
+                            2,
+                            1000104,1,
+                            0,1,
+                            null,null,
+                            'userid01',
+                            1,
+                            false,
+                            'pxr_user',
+                            NOW(),
+                            'pxr_user',
+                            NOW()
+                        );
+                    `);
+                    operatorService = new StubOperatorServer(200, '437a5cbc10da802a887f5e057c88fdc64a927332871ad2a987dfcb7d224e7e00');
+                    catalogService = new StubCatalogServerGetBook(200);
+                    proxyService = new StubProxyBookServer(200);
+                    const response = await supertest(expressApp)
+                        .post(Url.bookURI)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: JSON.stringify(Session.pxrRootInd2) })
+                        .send({
+                            type: 'event',
+                            identifier: null,
+                            updatedAt: null,
+                            condition: null
+                        });
+                    try {
+                        expect(response.status).toBe(400);
+                        expect(response.body.message).toBe(Message.EMPTY_WF_AND_APP);
+                    } catch (err) {
+                        console.log(response.body);
+                        throw err;
+                    }
+                });
+            });
+        });
     });
 });

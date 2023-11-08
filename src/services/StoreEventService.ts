@@ -67,7 +67,9 @@ export default class StoreEventService {
     public async storeEventNotificateProcess (cmatrix: CMatrix, type: string, operator: Operator) {
         // PXR-IDを取得
         const userId = cmatrix.userId;
-        const userIdCooperate = await EntityOperation.getUserIdCooperateRecordFromUserId(userId);
+        const app: number = cmatrix.event.eventAppCatalogCode;
+        const wf: number = null;
+        const userIdCooperate = await EntityOperation.getUserIdCooperateRecordFromUserId(userId, app, wf);
         const book = await EntityOperation.getBookRecordById(userIdCooperate.bookId);
         const pxrId = book.pxrId;
 
@@ -318,16 +320,18 @@ export default class StoreEventService {
         entity.notificateType = res['eventType'];
         entity.processType = type;
         entity.userId = shareTargetUserId;
-        entity.dataId = data.docIdentifier;
         if (dataType === 'doc') {
+            entity.dataId = data.docIdentifier;
             entity.documentCatalogCode = data.docCatalogCode;
             entity.documentCatalogVersion = data.docCatalogVersion;
         }
         if (dataType === 'event') {
+            entity.dataId = data.eventIdentifier;
             entity.eventCatalogCode = data.eventCatalogCode;
             entity.eventCatalogVersion = data.eventCatalogVersion;
         }
         if (dataType === 'thing') {
+            entity.dataId = data.thingIdentifier;
             entity.thingCatalogCode = data.thingCatalogCode;
             entity.thingCatalogVersion = data.thingCatalogVersion;
         }

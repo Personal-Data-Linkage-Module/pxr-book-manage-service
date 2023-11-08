@@ -340,6 +340,7 @@ export default class Common {
     public async executeSqlString (sql: string) {
         // DBを初期化
         const connection = await connectDatabase();
-        await connection.query(sql);
+        const result = await connection.query(sql);
+        return result;
     }
 }
