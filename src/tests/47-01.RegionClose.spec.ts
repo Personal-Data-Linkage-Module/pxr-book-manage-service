@@ -342,7 +342,7 @@ describe('book-mange API', () => {
                         _value: 2000004,
                         _ver: 1
                     },
-                    endDate: 202112010000000000900
+                    endDate: 202112010000000000900 // eslint-disable-line no-loss-of-precision
                 }));
 
             // レスポンスチェック

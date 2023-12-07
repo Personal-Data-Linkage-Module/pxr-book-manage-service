@@ -19,73 +19,73 @@ export default class DataOperationDataType {
      * データ操作定義ID
      */
     @Column({ type: 'bigint', nullable: false, name: 'data_operation_id' })
-    dataOperationId: number = 0;
+        dataOperationId: number = 0;
 
     /**
      * 種別
      */
     @Column({ type: 'varchar', length: 255, name: 'catalog_uuid' })
-    catalogUuid: string;
+        catalogUuid: string;
 
     /**
      * ドキュメントカタログコード
      */
     @Column({ type: 'bigint', name: 'document_catalog_code' })
-    documentCatalogCode: number;
+        documentCatalogCode: number;
 
     /**
      * ドキュメントカタログバージョン
      */
     @Column({ type: 'bigint', name: 'document_catalog_version' })
-    documentCatalogVersion: number;
+        documentCatalogVersion: number;
 
     /**
      * イベントカタログコード
      */
     @Column({ type: 'bigint', name: 'event_catalog_code' })
-    eventCatalogCode: number;
+        eventCatalogCode: number;
 
     /**
      * イベントカタログバージョン
      */
     @Column({ type: 'bigint', name: 'event_catalog_version' })
-    eventCatalogVersion: number;
+        eventCatalogVersion: number;
 
     /**
      * モノカタログコード
      */
     @Column({ type: 'bigint', name: 'thing_catalog_code' })
-    thingCatalogCode: number;
+        thingCatalogCode: number;
 
     /**
      * モノカタログバージョン
      */
     @Column({ type: 'bigint', nullable: false, name: 'thing_catalog_version' })
-    thingCatalogVersion: number;
+        thingCatalogVersion: number;
 
     /**
      * 同意フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: true, name: 'consent_flg' })
-    consentFlg: boolean = true;
+        consentFlg: boolean = true;
 
     /**
      * 属性
      */
     @Column({ type: 'text' })
-    attributes: string = '';
+        attributes: string = '';
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -97,7 +97,7 @@ export default class DataOperationDataType {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

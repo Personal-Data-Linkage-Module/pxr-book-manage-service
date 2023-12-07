@@ -510,10 +510,10 @@ export default class BookOpenService {
         // 対象を大小英数字とする
         const c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         const cl = c.length;
-        var result = '';
+        let result = '';
 
         // 生成
-        for (var i = 0; i < digit; i++) {
+        for (let i = 0; i < digit; i++) {
             result += c[Math.floor(Math.random() * cl)];
         }
         return result;

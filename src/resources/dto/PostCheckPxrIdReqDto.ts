@@ -28,5 +28,5 @@ export default class PostCheckPxrIdReqDto {
     @IsString()
     @IsDefined()
     @IsNotEmpty()
-    pxrId: string;
+        pxrId: string;
 }

@@ -24,29 +24,29 @@ export default class GetOutputConditionReqDto {
     @IsDefined()
     @IsNumber()
     @Transform(transformToNumber)
-    offset: number;
+        offset: number;
 
     @IsDefined()
     @IsNumber()
     @Transform(transformToNumber)
-    limit: number = 10;
+        limit: number = 10;
 
     @IsOptional()
     @IsNumber()
     @Transform(transformToNumber)
-    id?: number;
+        id?: number;
 
     @IsOptional()
     @IsNumber()
     @Transform(transformToNumber)
-    mcdOutputCodeId?: number;
+        mcdOutputCodeId?: number;
 
     @IsOptional()
     @IsNumber()
     @Transform(transformToNumber)
-    approved?: number;
+        approved?: number;
 
     @IsOptional()
     @IsBoolean()
-    isServiceCanceled: boolean = false;
+        isServiceCanceled: boolean = false;
 }

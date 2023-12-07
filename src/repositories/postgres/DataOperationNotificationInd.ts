@@ -19,37 +19,37 @@ export default class DataOperationNotificationInd {
      * データ操作定義通知管理ID
      */
     @Column({ type: 'bigint', nullable: false, name: 'data_operation_notification_id' })
-    dataOperationNotificationId: number;
+        dataOperationNotificationId: number;
 
     /**
      * ブックID
      */
     @Column({ type: 'bigint', nullable: false, name: 'book_id' })
-    bookId: number;
+        bookId: number;
 
     /**
      * ステータス
      */
     @Column({ type: 'smallint', nullable: false, default: 0, name: 'status' })
-    status: number = 0;
+        status: number = 0;
 
     /**
      * 最終送付日時
      */
     @Column({ type: 'timestamp without time zone', name: 'last_sent_at' })
-    lastSentAt: Date;
+        lastSentAt: Date;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -61,7 +61,7 @@ export default class DataOperationNotificationInd {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

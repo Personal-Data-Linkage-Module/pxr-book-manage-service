@@ -22,5 +22,5 @@ export default class PostIdentitySearchReqDto {
     //    @IsString()
     @IsDefined()
     @IsNotEmpty()
-    pxrId: string;
+        pxrId: string;
 }

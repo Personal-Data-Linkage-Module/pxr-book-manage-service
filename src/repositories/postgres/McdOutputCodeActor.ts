@@ -19,109 +19,109 @@ export default class McdOutputCodeActor {
      * My-Condition-Data出力コードID
      */
     @Column({ type: 'bigint', nullable: false, name: 'mcd_output_code_id' })
-    mcdOutputCodeId: number;
+        mcdOutputCodeId: number;
 
     /**
      * 対象期間From
      */
     @Column({ type: 'timestamp without time zone', name: 'target_term_start' })
-    targetTermStart: Date;
+        targetTermStart: Date;
 
     /**
      * 対象期間To
      */
     @Column({ type: 'timestamp without time zone', name: 'target_term_end' })
-    targetTermEnd: Date;
+        targetTermEnd: Date;
 
     /**
      * アクターカタログコード
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_code' })
-    actorCatalogCode: number;
+        actorCatalogCode: number;
 
     /**
      * アクターカタログバージョン
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_version' })
-    actorCatalogVersion: number;
+        actorCatalogVersion: number;
 
     /**
      * アプリケーションカタログコード
      */
     @Column({ type: 'bigint', name: 'app_catalog_code' })
-    appCatalogCode: number;
+        appCatalogCode: number;
 
     /**
      * アプリケーションカタログバージョン
      */
     @Column({ type: 'bigint', name: 'app_catalog_version' })
-    appCatalogVersion: number;
+        appCatalogVersion: number;
 
     /**
      * WFカタログコード
      */
     @Column({ type: 'bigint', name: 'wf_catalog_code' })
-    wfCatalogCode: number;
+        wfCatalogCode: number;
 
     /**
      * WFカタログバージョン
      */
     @Column({ type: 'bigint', name: 'wf_catalog_version' })
-    wfCatalogVersion: number;
+        wfCatalogVersion: number;
 
     /**
      * 個別リクエスト
      */
     @Column({ type: 'varchar', length: 255, name: 'ind_request' })
-    indRequest: string;
+        indRequest: string;
 
     /**
      * 利用者ID連携解除指定（解除不要：0, 解除：1）
      */
     @Column({ type: 'smallint', nullable: false, name: 'release_cooperate_spec' })
-    releaseCooperateSpec: number;
+        releaseCooperateSpec: number;
 
     /**
      * 利用者ID連携解除ステータス（解除なし:0, 解除待ち：1, 解除済：2）
      */
     @Column({ type: 'smallint', nullable: false, name: 'release_cooperate_status' })
-    releaseCooperateStatus: number;
+        releaseCooperateStatus: number;
 
     /**
      * データ返却指定（返却不要：0, 返却：1）
      */
     @Column({ type: 'smallint', nullable: false, default: 0, name: 'return_data_spec' })
-    returnDataSpec: number;
+        returnDataSpec: number;
 
     /**
      * 承認ステータス（未回答：0, 承認：1, 否認：2）
      */
     @Column({ type: 'smallint', nullable: false, name: 'approval_status' })
-    approvalStatus: number;
+        approvalStatus: number;
 
     /**
      * 対応予定時期・対応内容/否認理由
      */
     @Column({ type: 'text' })
-    message: string = '';
+        message: string = '';
 
     /**
      * データ削除指定（削除不可：0, 削除可：1）
      */
     @Column({ type: 'smallint', nullable: false, default: 0, name: 'delete_data_spec' })
-    deleteDataSpec: number;
+        deleteDataSpec: number;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -133,7 +133,7 @@ export default class McdOutputCodeActor {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

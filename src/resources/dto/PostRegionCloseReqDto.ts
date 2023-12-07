@@ -32,14 +32,14 @@ export default class PostRegionCloseReqDto {
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    actor: Code;
+        actor: Code;
 
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    region: Code;
+        region: Code;
 
     @IsDefined()
     @IsString()
-    endDate: string;
+        endDate: string;
 }

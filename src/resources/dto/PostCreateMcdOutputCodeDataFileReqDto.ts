@@ -25,13 +25,13 @@ export class CodeObject {
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
-    _value: number;
+        _value: number;
 
     @Transform(transformToNumber)
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
-    _ver: number;
+        _ver: number;
 }
 
 /**
@@ -40,54 +40,54 @@ export class CodeObject {
 export default class PostCreateMcdOutputCodeDataFileReqDto {
     @IsOptional()
     @IsNumber()
-    mcdOutputCodeActorId: number;
+        mcdOutputCodeActorId: number;
 
     @IsDefined()
     @IsString()
-    code: string;
+        code: string;
 
     @IsOptional()
     @Type(() => CodeObject)
     @ValidateNested()
-    actor: CodeObject;
+        actor: CodeObject;
 
     @IsOptional()
     @IsNumber()
-    outputApproved: number;
+        outputApproved: number;
 
     @IsOptional()
     @IsNumber()
-    outputFileType: number;
+        outputFileType: number;
 
     @IsOptional()
     @IsNumber()
-    uploadFileType: number;
+        uploadFileType: number;
 
     @IsOptional()
     @IsNumber()
-    extDataRequested: number;
+        extDataRequested: number;
 
     @IsOptional()
     @IsString()
-    fileName: string;
+        fileName: string;
 
     @IsDefined()
     @IsNumber()
-    inputFileIsReady: number;
+        inputFileIsReady: number;
 
     @IsDefined()
     @IsNumber()
-    outputStatus: number;
+        outputStatus: number;
 
     @IsDefined()
     @IsNumber()
-    isDeleteTarget: number;
+        isDeleteTarget: number;
 
     @IsDefined()
     @IsNumber()
-    deleteStatus: number;
+        deleteStatus: number;
 
     @IsDefined()
     @IsNumber()
-    processing: number;
+        processing: number;
 }

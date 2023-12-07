@@ -32,7 +32,7 @@ export default class GetOutputCodeReqDto {
     @IsDefined()
     @IsNumber()
     @Transform(transformToNumber)
-    offset: number = 0;
+        offset: number = 0;
 
     /**
      * 取得件数
@@ -40,5 +40,5 @@ export default class GetOutputCodeReqDto {
     @IsDefined()
     @IsNumber()
     @Transform(transformToNumber)
-    limit: number = 10;
+        limit: number = 10;
 }

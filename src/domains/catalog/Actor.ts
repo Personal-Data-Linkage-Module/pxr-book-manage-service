@@ -12,25 +12,25 @@ import { IsNotEmptyArray } from '../../common/Transform';
 export class CatalogItem {
     @IsString()
     @IsNotEmpty()
-    ns: string;
+        ns: string;
 
     @IsDefined()
     @Type(type => CodeObject)
     @ValidateNested()
     @IsNotEmptyObject()
-    _code: CodeObject;
+        _code: CodeObject;
 }
 
 export class Template {
     @IsOptional()
     @Type(type => CodeObject)
     @ValidateNested({ each: true })
-    workflow: CodeObject[];
+        workflow: CodeObject[];
 
     @IsOptional()
     @Type(type => CodeObject)
     @ValidateNested({ each: true })
-    application: CodeObject[];
+        application: CodeObject[];
 }
 
 export default class {
@@ -38,7 +38,7 @@ export default class {
     @Type(type => CatalogItem)
     @ValidateNested()
     @IsNotEmptyObject()
-    catalogItem: CatalogItem;
+        catalogItem: CatalogItem;
 
     template: Template;
 }

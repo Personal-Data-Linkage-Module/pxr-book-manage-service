@@ -19,31 +19,31 @@ export default class ShareSourceSource {
      * 共有元指定データ種ID
      */
     @Column({ type: 'bigint', nullable: false, name: 'share_source_datatype_id' })
-    shareSourceDatatypeId: number = 0;
+        shareSourceDatatypeId: number = 0;
 
     /**
      * アクターカタログコード
      */
     @Column({ type: 'bigint', name: 'actor_catalog_code' })
-    actorCatalogCode: number = 0;
+        actorCatalogCode: number = 0;
 
     /**
      * アクターカタログバージョン
      */
     @Column({ type: 'bigint', name: 'actor_catalog_version' })
-    actorCatalogVersion: number = 0;
+        actorCatalogVersion: number = 0;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -55,7 +55,7 @@ export default class ShareSourceSource {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

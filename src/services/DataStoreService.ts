@@ -354,10 +354,12 @@ export default class DataStoreService {
             }
 
             // appとwfをオブジェクト化
-            const app = appCatalogCode ? {
-                _value: appCatalogCode,
-                _ver: userIdResult.getAppCatalogVersion()
-            } : null;
+            const app = appCatalogCode
+                ? {
+                    _value: appCatalogCode,
+                    _ver: userIdResult.getAppCatalogVersion()
+                }
+                : null;
             const wf: {} = null;
 
             // データ蓄積定義を取得
@@ -649,15 +651,17 @@ export default class DataStoreService {
                     resEle.document = resEle.document.length > 0 ? resEle.document : [];
                     const resEvent: any = { thing: [] };
                     await this.setEventData(dataType, storeCatalog, resEvent);
-                    resEle.event = resEvent.thing.length > 0 ? [
-                        {
-                            _code: {
-                                _value: dataType.eventCatalogCode,
-                                _ver: dataType.eventCatalogVersion
-                            },
-                            thing: resEvent.thing
-                        }
-                    ] : [];
+                    resEle.event = resEvent.thing.length > 0
+                        ? [
+                            {
+                                _code: {
+                                    _value: dataType.eventCatalogCode,
+                                    _ver: dataType.eventCatalogVersion
+                                },
+                                thing: resEvent.thing
+                            }
+                        ]
+                        : [];
                     if (resEle.event.length > 0 || resEle.document.length > 0) {
                         res.push(resEle);
                     }

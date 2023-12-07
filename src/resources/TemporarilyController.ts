@@ -1077,10 +1077,12 @@ export default class {
             }
         }
 
-        return isEnabled ? {
-            actor: actor,
-            app: app,
-            wf: null
-        } : null;
+        return isEnabled
+            ? {
+                actor: actor,
+                app: app,
+                wf: null
+            }
+            : null;
     }
 }

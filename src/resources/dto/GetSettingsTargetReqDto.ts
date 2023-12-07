@@ -20,10 +20,10 @@ export default class GetSettingsTargetReqDto {
     @IsDefined()
     @IsNumber()
     @Transform(transformToNumber)
-    offset: number = 0;
+        offset: number = 0;
 
     @IsDefined()
     @IsNumber()
     @Transform(transformToNumber)
-    limit: number = 10;
+        limit: number = 10;
 }

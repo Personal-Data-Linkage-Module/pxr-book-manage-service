@@ -79,11 +79,11 @@ export class UserInformation {
 export default class PostUserInfoReqDto {
     /** pxrId */
     @IsString()
-    pxrId: string;
+        pxrId: string;
 
     /** userInfo */
     @IsDefined()
     @Type(() => UserInformation)
     @ValidateNested()
-    userInfo: UserInformation;
+        userInfo: UserInformation;
 }

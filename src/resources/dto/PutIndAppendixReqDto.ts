@@ -11,5 +11,5 @@ export default class PutIndAppendixReqDto {
      */
     @IsDefined()
     @IsObject()
-    appendix: object;
+        appendix: object;
 }

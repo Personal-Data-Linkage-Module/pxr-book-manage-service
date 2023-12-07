@@ -277,18 +277,24 @@ export default class StoreEventService {
             operate: type,
             userId: shareTargetUserId,
             identifier: data[dataType + 'Identifier'],
-            document: data.docCatalogCode ? {
-                _value: data.docCatalogCode,
-                _ver: data.docCatalogVersion
-            } : undefined,
-            event: data.eventCatalogCode ? {
-                _value: data.eventCatalogCode,
-                _ver: data.eventCatalogVersion
-            } : undefined,
-            thing: data.thingCatalogCode ? {
-                _value: data.thingCatalogCode,
-                _ver: data.thingCatalogVersion
-            } : undefined,
+            document: data.docCatalogCode
+                ? {
+                    _value: data.docCatalogCode,
+                    _ver: data.docCatalogVersion
+                }
+                : undefined,
+            event: data.eventCatalogCode
+                ? {
+                    _value: data.eventCatalogCode,
+                    _ver: data.eventCatalogVersion
+                }
+                : undefined,
+            thing: data.thingCatalogCode
+                ? {
+                    _value: data.thingCatalogCode,
+                    _ver: data.thingCatalogVersion
+                }
+                : undefined,
             sourceActor: {
                 _value: data[dataType + 'ActorCode'],
                 _ver: data[dataType + 'ActorVersion']

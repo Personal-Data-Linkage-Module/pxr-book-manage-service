@@ -33,12 +33,12 @@ class CreatedAt {
     @Transform(transformToDateTime)
     @IsDate()
     @IsOptional()
-    start: Date;
+        start: Date;
 
     @Transform(transformToDateTime)
     @IsDate()
     @IsOptional()
-    end: Date;
+        end: Date;
 }
 
 export default class PostSearchReqDto {
@@ -48,28 +48,28 @@ export default class PostSearchReqDto {
     @IsString({ each: true })
     @IsNotEmptyArray()
     @IsStringEmptyInArray()
-    pxrId: string[];
+        pxrId: string[];
 
     /** createdAt */
     @IsOptional()
     @Type(() => CreatedAt)
     @ValidateNested()
-    createdAt: CreatedAt;
+        createdAt: CreatedAt;
 
     /** offset */
     @Min(0)
     @IsNumber()
     @IsOptional()
-    offset: number = null;
+        offset: number = null;
 
     /** limit */
     @Min(1)
     @IsNumber()
     @IsOptional()
-    limit: number = null;
+        limit: number = null;
 
     /** includeDeleteCoop */
     @IsBoolean()
     @IsOptional()
-    includeDeleteCoop: boolean = null;
+        includeDeleteCoop: boolean = null;
 }

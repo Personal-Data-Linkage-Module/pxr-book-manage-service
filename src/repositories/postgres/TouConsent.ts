@@ -19,37 +19,37 @@ export default class TouConsent {
      * ブックID
      */
     @Column({ type: 'bigint', nullable: false, name: 'book_id' })
-    bookId: number = 0;
+        bookId: number = 0;
 
     /**
      * 規約タイプ
      */
     @Column({ type: 'bigint', nullable: false, name: 'terms_type' })
-    termsType: number = 0;
+        termsType: number = 0;
 
     /**
      * 利用規約カタログコード
      */
     @Column({ type: 'bigint', nullable: false, name: 'terms_of_use_code' })
-    termsOfUseCode: number = 0;
+        termsOfUseCode: number = 0;
 
     /**
      * 利用規約カタログバージョン
      */
     @Column({ type: 'bigint', nullable: false, name: 'terms_of_use_version' })
-    termsOfUseVersion: number = 0;
+        termsOfUseVersion: number = 0;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -61,7 +61,7 @@ export default class TouConsent {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

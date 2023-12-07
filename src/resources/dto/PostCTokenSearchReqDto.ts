@@ -36,5 +36,5 @@ export class startEnd {
 
 export default class PostCTokenSearchReqDto {
     @IsOptional()
-    createAt: startEnd;
+        createAt: startEnd;
 }

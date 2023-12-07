@@ -24,15 +24,15 @@ export default class PostSearchCooperateReqDto {
     /** actor */
     @IsNumber()
     @IsDefined()
-    actor: number = null;
+        actor: number = null;
 
     /** app */
     @IsNumber()
     @IsOptional()
-    app: number = null;
+        app: number = null;
 
     /** wf */
     @IsNumber()
     @IsOptional()
-    wf: number = null;
+        wf: number = null;
 }

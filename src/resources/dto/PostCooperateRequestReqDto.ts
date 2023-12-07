@@ -32,29 +32,29 @@ export class Code {
 export default class PostCooperateRequestReqDto {
     @IsOptional()
     @IsString()
-    pxrId?: string;
+        pxrId?: string;
 
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    actor: Code;
+        actor: Code;
 
     @IsOptional()
     @Type(() => Code)
     @ValidateNested()
-    region?: Code | null;
+        region?: Code | null;
 
     @IsOptional()
     @Type(() => Code)
     @ValidateNested()
-    app?: Code | null;
+        app?: Code | null;
 
     @IsOptional()
     @Type(() => Code)
     @ValidateNested()
-    wf?: Code | null;
+        wf?: Code | null;
 
     @IsOptional()
     @IsString()
-    userId?: string;
+        userId?: string;
 }

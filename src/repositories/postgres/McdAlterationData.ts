@@ -19,73 +19,73 @@ export default class McdAlterationData {
      * 利用者データ変更アクターID
      */
     @Column({ type: 'bigint', nullable: false, name: 'mcd_alteration_actor_id' })
-    mcdAlterationActorId: number;
+        mcdAlterationActorId: number;
 
     /**
      * ドキュメントカタログコード
      */
     @Column({ type: 'bigint', name: 'document_catalog_code' })
-    documentCatalogCode: number;
+        documentCatalogCode: number;
 
     /**
      * ドキュメントカタログバージョン
      */
     @Column({ type: 'bigint', name: 'document_catalog_version' })
-    documentCatalogVersion: number;
+        documentCatalogVersion: number;
 
     /**
      * ドキュメント識別子
      */
     @Column({ type: 'varchar', length: 255, name: 'document_id' })
-    documentId: string;
+        documentId: string;
 
     /**
      * イベントカタログコード
      */
     @Column({ type: 'bigint', name: 'event_catalog_code' })
-    eventCatalogCode: number;
+        eventCatalogCode: number;
 
     /**
      * イベントカタログバージョン
      */
     @Column({ type: 'bigint', name: 'event_catalog_version' })
-    eventCatalogVersion: number;
+        eventCatalogVersion: number;
 
     /**
      * イベント識別子
      */
     @Column({ type: 'varchar', length: 255, name: 'event_id' })
-    eventId: string;
+        eventId: string;
 
     /**
      * モノカタログコード
      */
     @Column({ type: 'bigint', name: 'thing_catalog_code' })
-    thingCatalogCode: number;
+        thingCatalogCode: number;
 
     /**
      * モノカタログバージョン
      */
     @Column({ type: 'bigint', name: 'thing_catalog_version' })
-    thingCatalogVersion: number;
+        thingCatalogVersion: number;
 
     /**
      * モノ識別子
      */
     @Column({ type: 'varchar', length: 255, name: 'thing_id' })
-    thingId: string;
+        thingId: string;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -97,7 +97,7 @@ export default class McdAlterationData {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

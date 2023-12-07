@@ -19,85 +19,85 @@ export default class McdAlterationActor {
      * My-Condition-Data変更請求ID
      */
     @Column({ type: 'bigint', nullable: false, name: 'mcd_alteration_id' })
-    mcdAlterationId: number = 0;
+        mcdAlterationId: number = 0;
 
     /**
      * 対象期間From
      */
     @Column({ type: 'timestamp without time zone', name: 'target_term_start' })
-    targetTermStart: Date;
+        targetTermStart: Date;
 
     /**
      * 対象期間To
      */
     @Column({ type: 'timestamp without time zone', name: 'target_term_end' })
-    targetTermEnd: Date;
+        targetTermEnd: Date;
 
     /**
      * アクターカタログコード
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_code' })
-    actorCatalogCode: number = 0;
+        actorCatalogCode: number = 0;
 
     /**
      * アクターカタログバージョン
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_version' })
-    actorCatalogVersion: number = 0;
+        actorCatalogVersion: number = 0;
 
     /**
      * アプリケーションカタログコード
      */
     @Column({ type: 'bigint', name: 'app_catalog_code' })
-    appCatalogCode: number;
+        appCatalogCode: number;
 
     /**
      * アプリケーションカタログバージョン
      */
     @Column({ type: 'bigint', name: 'app_catalog_version' })
-    appCatalogVersion: number;
+        appCatalogVersion: number;
 
     /**
      * WFカタログコード
      */
     @Column({ type: 'bigint', name: 'wf_catalog_code' })
-    wfCatalogCode: number;
+        wfCatalogCode: number;
 
     /**
      * WFカタログバージョン
      */
     @Column({ type: 'bigint', name: 'wf_catalog_version' })
-    wfCatalogVersion: number;
+        wfCatalogVersion: number;
 
     /**
      * 変更内容
      */
     @Column({ type: 'text' })
-    alteration: string = '';
+        alteration: string = '';
 
     /**
      * 承認ステータス（未回答：0, 承認：1, 否認：2）
      */
     @Column({ type: 'smallint', nullable: false, name: 'approval_status' })
-    approvalStatus: number = 0;
+        approvalStatus: number = 0;
 
     /**
      * 対応予定時期・対応内容/否認理由
      */
     @Column({ type: 'text' })
-    message: string = '';
+        message: string = '';
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -109,7 +109,7 @@ export default class McdAlterationActor {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

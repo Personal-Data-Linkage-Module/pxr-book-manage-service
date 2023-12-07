@@ -23,70 +23,70 @@ export class Document {
     @IsUUID()
     @IsDefined()
     @Expose({ name: '2_n_1_1' })
-    docIdentifier: string;
+        docIdentifier: string;
 
     /** ドキュメント種別カタログコード */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '2_n_1_2_1' })
-    docCatalogCode: number;
+        docCatalogCode: number;
 
     /** ドキュメント種別カタログバージョン */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '2_n_1_2_2' })
-    docCatalogVersion: number;
+        docCatalogVersion: number;
 
     /** ドキュメント作成時間 */
     @IsDate()
     @IsDefined()
     @Transform(transformToDateTime)
     @Expose({ name: '2_n_2_1' })
-    docCreateAt: Date;
+        docCreateAt: Date;
 
     /** ドキュメントを発生させたアクター識別子カタログコード */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '2_n_3_1_1' })
-    docActorCode: number;
+        docActorCode: number;
 
     /** ドキュメントを発生させたアクター識別子カタログバージョン */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '2_n_3_1_2' })
-    docActorVersion: number;
+        docActorVersion: number;
 
     /** ワークフロー識別子カタログコード */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '2_n_3_2_1' })
-    docWfCatalogCode: number = null;
+        docWfCatalogCode: number = null;
 
     /** ワークフロー識別子カタログバージョン */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '2_n_3_2_2' })
-    docWfCatalogVersion: number = null;
+        docWfCatalogVersion: number = null;
 
     /** アプリケーション識別子カタログコード */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '2_n_3_5_1' })
-    docAppCatalogCode: number = null;
+        docAppCatalogCode: number = null;
 
     /** アプリケーション識別子カタログバージョン */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '2_n_3_5_2' })
-    docAppCatalogVersion: number = null;
+        docAppCatalogVersion: number = null;
 }
 
 export class Event {
@@ -94,77 +94,77 @@ export class Event {
     @IsUUID()
     @IsDefined()
     @Expose({ name: '3_1_1' })
-    eventIdentifier: string;
+        eventIdentifier: string;
 
     /** イベント種別カタログコード */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '3_1_2_1' })
-    eventCatalogCode: number;
+        eventCatalogCode: number;
 
     /** イベント種別カタログバージョン */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '3_1_2_2' })
-    eventCatalogVersion: number;
+        eventCatalogVersion: number;
 
     /** イベント開始時間 */
     @IsDate()
     @IsOptional()
     @Transform(transformToDateTime)
     @Expose({ name: '3_2_1' })
-    eventStartAt: Date;
+        eventStartAt: Date;
 
     /** イベント終了時間 */
     @IsDate()
     @IsOptional()
     @Transform(transformToDateTime)
     @Expose({ name: '3_2_2' })
-    eventEndAt: Date;
+        eventEndAt: Date;
 
     /** イベントを発生させたアクター識別子カタログコード */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '3_5_1_1' })
-    eventActorCode: number;
+        eventActorCode: number;
 
     /** イベントを発生させたアクター識別子カタログバージョン */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '3_5_1_2' })
-    eventActorVersion: number;
+        eventActorVersion: number;
 
     /** ワークフロー識別子カタログコード */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '3_5_2_1' })
-    eventWfCatalogCode: number = null;
+        eventWfCatalogCode: number = null;
 
     /** ワークフロー識別子カタログバージョン */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '3_5_2_2' })
-    eventWfCatalogVersion: number = null;
+        eventWfCatalogVersion: number = null;
 
     /** アプリケーション識別子カタログコード */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '3_5_5_1' })
-    eventAppCatalogCode: number = null;
+        eventAppCatalogCode: number = null;
 
     /** アプリケーション識別子カタログバージョン */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '3_5_5_2' })
-    eventAppCatalogVersion: number = null;
+        eventAppCatalogVersion: number = null;
 }
 
 export class Thing {
@@ -172,74 +172,74 @@ export class Thing {
     @IsUUID()
     @IsDefined()
     @Expose({ name: '4_1_1' })
-    thingIdentifier: string;
+        thingIdentifier: string;
 
     /** モノ識別子カタログコード */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '4_1_2_1' })
-    thingCatalogCode: number;
+        thingCatalogCode: number;
 
     /** モノ識別子カタログバージョン */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '4_1_2_2' })
-    thingCatalogVersion: number;
+        thingCatalogVersion: number;
 
     /** モノを発生させたアクター識別子カタログコード */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '4_4_1_1' })
-    thingActorCode: number;
+        thingActorCode: number;
 
     /** モノを発生させたアクター識別子カタログバージョン */
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
     @Expose({ name: '4_4_1_2' })
-    thingActorVersion: number;
+        thingActorVersion: number;
 
     /** ワークフロー識別子カタログコード */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '4_4_2_1' })
-    thingWfCatalogCode: number = null;
+        thingWfCatalogCode: number = null;
 
     /** ワークフロー識別子カタログバージョン */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '4_4_2_2' })
-    thingWfCatalogVersion: number = null;
+        thingWfCatalogVersion: number = null;
 
     /** アプリケーション識別子カタログコード */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '4_4_5_1' })
-    thingAppCatalogCode: number = null;
+        thingAppCatalogCode: number = null;
 
     /** アプリケーション識別子カタログバージョン */
     @IsNumber()
     @IsOptional()
     @Transform(transformToNumber)
     @Expose({ name: '4_4_5_2' })
-    thingAppCatalogVersion: number = null;
+        thingAppCatalogVersion: number = null;
 
     /** 行ハッシュ */
     @IsString()
     @IsDefined()
-    rowHash: string;
+        rowHash: string;
 
     /** 行ハッシュ生成時間 */
     @IsDate()
     @IsDefined()
     @Transform(transformToDateTime)
-    rowHashCreateAt: Date;
+        rowHashCreateAt: Date;
 }
 
 export class CMatrix {
@@ -247,20 +247,20 @@ export class CMatrix {
     @IsString()
     @IsDefined()
     @Expose({ name: '1_1' })
-    userId: string;
+        userId: string;
 
     /** Document */
     @IsArray()
     @IsDefined()
     @ValidateNested()
     @Type(() => Document)
-    document: Document[];
+        document: Document[];
 
     /** Event */
     @IsDefined()
     @ValidateNested()
     @Type(() => Event)
-    event: Event;
+        event: Event;
 
     /** Thing */
     @ArrayNotEmpty()
@@ -268,7 +268,7 @@ export class CMatrix {
     @IsDefined()
     @ValidateNested()
     @Type(() => Thing)
-    thing: Thing[];
+        thing: Thing[];
 }
 
 export default class PostStoreEventNotificateReqDto {
@@ -277,19 +277,19 @@ export default class PostStoreEventNotificateReqDto {
     @IsDefined()
     @ValidateNested()
     @Type(() => CMatrix)
-    add: CMatrix[];
+        add: CMatrix[];
 
     /** update */
     @IsArray()
     @IsDefined()
     @ValidateNested()
     @Type(() => CMatrix)
-    update: CMatrix[];
+        update: CMatrix[];
 
     /** delete */
     @IsArray()
     @IsDefined()
     @ValidateNested()
     @Type(() => CMatrix)
-    delete: CMatrix[];
+        delete: CMatrix[];
 }

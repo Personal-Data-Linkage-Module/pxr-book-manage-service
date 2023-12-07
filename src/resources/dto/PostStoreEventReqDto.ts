@@ -12,12 +12,12 @@ export class CodeObject {
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
-    _value: number;
+        _value: number;
 
     @IsNumber()
     @IsDefined()
     @Transform(transformToNumber)
-    _ver: number;
+        _ver: number;
 }
 /**
  * 蓄積イベント通知定義更新リクエストDTO
@@ -26,24 +26,24 @@ export default class PostStoreEventReqDto {
     @IsDefined()
     @IsNotEmpty()
     @IsString()
-    type: string;
+        type: string;
 
     @IsDefined()
     @IsNotEmptyObject()
     @Type(() => CodeObject)
     @ValidateNested()
-    notificateCatalog: CodeObject;
+        notificateCatalog: CodeObject;
 
     @IsDefined()
     @IsNotEmptyObject()
     @Type(() => CodeObject)
     @ValidateNested()
-    shareCode: CodeObject;
+        shareCode: CodeObject;
 
     @IsDefined()
     @IsNotEmpty()
     @IsArray()
     @IsUUID('all', { each: true })
     @Expose({ name: 'shareUUID' })
-    shareUuid: string[];
+        shareUuid: string[];
 }

@@ -117,28 +117,28 @@ export default class PostOutputPrepareReqDto {
     @IsDefined()
     @IsNumber()
     @IsNotEmpty()
-    type: number;
+        type: number;
 
     /** Pxr-ID */
     @IsOptional()
     @IsString()
-    pxrId: string;
+        pxrId: string;
 
     /** actor */
     @IsOptional()
     @Type(() => CodeObject)
     @ValidateNested()
-    actor: CodeObject;
+        actor: CodeObject;
 
     /** region */
     @IsOptional()
     @Type(() => CodeObject)
     @ValidateNested()
-    region: CodeObject;
+        region: CodeObject;
 
     /** 利用者ID連携解除フラグ */
     @Transform(transformToBooleanFromString)
     @IsOptional()
     @IsBoolean()
-    cooperationRelease: boolean;
+        cooperationRelease: boolean;
 }

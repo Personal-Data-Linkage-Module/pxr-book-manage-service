@@ -300,14 +300,18 @@ export default class BookService {
                             _value: userIdCooperate.actorCatalogCode,
                             _ver: userIdCooperate.actorCatalogVersion
                         },
-                        region: userIdCooperate.regionCatalogCode ? {
-                            _value: userIdCooperate.regionCatalogCode,
-                            _ver: userIdCooperate.regionCatalogVersion
-                        } : undefined,
-                        app: userIdCooperate.appCatalogCode ? {
-                            _value: userIdCooperate.appCatalogCode,
-                            _ver: userIdCooperate.appCatalogVersion
-                        } : undefined,
+                        region: userIdCooperate.regionCatalogCode
+                            ? {
+                                _value: userIdCooperate.regionCatalogCode,
+                                _ver: userIdCooperate.regionCatalogVersion
+                            }
+                            : undefined,
+                        app: userIdCooperate.appCatalogCode
+                            ? {
+                                _value: userIdCooperate.appCatalogCode,
+                                _ver: userIdCooperate.appCatalogVersion
+                            }
+                            : undefined,
                         wf: undefined,
                         userId: userIdCooperate.userId,
                         status: userIdCooperate.status
@@ -353,10 +357,12 @@ export default class BookService {
                 identification: identifications,
                 cooperation: cooperations,
                 termsOfUse: {
-                    platform: platformTouConsent ? {
-                        _value: platformTouConsent.termsOfUseCode,
-                        _ver: platformTouConsent.termsOfUseVersion
-                    } : {},
+                    platform: platformTouConsent
+                        ? {
+                            _value: platformTouConsent.termsOfUseCode,
+                            _ver: platformTouConsent.termsOfUseVersion
+                        }
+                        : {},
                     region: resRegion
                 },
                 appendix: book.appendix ? JSON.parse(book.appendix) : null

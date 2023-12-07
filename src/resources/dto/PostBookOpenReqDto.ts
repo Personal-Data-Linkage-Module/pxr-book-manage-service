@@ -33,45 +33,45 @@ export class CodeObject {
     @IsDefined()
     @IsNumber()
     @Transform(transformToNumber)
-    _value: number;
+        _value: number;
 
     @IsDefined()
     @IsNumber()
     @Transform(transformToNumber)
-    _ver: number;
+        _ver: number;
 }
 
 export class Item {
     @IsNotEmpty()
     @IsString()
-    title: string;
+        title: string;
 
     @IsDefined()
     @Type(() => CodeObject)
     @ValidateNested()
     @IsNotEmptyObject()
-    type: CodeObject;
+        type: CodeObject;
 
     @IsOptional()
-    content: string | boolean | number | undefined | null;
+        content: string | boolean | number | undefined | null;
 
     @IsBoolean()
     @IsOptional()
     @Transform(transformToBooleanFromString)
-    'changeable-flag': boolean;
+        'changeable-flag': boolean;
 }
 
 export class ItemGroup {
     @IsNotEmpty()
     @IsString()
-    title: string;
+        title: string;
 
     @IsDefined()
     @IsArray()
     @Type(() => Item)
     @ValidateNested({ each: true })
     @IsNotEmptyArray()
-    item: Item[]
+        item: Item[];
 }
 
 export class Identification {
@@ -79,14 +79,14 @@ export class Identification {
     @Type(() => CodeObject)
     @ValidateNested()
     @IsNotEmptyObject()
-    _code: CodeObject;
+        _code: CodeObject;
 
     @IsDefined()
     @IsArray()
     @Type(() => ItemGroup)
     @ValidateNested({ each: true })
     @IsNotEmptyArray()
-    'item-group': ItemGroup[];
+        'item-group': ItemGroup[];
 }
 
 export default class PostBookOpenReqDto {
@@ -94,31 +94,31 @@ export default class PostBookOpenReqDto {
     @IsString()
     @IsOptional()
     @IsNotEmpty()
-    pxrId: string;
+        pxrId: string;
 
     /** loginId */
     @IsString()
     @IsOptional()
     @IsNotEmpty()
-    loginId: string;
+        loginId: string;
 
     /** userId */
     @IsString()
     @IsOptional()
-    userId: string;
+        userId: string;
 
     /** idServiceFlg */
     @IsOptional()
     @IsBoolean()
-    idServiceFlg: boolean;
+        idServiceFlg: boolean;
 
     /** attributes */
     @IsOptional()
-    attributes: any = null;
+        attributes: any = null;
 
     /** appendix */
     @IsOptional()
-    appendix: any = null;
+        appendix: any = null;
 
     /** identification */
     @IsDefined()
@@ -126,18 +126,18 @@ export default class PostBookOpenReqDto {
     @Type(() => Identification)
     @ValidateNested({ each: true })
     @IsNotEmptyArray()
-    identification: Identification[];
+        identification: Identification[];
 
     /** userInformation */
     @IsDefined()
     @Type(() => Identification)
     @ValidateNested()
-    userInformation: Identification;
+        userInformation: Identification;
 
     /** platform_terms_of_use */
     @IsDefined()
     @Type(() => CodeObject)
     @ValidateNested()
     @IsNotEmpty()
-    'platform_terms_of_use': CodeObject;
+        'platform_terms_of_use': CodeObject;
 }

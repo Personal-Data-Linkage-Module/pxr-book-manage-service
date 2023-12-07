@@ -29,29 +29,29 @@ export class Code {
 export default class PostCooperateUserReqDto {
     @IsString()
     @IsDefined()
-    pxrId: string;
+        pxrId: string;
 
     @IsString()
     @IsDefined()
-    userId: string;
+        userId: string;
 
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    actor: Code;
+        actor: Code;
 
     @IsOptional()
     @Type(() => Code)
     @ValidateNested()
-    region?: Code | null;
+        region?: Code | null;
 
     @IsOptional()
     @Type(() => Code)
     @ValidateNested()
-    app?: Code | null;
+        app?: Code | null;
 
     @IsOptional()
     @Type(() => Code)
     @ValidateNested()
-    wf?: Code | null;
+        wf?: Code | null;
 }
