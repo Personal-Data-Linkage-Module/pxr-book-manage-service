@@ -948,7 +948,7 @@ export default class EntityOperation {
     static async getIdentifications (operator: Operator, message: any) {
         const connection = await connectDatabase();
         const pxrId = operator.getPxrId();
-        const entity = await connection.getRepository(MyConditionBook).findOne({
+        const entity = await connection.getRepository(MyConditionBook).findOneBy({
             pxrId: pxrId,
             isDisabled: false
         });
@@ -1125,7 +1125,7 @@ export default class EntityOperation {
      */
     static async findBookWithPxrIdAndChecksDeletionFlag (pxrId: string, flag: boolean) {
         const result = await getConnection('postgres').getRepository(MyConditionBook)
-            .findOne({
+            .findOneBy({
                 pxrId: pxrId,
                 isDisabled: false
             });
@@ -1839,7 +1839,7 @@ export default class EntityOperation {
     static async getMyConditionDataOutputCodeById (id: number): Promise<MyConditionDataOutputCode> {
         const connection = await connectDatabase();
         const repository = connection.getRepository(MyConditionDataOutputCode);
-        return repository.findOne({
+        return repository.findOneBy({
             id: id,
             isDisabled: false
         });
@@ -1891,7 +1891,7 @@ export default class EntityOperation {
     static async getMcdOutputCodeDataFileById (id: number): Promise<McdOutputCodeDataFile> {
         const connection = await connectDatabase();
         const repository = connection.getRepository(McdOutputCodeDataFile);
-        return repository.findOne({
+        return repository.findOneBy({
             id: id,
             isDisabled: false
         });

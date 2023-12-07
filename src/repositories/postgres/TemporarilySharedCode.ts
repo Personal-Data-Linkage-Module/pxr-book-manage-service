@@ -11,7 +11,7 @@ export default class TemporarilySharedCode {
     /**
      * ID
      */
-    @PrimaryGeneratedColumn({ type: 'uuid' })
+    @PrimaryGeneratedColumn("uuid")
     readonly id!: string;
 
     /**
