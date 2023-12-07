@@ -31,6 +31,7 @@ describe('book-mange API', () => {
      * 全テスト実行の後処理
      */
     afterAll(async () => {
+        await common.disconnect();
         app.stop();
     });
     /**
