@@ -42,7 +42,7 @@ import EntityOperation from '../repositories/EntityOperation';
 import CatalogDto from './dto/CatalogDto';
 import { DateTimeFormatString } from '../common/Transform';
 import moment = require('moment');
-import uuid = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 const Message = Config.ReadConfig('./config/message.json');
 const Configure = Config.ReadConfig('./config/config.json');
 
@@ -488,7 +488,7 @@ export default class OutputService {
         }
 
         // 4. コードを発行する
-        const code = uuid();
+        const code = uuidv4();
 
         // 5. カタログ GET /catalog/name でext_nameを取得する
         const catalogDto = new CatalogDto();
