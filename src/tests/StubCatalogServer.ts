@@ -18051,7 +18051,7 @@ export class StubCatalogServerTermsOfUse {
                                     _value: '1000001',
                                     _ver: '1'
                                 },
-                                'period-of-re-consent': '2023-01-01T00:00:00.000+0900'
+                                'period-of-re-consent': '2500-01-01T00:00:00.000+0900'
                             }
                         });
                     } else if (code === 1001008) {
@@ -18065,7 +18065,7 @@ export class StubCatalogServerTermsOfUse {
                                     _value: '1000001',
                                     _ver: '1'
                                 },
-                                'period-of-re-consent': '2023-01-01T00:00:00.000+0900'
+                                'period-of-re-consent': '2500-01-01T00:00:00.000+0900'
                             }
                         });
                     }
