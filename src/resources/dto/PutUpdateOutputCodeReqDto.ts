@@ -24,13 +24,13 @@ import { transformToNumber, transformToDateTime } from '../../common/Transform';
  * PUT: My-Condition-Data出力コード更新APIのリクエストDTO
  */
 export class CodeVersionObject {
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
     _value: number;
 
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsDefined()
     _ver: number;
@@ -110,7 +110,7 @@ export default class PutUpdateOutputCodeReqDto {
     /**
      * 署名付きURL出力有効期限
      */
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsOptional()
     @IsDate()
     expirationDate: Date;

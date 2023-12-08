@@ -24,13 +24,13 @@ import { transformToNumber, transformToDateTime } from '../../common/Transform';
  * POST: My-Condition-Data出力コード取得APIのリクエストDTO
  */
 export class CodeVersionObject {
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
     _value: number;
 
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsOptional()
     _ver: number;
@@ -109,7 +109,7 @@ export default class PostGetOutputCodeReqDto {
     /**
      * 署名付きURL出力有効期限
      */
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsOptional()
     @IsDate()
     expirationDate: Date;

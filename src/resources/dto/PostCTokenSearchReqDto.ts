@@ -22,12 +22,12 @@ import { transformToDateTime } from '../../common/Transform';
 
 
 export class startEnd {
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsDate()
     @IsOptional()
     start: Date;
 
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsDate()
     @IsOptional()
     end: Date;

@@ -18,35 +18,36 @@ https://opensource.org/licenses/mit-license.php
 // import { IsUUID, IsString, IsNumber, IsDateString } from 'class-validator';
 import { IsBoolean, IsDefined, IsNumber, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { transformToNumber } from '../../common/Transform';
+import { transformToNumber, transformToBooleanFromString } from '../../common/Transform';
 
 export default class GetOutputConditionReqDto {
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
-        offset: number;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        offset: number = 0;
 
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
         limit: number = 10;
 
     @IsOptional()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
         id?: number;
 
     @IsOptional()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
         mcdOutputCodeId?: number;
 
     @IsOptional()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
         approved?: number;
 
     @IsOptional()
     @IsBoolean()
+    @Transform(({ value }) => { return transformToBooleanFromString(value); })
         isServiceCanceled: boolean = false;
 }

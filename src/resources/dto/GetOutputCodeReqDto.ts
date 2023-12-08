@@ -31,7 +31,7 @@ export default class GetOutputCodeReqDto {
      */
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
         offset: number = 0;
 
     /**
@@ -39,6 +39,6 @@ export default class GetOutputCodeReqDto {
      */
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
         limit: number = 10;
 }

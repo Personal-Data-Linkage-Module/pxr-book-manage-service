@@ -20,12 +20,12 @@ import { transformToNumber, transformToBooleanFromString } from '../../common/Tr
 export class CodeObject {
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     _value: number;
 
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     _ver: number;
 }
 
@@ -45,7 +45,7 @@ export class Item {
 
     @IsBoolean()
     @IsOptional()
-    @Transform(transformToBooleanFromString)
+    @Transform(({ value }) => { return transformToBooleanFromString(value); })
     'changeable-flag': boolean;
 }
 

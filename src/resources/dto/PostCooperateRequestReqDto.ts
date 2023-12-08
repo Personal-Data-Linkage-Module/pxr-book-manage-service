@@ -16,12 +16,12 @@ import { transformToNumber } from '../../common/Transform';
 export class Code {
     @IsNumber()
     @IsDefined()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     _value: number;
 
     @IsNumber()
     @IsDefined()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     _ver: number;
 }
 /* eslint-enable */

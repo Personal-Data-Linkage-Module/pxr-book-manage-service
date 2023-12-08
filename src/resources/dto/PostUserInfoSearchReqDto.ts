@@ -35,7 +35,7 @@ export class CodeVersionObject {
     /**
      * コード
      */
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
@@ -44,7 +44,7 @@ export class CodeVersionObject {
     /**
      * バージョン
      */
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsDefined()
         _ver: number;
@@ -82,7 +82,7 @@ export class Condition {
      * 最小値
      */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
         min: number;
 
@@ -90,7 +90,7 @@ export class Condition {
      * 最大値
      */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
         max: number;
 
@@ -123,7 +123,7 @@ export default class PostUserInfoSearchReqDto {
      */
     @IsDefined()
     @IsNotEmpty()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
         min: number;
 
@@ -132,7 +132,7 @@ export default class PostUserInfoSearchReqDto {
      */
     @IsOptional()
     @IsNotEmpty()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
         max: number;
 

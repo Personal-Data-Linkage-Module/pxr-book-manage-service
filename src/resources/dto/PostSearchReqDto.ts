@@ -30,12 +30,12 @@ import { Type, Transform } from 'class-transformer';
 import { transformToDateTime, IsNotEmptyArray, IsStringEmptyInArray } from '../../common/Transform';
 
 class CreatedAt {
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsDate()
     @IsOptional()
         start: Date;
 
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsDate()
     @IsOptional()
         end: Date;

@@ -23,12 +23,12 @@ import { transformToNumber, transformToBooleanFromString, transformToDateTime } 
 export class CodeObject {
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     _value: number;
 
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     _ver: number;
 }
 
@@ -113,7 +113,7 @@ export class DataType {
 /* eslint-enable */
 export default class PostOutputPrepareReqDto {
     /** 出力タイプ */
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsDefined()
     @IsNumber()
     @IsNotEmpty()
@@ -137,7 +137,7 @@ export default class PostOutputPrepareReqDto {
         region: CodeObject;
 
     /** 利用者ID連携解除フラグ */
-    @Transform(transformToBooleanFromString)
+    @Transform(({ value }) => { return transformToBooleanFromString(value); })
     @IsOptional()
     @IsBoolean()
         cooperationRelease: boolean;

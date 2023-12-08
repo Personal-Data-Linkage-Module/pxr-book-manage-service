@@ -21,13 +21,13 @@ import { transformToNumber } from '../../common/Transform';
 /* eslint-enable */
 
 export class CodeObject {
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
         _value: number;
 
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
