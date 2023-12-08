@@ -1281,7 +1281,7 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            expect(response.body.reasons[0].message).toBe(Message.validation.isDefined);
             expect(response.body.reasons[0].property).toBe('actor');
         });
         test('パラメータ異常：actor オブジェクト以外', async () => {
@@ -1404,7 +1404,7 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            expect(response.body.reasons[0].message).toBe(Message.validation.isDefined);
             expect(response.body.reasons[0].property).toBe('region');
         });
         test('パラメータ異常：region オブジェクト以外', async () => {

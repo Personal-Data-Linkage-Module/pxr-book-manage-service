@@ -248,8 +248,22 @@ describe('book-manage API', () => {
                 }));
 
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].property).toBe('notificateCatalog');
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            // レスポンスチェック
+            expect(JSON.stringify(response.body)).toBe(JSON.stringify({
+                status: 400,
+                reasons: [
+                    {
+                        property: 'notificateCatalog',
+                        value: null,
+                        message: Message.validation.isNotEmptyObject
+                    },
+                    {
+                        property: 'notificateCatalog',
+                        value: null,
+                        message: Message.validation.nestedValidation
+                    }
+                ]
+            }));
         });
         test('パラメータ不足：notificateCatalog._value', async () => {
             _operatorServer = new StubOperatorServerType0(200, 0);
@@ -455,8 +469,22 @@ describe('book-manage API', () => {
                 }));
 
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].property).toBe('shareCode');
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            // レスポンスチェック
+            expect(JSON.stringify(response.body)).toBe(JSON.stringify({
+                status: 400,
+                reasons: [
+                    {
+                        property: 'shareCode',
+                        value: null,
+                        message: Message.validation.isNotEmptyObject
+                    },
+                    {
+                        property: 'shareCode',
+                        value: null,
+                        message: Message.validation.nestedValidation
+                    }
+                ]
+            }));
         });
         test('パラメータ不足：shareCode._value', async () => {
             _operatorServer = new StubOperatorServerType0(200, 0);

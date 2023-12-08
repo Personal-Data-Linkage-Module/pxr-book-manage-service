@@ -7,7 +7,7 @@ import { transformAndValidate } from 'class-transformer-validator';
 import AppError from '../../common/AppError';
 import Config from '../../common/Config';
 import express = require('express');
-import CreateSharedDefinition from '../dto/CreateSharedDefinition';
+import PostDataShareReqDto from '../dto/PostDataShareReqDto'
 import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 import { ResponseCode } from '../../common/ResponseCode';
 const Message = Config.ReadConfig('./config/message.json');
@@ -16,7 +16,7 @@ const Message = Config.ReadConfig('./config/message.json');
 export default class implements ExpressMiddlewareInterface {
     async use (req: express.Request, res: express.Response, next: express.NextFunction) {
         const dto = await transformAndValidate(
-            CreateSharedDefinition,
+            PostDataShareReqDto,
             req.body
         );
         if (Array.isArray(dto)) {

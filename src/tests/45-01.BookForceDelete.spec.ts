@@ -181,7 +181,7 @@ describe('book-mange API', () => {
             catalog = new StubCatalogServerBookForceDelete(200, false);
 
             // 対象APIに送信
-            const response = await supertest(expressApp).delete(url + '?physicalDelete=true')
+            const response = await supertest(expressApp).delete(url)
                 .set({ accept: 'application/json', 'Content-Type': 'application/json' })
                 .set('Cookie', ['operator_type3_session=' + 'd89171efae04aa55357bdd2ebf8338725c8fd17ffdfbe61be66ca96c7590b296']);
 

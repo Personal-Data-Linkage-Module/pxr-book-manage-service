@@ -4179,7 +4179,7 @@ describe('book-manage API', () => {
                 {
                     property: 'notificateCatalog',
                     value: null,
-                    message: 'オブジェクトもしくは配列である必要があります'
+                    message: 'この値は必須値です'
                 }
             ]));
         });
@@ -4218,7 +4218,7 @@ describe('book-manage API', () => {
                 {
                     property: 'shareCode',
                     value: null,
-                    message: 'オブジェクトもしくは配列である必要があります'
+                    message: 'この値は必須値です'
                 }
             ]));
         });

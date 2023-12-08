@@ -161,10 +161,10 @@ export default class {
     @Header('X-XSS-Protection', '1; mode=block')
     @Header('X-Frame-Options', 'deny')
     @EnableSimpleBackPressure()
-    async postPlatformNotificationComplete (@Req() req: Request, @Body() dto: PostTermsOfUseNotificationCompleteReqDto) {
+    async postPlatformNotificationComplete (@Req() req: Request) {
         const configure = Config.ReadConfig('./config/config.json');
 
-        dto = await transformAndValidate(PostTermsOfUseNotificationCompleteReqDto, dto) as PostTermsOfUseNotificationCompleteReqDto;
+        const dto = await transformAndValidate(PostTermsOfUseNotificationCompleteReqDto, req.body) as PostTermsOfUseNotificationCompleteReqDto;
 
         // サービス層のセッションチェックを実行
         const sessionCheckDto = new SessionCheckDto();
@@ -312,10 +312,10 @@ export default class {
     @Header('X-XSS-Protection', '1; mode=block')
     @Header('X-Frame-Options', 'deny')
     @EnableSimpleBackPressure()
-    async postRegionNotificationComplete (@Req() req: Request, @Body() dto: PostTermsOfUseNotificationCompleteReqDto) {
+    async postRegionNotificationComplete (@Req() req: Request) {
         const configure = Config.ReadConfig('./config/config.json');
 
-        dto = await transformAndValidate(PostTermsOfUseNotificationCompleteReqDto, dto) as PostTermsOfUseNotificationCompleteReqDto;
+        const dto = await transformAndValidate(PostTermsOfUseNotificationCompleteReqDto, req.body) as PostTermsOfUseNotificationCompleteReqDto;
 
         // サービス層のセッションチェックを実行
         const sessionCheckDto = new SessionCheckDto();
@@ -432,7 +432,8 @@ export default class {
     @Header('X-Frame-Options', 'deny')
     @EnableSimpleBackPressure()
     @UseBefore(PostIndTermOfUseRequestValidator)
-    async postIndTermOfUseRegion (@Req() req: Request, @Body() dto: PostIndTermOfUseRegionReqDto) {
+    async postIndTermOfUseRegion (@Req() req: Request) {
+        const dto = await transformAndValidate(PostIndTermOfUseRegionReqDto, req.body) as PostIndTermOfUseRegionReqDto;
         // オペレーター情報の取得
         const operator = await OperatorService.authMe(req);
 
