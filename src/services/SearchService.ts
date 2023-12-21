@@ -149,23 +149,29 @@ export default class SearchService {
      * @returns
      */
     private setCooperation (book: MyConditionBook) {
-        return book.userIdCooperate && book.userIdCooperate.id ? {
-            actor: {
-                _value: book.userIdCooperate.actorCatalogCode,
-                _ver: book.userIdCooperate.actorCatalogVersion
-            },
-            userId: book.userIdCooperate.userId,
-            startAt: book.userIdCooperate.startAt,
-            status: book.userIdCooperate.status,
-            region: book.userIdCooperate.regionCatalogCode ? {
-                _value: book.userIdCooperate.regionCatalogCode,
-                _ver: book.userIdCooperate.regionCatalogVersion
-            } : null,
-            app: book.userIdCooperate.appCatalogCode ? {
-                _value: book.userIdCooperate.appCatalogCode,
-                _ver: book.userIdCooperate.appCatalogVersion
-            } : null
-        } : null;
+        return book.userIdCooperate && book.userIdCooperate.id
+            ? {
+                actor: {
+                    _value: book.userIdCooperate.actorCatalogCode,
+                    _ver: book.userIdCooperate.actorCatalogVersion
+                },
+                userId: book.userIdCooperate.userId,
+                startAt: book.userIdCooperate.startAt,
+                status: book.userIdCooperate.status,
+                region: book.userIdCooperate.regionCatalogCode
+                    ? {
+                        _value: book.userIdCooperate.regionCatalogCode,
+                        _ver: book.userIdCooperate.regionCatalogVersion
+                    }
+                    : null,
+                app: book.userIdCooperate.appCatalogCode
+                    ? {
+                        _value: book.userIdCooperate.appCatalogCode,
+                        _ver: book.userIdCooperate.appCatalogVersion
+                    }
+                    : null
+            }
+            : null;
     }
 
     /**
