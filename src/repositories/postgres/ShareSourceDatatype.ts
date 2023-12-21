@@ -20,73 +20,73 @@ export default class ShareSourceDatatype {
      * 蓄積イベント通知定義ID
      */
     @Column({ type: 'bigint', nullable: false, name: 'store_event_notificate_id' })
-    storeEventNotificateId: number = 0;
+        storeEventNotificateId: number = 0;
 
     /**
      * 共有定義カタログコード
      */
     @Column({ type: 'bigint', name: 'share_catalog_code' })
-    shareCatalogCode: number = 0;
+        shareCatalogCode: number = 0;
 
     /**
      * 共有定義カタログバージョン
      */
     @Column({ type: 'bigint', name: 'share_catalog_version' })
-    shareCatalogVersion: number = 0;
+        shareCatalogVersion: number = 0;
 
     /**
      * 共有定義UUID
      */
     @Column({ type: 'varchar', length: 255, name: 'share_uuid' })
-    shareUuid: string = '';
+        shareUuid: string = '';
 
     /**
      * ドキュメントカタログコード
      */
     @Column({ type: 'bigint', name: 'document_catalog_code' })
-    documentCatalogCode: number = 0;
+        documentCatalogCode: number = 0;
 
     /**
      * ドキュメントカタログバージョン
      */
     @Column({ type: 'bigint', name: 'document_catalog_version' })
-    documentCatalogVersion: number = 0;
+        documentCatalogVersion: number = 0;
 
     /**
      * イベントカタログコード
      */
     @Column({ type: 'bigint', name: 'event_catalog_code' })
-    eventCatalogCode: number = 0;
+        eventCatalogCode: number = 0;
 
     /**
      * イベントカタログバージョン
      */
     @Column({ type: 'bigint', name: 'event_catalog_version' })
-    eventCatalogVersion: number = 0;
+        eventCatalogVersion: number = 0;
 
     /**
      * モノカタログコード
      */
     @Column({ type: 'bigint', name: 'thing_catalog_code' })
-    thingCatalogCode: number = 0;
+        thingCatalogCode: number = 0;
 
     /**
      * モノカタログバージョン
      */
     @Column({ type: 'bigint', name: 'thing_catalog_version' })
-    thingCatalogVersion: number = 0;
+        thingCatalogVersion: number = 0;
 
     /**
      * 削除フラグ（削除済：true）
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -98,7 +98,7 @@ export default class ShareSourceDatatype {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

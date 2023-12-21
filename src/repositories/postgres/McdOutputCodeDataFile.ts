@@ -19,97 +19,97 @@ export default class McdOutputCodeDataFile {
      * 出力データ収集アクターID
      */
     @Column({ type: 'bigint', name: 'mcd_output_code_actor_id' })
-    mcdOutputCodeActorId: number = null;
+        mcdOutputCodeActorId: number = null;
 
     /**
      * My-Condition-Data出力コード
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'mcd_output_code' })
-    mcdOutputCode: string = null;
+        mcdOutputCode: string = null;
 
     /**
      * アクターカタログコード
      */
     @Column({ type: 'bigint', name: 'actor_catalog_code' })
-    actorCatalogCode: number;
+        actorCatalogCode: number;
 
     /**
      * アクターカタログバージョン
      */
     @Column({ type: 'bigint', name: 'actor_catalog_version' })
-    actorCatalogVersion: number;
+        actorCatalogVersion: number;
 
     /**
      * データ出力承認ステータス（未回答：0, 承認：1, 否認：2）
      */
     @Column({ type: 'smallint', name: 'output_data_approval_status' })
-    ouputDataApprovalStatus: number;
+        ouputDataApprovalStatus: number;
 
     /**
      * 出力ファイル種別（ダウンロード: 1, アップロード: 2）
      */
     @Column({ type: 'smallint', nullable: false, name: 'output_file_type' })
-    outputFileType: number;
+        outputFileType: number;
 
     /**
      * アップロードファイル種別（利用者データ: 1, 個別データ: 2）
      */
     @Column({ type: 'smallint', name: 'upload_file_type' })
-    uploadFileType: number;
+        uploadFileType: number;
 
     /**
      * 個別データ通知ステータス（未通知:0, 通知済:1）
      */
     @Column({ type: 'smallint', name: 'notification_status' })
-    notificationStatus: number;
+        notificationStatus: number;
 
     /**
      * ファイル名
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'file_name' })
-    fileName: string;
+        fileName: string;
 
     /**
      * 入力ファイル準備ステータス（未完了：0, 完了：1）
      */
     @Column({ type: 'smallint', nullable: false, name: 'input_file_preparation_status' })
-    inputFilePreparationStatus: number;
+        inputFilePreparationStatus: number;
 
     /**
      * 出力ステータス（未作成：0, 作成済：1）
      */
     @Column({ type: 'smallint', nullable: false, name: 'output_status' })
-    outputStatus: number;
+        outputStatus: number;
 
     /**
      * データ削除指定（削除不可：0, 削除可：1）
      */
     @Column({ type: 'smallint', nullable: false, name: 'delete_data_spec' })
-    deleteDataSpec: number;
+        deleteDataSpec: number;
 
     /**
      * 削除ステータス（削除なし:0, 削除準備中：1, 削除待ち:2, 削除済：3）
      */
     @Column({ type: 'smallint', nullable: false, name: 'delete_status' })
-    deleteStatus: number;
+        deleteStatus: number;
 
     /**
      * 処理中フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_processing' })
-    isProcessing: boolean = false;
+        isProcessing: boolean = false;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -121,7 +121,7 @@ export default class McdOutputCodeDataFile {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

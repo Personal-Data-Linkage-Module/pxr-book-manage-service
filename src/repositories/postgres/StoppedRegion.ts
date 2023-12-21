@@ -19,43 +19,43 @@ export default class StoppedRegion {
      * アクターカタログコード
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_code' })
-    actorCatalogCode: number = 0;
+        actorCatalogCode: number = 0;
 
     /**
      * アクターカタログバージョン
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_version' })
-    actorCatalogVersion: number = 0;
+        actorCatalogVersion: number = 0;
 
     /**
      * リージョンカタログコード
      */
     @Column({ type: 'bigint', name: 'region_catalog_code' })
-    regionCatalogCode: number = 0;
+        regionCatalogCode: number = 0;
 
     /**
      * リージョンカタログバージョン
      */
     @Column({ type: 'bigint', name: 'region_catalog_version' })
-    regionCatalogVersion: number = 0;
+        regionCatalogVersion: number = 0;
 
     /**
      * 終了日時
      */
     @Column({ type: 'timestamp without time zone', name: 'closed_at' })
-    closedAt: Date = null;
+        closedAt: Date = null;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -67,7 +67,7 @@ export default class StoppedRegion {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

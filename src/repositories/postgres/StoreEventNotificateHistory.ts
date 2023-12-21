@@ -16,145 +16,145 @@ export default class StoreEventNotificateHistory {
      * 送信種別
      */
     @Column({ type: 'varchar', length: 255, name: 'notificate_type' })
-    notificateType: string = '';
+        notificateType: string = '';
 
     /**
      * 処理種別
      */
     @Column({ type: 'varchar', length: 255, name: 'process_type' })
-    processType: string = '';
+        processType: string = '';
 
     /**
      * 利用者ID
      */
     @Column({ type: 'varchar', length: 255, name: 'user_id' })
-    userId: string = '';
+        userId: string = '';
 
     /**
      * データID
      */
     @Column({ type: 'varchar', length: 255, name: 'data_id' })
-    dataId: string = '';
+        dataId: string = '';
 
     /**
      * ドキュメント種別カタログコード
      */
     @Column({ type: 'bigint', name: 'document_catalog_code' })
-    documentCatalogCode: number = 0;
+        documentCatalogCode: number = 0;
 
     /**
      * ドキュメント種別カタログバージョン
      */
     @Column({ type: 'bigint', name: 'document_catalog_version' })
-    documentCatalogVersion: number = 0;
+        documentCatalogVersion: number = 0;
 
     /**
      * イベント種別カタログコード
      */
     @Column({ type: 'bigint', name: 'event_catalog_code' })
-    eventCatalogCode: number = 0;
+        eventCatalogCode: number = 0;
 
     /**
      * イベント種別カタログバージョン
      */
     @Column({ type: 'bigint', name: 'event_catalog_version' })
-    eventCatalogVersion: number = 0;
+        eventCatalogVersion: number = 0;
 
     /**
      * モノ種別カタログコード
      */
     @Column({ type: 'bigint', name: 'thing_catalog_code' })
-    thingCatalogCode: number = 0;
+        thingCatalogCode: number = 0;
 
     /**
      * モノ種別カタログバージョン
      */
     @Column({ type: 'bigint', name: 'thing_catalog_version' })
-    thingCatalogVersion: number = 0;
+        thingCatalogVersion: number = 0;
 
     /**
      * 共有元アクターカタログコード
      */
     @Column({ type: 'bigint', name: 'share_source_actor_catalog_code' })
-    shareSourceActorCatalogCode: number = 0;
+        shareSourceActorCatalogCode: number = 0;
 
     /**
      * 共有元アクターカタログバージョン
      */
     @Column({ type: 'bigint', name: 'share_source_actor_catalog_version' })
-    shareSourceActorCatalogVersion: number = 0;
+        shareSourceActorCatalogVersion: number = 0;
 
     /**
      * 共有元アプリケーションカタログコード
      */
     @Column({ type: 'bigint', name: 'share_source_app_catalog_code' })
-    shareSourceAppCatalogCode: number = 0;
+        shareSourceAppCatalogCode: number = 0;
 
     /**
      * 共有元アプリケーションカタログバージョン
      */
     @Column({ type: 'bigint', name: 'share_source_app_catalog_version' })
-    shareSourceAppCatalogVersion: number = 0;
+        shareSourceAppCatalogVersion: number = 0;
 
     /**
      * 共有元ワークフローカタログコード
      */
     @Column({ type: 'bigint', name: 'share_source_wf_catalog_code' })
-    shareSourceWfCatalogCode: number = 0;
+        shareSourceWfCatalogCode: number = 0;
 
     /**
      * 共有元ワークフローカタログバージョン
      */
     @Column({ type: 'bigint', name: 'share_source_wf_catalog_version' })
-    shareSourceWfCatalogVersion: number = 0;
+        shareSourceWfCatalogVersion: number = 0;
 
     /**
      * 共有先アクターカタログコード
      */
     @Column({ type: 'bigint', name: 'share_target_actor_catalog_code' })
-    shareTargetActorCatalogCode: number = 0;
+        shareTargetActorCatalogCode: number = 0;
 
     /**
      * 共有先アクターカタログバージョン
      */
     @Column({ type: 'bigint', name: 'share_target_actor_catalog_version' })
-    shareTargetActorCatalogVersion: number = 0;
+        shareTargetActorCatalogVersion: number = 0;
 
     /**
      * 共有先アプリケーションカタログコード
      */
     @Column({ type: 'bigint', name: 'share_target_app_catalog_code' })
-    shareTargetAppCatalogCode: number = 0;
+        shareTargetAppCatalogCode: number = 0;
 
     /**
      * 共有先アプリケーションカタログバージョン
      */
     @Column({ type: 'bigint', name: 'share_target_app_catalog_version' })
-    shareTargetAppCatalogVersion: number = 0;
+        shareTargetAppCatalogVersion: number = 0;
 
     /**
      * 共有先ワークフローカタログコード
      */
     @Column({ type: 'bigint', name: 'share_target_wf_catalog_code' })
-    shareTargetWfCatalogCode: number = 0;
+        shareTargetWfCatalogCode: number = 0;
 
     /**
      * 共有先ワークフローカタログバージョン
      */
     @Column({ type: 'bigint', name: 'share_target_wf_catalog_version' })
-    shareTargetWfCatalogVersion: number = 0;
+        shareTargetWfCatalogVersion: number = 0;
 
     /**
      * 削除フラグ（削除済：true）
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -166,7 +166,7 @@ export default class StoreEventNotificateHistory {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

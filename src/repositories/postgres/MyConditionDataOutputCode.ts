@@ -19,121 +19,121 @@ export default class MyConditionDataOutputCode {
      * コード
      */
     @Column({ type: 'varchar', length: 255, name: 'code' })
-    code: string = null;
+        code: string = null;
 
     /**
      * ブックID
      */
     @Column({ type: 'bigint', nullable: false, name: 'book_id' })
-    bookId: number;
+        bookId: number;
 
     /**
      * 出力タイプ
      */
     @Column({ type: 'bigint', nullable: false, name: 'output_type' })
-    outputType: number;
+        outputType: number;
 
     /**
      * アクターカタログコード
      */
     @Column({ type: 'bigint', name: 'actor_catalog_code' })
-    actorCatalogCode: number;
+        actorCatalogCode: number;
 
     /**
      * アクターカタログバージョン
      */
     @Column({ type: 'bigint', name: 'actor_catalog_version' })
-    actorCatalogVersion: number;
+        actorCatalogVersion: number;
 
     /**
      * リージョンカタログコード
      */
     @Column({ type: 'bigint', name: 'region_catalog_code' })
-    regionCatalogCode: number;
+        regionCatalogCode: number;
 
     /**
      * リージョンカタログバージョン
      */
     @Column({ type: 'bigint', name: 'region_catalog_version' })
-    regionCatalogVersion: number;
+        regionCatalogVersion: number;
 
     /**
      * アプリケーションカタログコード
      */
     @Column({ type: 'bigint', name: 'app_catalog_code' })
-    appCatalogCode: number;
+        appCatalogCode: number;
 
     /**
      * アプリケーションカタログバージョン
      */
     @Column({ type: 'bigint', name: 'app_catalog_version' })
-    appCatalogVersion: number;
+        appCatalogVersion: number;
 
     /**
      * WFカタログコード
      */
     @Column({ type: 'bigint', name: 'wf_catalog_code' })
-    wfCatalogCode: number;
+        wfCatalogCode: number;
 
     /**
      * WFカタログバージョン
      */
     @Column({ type: 'bigint', name: 'wf_catalog_version' })
-    wfCatalogVersion: number;
+        wfCatalogVersion: number;
 
     /**
      * S3バケット名
      */
     @Column({ type: 'varchar', name: 'bucket_name' })
-    bucketName: string = null;
+        bucketName: string = null;
 
     /**
      * 署名付きURL出力有効期限
      */
     @Column({ type: 'timestamp without time zone', name: 'presigned_url_expire_at' })
-    presignedUrlExpireAt: Date = null;
+        presignedUrlExpireAt: Date = null;
 
     /**
      * 署名付きURL出力ステータス（未出力: 0, 出力済: 1）
      */
     @Column({ type: 'smallint', name: 'presigned_url_status' })
-    presignedUrlStatus: number;
+        presignedUrlStatus: number;
 
     /**
      * Region利用者連携解除承認ステータス（承認不要：0, 未承認: 1, 承認：2, 否認：3）
      */
     @Column({ type: 'smallint', name: 'release_cooperate_approval_status' })
-    releaseCooperateApprovalStatus: number;
+        releaseCooperateApprovalStatus: number;
 
     /**
      * Region利用者連携解除ステータス（0: 未処理, 1: 処理済）
      */
     @Column({ type: 'smallint', name: 'release_cooperate_status' })
-    releaseCooperateStatus: number;
+        releaseCooperateStatus: number;
 
     /**
      * Region利用者連携解除ステータス（0: 未処理, 1: 処理済）
      */
     @Column({ type: 'smallint', name: 'release_service_cooperate_status' })
-    releaseServiceCooperateStatus: number;
+        releaseServiceCooperateStatus: number;
 
     /**
      * 処理中フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_processing' })
-    isProcessing: boolean = false;
+        isProcessing: boolean = false;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -145,7 +145,7 @@ export default class MyConditionDataOutputCode {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

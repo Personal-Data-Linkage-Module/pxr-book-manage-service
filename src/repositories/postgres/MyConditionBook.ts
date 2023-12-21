@@ -20,53 +20,53 @@ export default class MyConditionBook {
      * PXR-ID
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'pxr_id' })
-    pxrId: string = '';
+        pxrId: string = '';
 
     /**
      * ステータス
      */
     @Column({ type: 'bigint', nullable: false, default: 0 })
-    status: number = 0;
+        status: number = 0;
 
     /**
      * Book閉鎖可能フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'book_close_available' })
-    bookCloseAvailable: boolean;
+        bookCloseAvailable: boolean;
 
     /**
      * Book閉鎖フラグON日時
      */
     @CreateDateColumn(({ type: 'timestamp without time zone', name: 'book_close_available_at' }))
-    bookCloseAvailableAt: Date = new Date();
+        bookCloseAvailableAt: Date = new Date();
 
     /**
      * 属性
      */
     @Column({ type: 'text' })
-    attributes: string = '';
+        attributes: string = '';
 
     /**
      * 付録
      */
     @Column({ type: 'text' })
-    appendix: string = '';
+        appendix: string = '';
 
     // 強制削除フラグ
     @Column({ type: 'boolean', nullable: false, default: false, name: 'force_deletion_flag' })
-    forceDeletionFlag: boolean;
+        forceDeletionFlag: boolean;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -78,7 +78,7 @@ export default class MyConditionBook {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時
@@ -90,7 +90,7 @@ export default class MyConditionBook {
      * UserIdCooperate
      */
     @OneToOne(() => UserIdCooperate, userIdCooperate => userIdCooperate.bookId)
-    userIdCooperate?: UserIdCooperate;
+        userIdCooperate?: UserIdCooperate;
 
     /**
      * コンストラクタ

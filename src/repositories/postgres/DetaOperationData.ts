@@ -19,43 +19,43 @@ export default class DetaOperationData {
      * データ操作定義ID
      */
     @Column({ type: 'bigint', nullable: false, name: 'data_operation_id' })
-    dataOperationId: number = 0;
+        dataOperationId: number = 0;
 
     /**
      * 親データID
      */
     @Column({ type: 'varchar', length: 255, name: 'parent_data_id' })
-    parentDataId: string = null;
+        parentDataId: string = null;
 
     /**
      * データ種（1：document, 2：event, 3：thing）
      */
     @Column({ type: 'smallint', nullable: false })
-    type: number;
+        type: number;
 
     /**
      * データ識別子
      */
     @Column({ type: 'varchar', length: 255 })
-    identifier: string;
+        identifier: string;
 
     /**
      * 属性
      */
     @Column({ type: 'text', name: 'attributes' })
-    attributes: string = null;
+        attributes: string = null;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -67,7 +67,7 @@ export default class DetaOperationData {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時
