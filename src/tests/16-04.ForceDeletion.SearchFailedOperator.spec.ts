@@ -65,6 +65,7 @@ describe('Book Manage Service.Book Deletion API Controller', () => {
         await catalogService.start();
     });
     afterAll(async () => {
+        await common.disconnect();
         app.stop();
         await operatorService.stop();
         await catalogService.stop();

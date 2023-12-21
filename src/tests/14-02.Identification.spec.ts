@@ -21,6 +21,7 @@ describe('book-manage API', () => {
     });
     afterAll(async () => {
         app.stop();
+        await common.disconnect();
     });
 
     /**
