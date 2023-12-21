@@ -5,7 +5,7 @@ https://opensource.org/licenses/mit-license.php
 /* eslint-disable */
 import { Request } from 'express';
 import {
-    JsonController, Post, Header, Req, UseBefore, QueryParam, Put, Get, QueryParams
+    JsonController, Post, Header, Req, UseBefore, QueryParam, Put, Get
 } from 'routing-controllers';
 import { transformAndValidate } from 'class-transformer-validator';
 import EnableSimpleBackPressure from './backpressure/EnableSimpleBackPressure';
@@ -122,7 +122,8 @@ export default class OutputController {
     @Header('X-XSS-Protection', '1; mode=block')
     @Header('X-Frame-Options', 'deny')
     @EnableSimpleBackPressure()
-    async getOutputCondition (@Req() req: Request, @QueryParams() dto: GetOutputConditionReqDto) {
+    async getOutputCondition (@Req() req: Request) {
+        const dto = await transformAndValidate(GetOutputConditionReqDto, req.query);
         const configure = Config.ReadConfig('./config/config.json');
 
         // サービス層のセッションチェックを実行
