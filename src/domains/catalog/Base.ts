@@ -11,13 +11,13 @@ import { CodeObject } from '../../resources/dto/PostBookOpenReqDto';
 export class CatalogItem {
     @IsString()
     @IsNotEmpty()
-    ns: string;
+        ns: string;
 
     @IsDefined()
     @Type(type => CodeObject)
     @ValidateNested()
     @IsNotEmptyObject()
-    _code: CodeObject;
+        _code: CodeObject;
 }
 
 export default class {
@@ -25,5 +25,5 @@ export default class {
     @Type(type => CatalogItem)
     @ValidateNested()
     @IsNotEmptyObject()
-    catalogItem: CatalogItem;
+        catalogItem: CatalogItem;
 }

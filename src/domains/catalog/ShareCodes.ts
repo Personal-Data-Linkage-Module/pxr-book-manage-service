@@ -12,13 +12,13 @@ import { IsNotEmptyArray } from '../../common/Transform';
 export class CatalogItem {
     @IsString()
     @IsNotEmpty()
-    ns: string;
+        ns: string;
 
     @IsDefined()
     @Type(type => CodeObject)
     @ValidateNested()
     @IsNotEmptyObject()
-    _code: CodeObject;
+        _code: CodeObject;
 }
 
 export class Codes {
@@ -27,21 +27,21 @@ export class Codes {
     @ValidateNested({ each: true })
     @IsNotEmptyArray()
     @IsArray()
-    document: CodeObject[];
+        document: CodeObject[];
 
     @IsDefined()
     @Type(type => CodeObject)
     @ValidateNested({ each: true })
     @IsNotEmptyArray()
     @IsArray()
-    event: CodeObject[];
+        event: CodeObject[];
 
     @IsDefined()
     @Type(type => CodeObject)
     @ValidateNested({ each: true })
     @IsNotEmptyArray()
     @IsArray()
-    thing: CodeObject[];
+        thing: CodeObject[];
 }
 
 export class Template {
@@ -50,7 +50,7 @@ export class Template {
     @ValidateNested({ each: true })
     @IsNotEmptyArray()
     @IsArray()
-    share: Codes[];
+        share: Codes[];
 }
 
 export default class {
@@ -58,11 +58,11 @@ export default class {
     @Type(type => CatalogItem)
     @ValidateNested()
     @IsNotEmptyObject()
-    catalogItem: CatalogItem;
+        catalogItem: CatalogItem;
 
     @IsDefined()
     @Type(type => Template)
     @ValidateNested()
     @IsNotEmptyObject()
-    template: Template;
+        template: Template;
 }
