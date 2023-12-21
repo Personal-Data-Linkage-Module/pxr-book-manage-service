@@ -27,78 +27,78 @@ import { Type } from 'class-transformer';
 class Code {
     @IsDefined()
     @IsNumber()
-    _value: number;
+        _value: number;
 
     @IsDefined()
     @IsNumber()
-    _ver: number;
+        _ver: number;
 }
 
 class ExcludeDocument {
     @IsDefined()
     @Type(() => Code)
-    code: Code;
+        code: Code;
 }
 
 class ExcludeThing {
     @IsDefined()
     @Type(() => Code)
-    code: Code;
+        code: Code;
 }
 
 class ExcludeEvent {
     @IsDefined()
     @Type(() => Code)
-    code: Code;
+        code: Code;
 
     /** thing */
     @IsDefined()
     @IsArray()
     @Type(() => ExcludeThing)
-    excludeThing: ExcludeThing[];
+        excludeThing: ExcludeThing[];
 }
 
 export default class PostDataShareReqDto {
     /** actor */
     @IsDefined()
     @Type(() => Code)
-    actor: Code;
+        actor: Code;
 
     /** app */
     @IsOptional()
     @Type(() => Code)
-    app: Code;
+        app: Code;
 
     /** wf */
     @IsOptional()
     @Type(() => Code)
-    wf: Code;
+        wf: Code;
 
     /** store */
     @IsDefined()
     @Type(() => Code)
-    share: Code;
+        share: Code;
 
     /** store_catalog_id */
     @IsDefined()
     @IsString()
-    shareCatalogId: string;
+        shareCatalogId: string;
 
     /** document */
     @IsOptional()
     @IsArray()
     @Type(() => ExcludeDocument)
-    excludeDocument: ExcludeDocument[];
+        excludeDocument: ExcludeDocument[];
 
     /** event */
     @IsOptional()
     @IsArray()
     @Type(() => ExcludeEvent)
-    excludeEvent: ExcludeEvent[];
+        excludeEvent: ExcludeEvent[];
 
     /** thing */
     @IsOptional()
     @IsArray()
     @Type(() => ExcludeThing)
-    excludeThing: ExcludeThing[];
+        excludeThing: ExcludeThing[];
 }

@@ -9,5 +9,5 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 export default class {
     @IsUUID()
     @IsNotEmpty()
-    tempShareCode: string;
+        tempShareCode: string;
 }

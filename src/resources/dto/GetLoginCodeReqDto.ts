@@ -27,5 +27,5 @@ export default class GetLoginCodeReqDto {
     @IsDefined()
     @IsNotEmpty()
     @IsString()
-    pxrId: string;
+        pxrId: string;
 }

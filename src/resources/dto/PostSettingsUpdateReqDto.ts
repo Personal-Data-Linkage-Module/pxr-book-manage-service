@@ -11,11 +11,11 @@ import { IsNotEmptyArray } from '../../common/Transform';
 export class CodeObject {
     @IsDefined()
     @IsNumber()
-    _value: number;
+        _value: number;
 
     @IsOptional()
     @IsNumber()
-    _ver: number;
+        _ver: number;
 }
 
 export default class PostSettingsUpdateReqDto {
@@ -23,5 +23,5 @@ export default class PostSettingsUpdateReqDto {
     @IsNotEmptyArray()
     @Type(type => CodeObject)
     @ValidateNested({ each: true })
-    codes: CodeObject[];
+        codes: CodeObject[];
 }

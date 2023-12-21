@@ -13,12 +13,12 @@ import { Transform, Type } from 'class-transformer';
 import { transformToNumber } from '../../common/Transform';
 
 export class Code {
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsDefined()
     _value: number;
 
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsDefined()
     _ver: number;
@@ -32,14 +32,14 @@ export default class PostRegionCloseReqDto {
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    actor: Code;
+        actor: Code;
 
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    region: Code;
+        region: Code;
 
     @IsDefined()
     @IsString()
-    endDate: string;
+        endDate: string;
 }

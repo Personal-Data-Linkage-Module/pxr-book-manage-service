@@ -9,5 +9,5 @@ import { IsDefined, IsString } from 'class-validator';
 export default class PostSettingNotificationCompleteReqDto {
     @IsDefined()
     @IsString()
-    pxrId: string;
+        pxrId: string;
 }

@@ -22,11 +22,11 @@ import { IsDefined, IsNumber, ValidateNested } from 'class-validator';
 export class CodeObject {
     @IsDefined()
     @IsNumber()
-    _value: number;
+        _value: number;
 
     @IsDefined()
     @IsNumber()
-    _ver: number;
+        _ver: number;
 }
 
 /**
@@ -36,15 +36,15 @@ export default class PostIndTermOfUseRegionReqDto {
     @IsDefined()
     @Type(() => CodeObject)
     @ValidateNested()
-    actor: CodeObject;
+        actor: CodeObject;
 
     @IsDefined()
     @Type(() => CodeObject)
     @ValidateNested()
-    region: CodeObject;
+        region: CodeObject;
 
     @IsDefined()
     @Type(() => CodeObject)
     @ValidateNested()
-    _code: CodeObject;
+        _code: CodeObject;
 }

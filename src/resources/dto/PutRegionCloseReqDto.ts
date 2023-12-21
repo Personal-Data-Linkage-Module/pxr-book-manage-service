@@ -10,8 +10,8 @@ import { transformToNumber } from '../../common/Transform';
 export class Code {
     @IsNumber()
     @IsDefined()
-    @Transform(transformToNumber)
-    _value: number;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        _value: number;
 }
 
 export default class PutRegionCloseReqDto {
@@ -21,7 +21,7 @@ export default class PutRegionCloseReqDto {
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    actor: Code;
+        actor: Code;
 
     /**
      * region
@@ -29,5 +29,5 @@ export default class PutRegionCloseReqDto {
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    region: Code;
+        region: Code;
 }

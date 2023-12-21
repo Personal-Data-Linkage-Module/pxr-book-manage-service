@@ -21,38 +21,38 @@ import {
 export class CodeOnlyObject {
     @IsNumber()
     @IsDefined()
-    @Transform(transformToNumber)
-    _value: number;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        _value: number;
 }
 
 export class CodeObject {
     @IsNumber()
     @IsDefined()
-    @Transform(transformToNumber)
-    _value: number;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        _value: number;
 
     @IsNumber()
     @IsDefined()
-    @Transform(transformToNumber)
-    _ver: number;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        _ver: number;
 }
 
 export class Identifier {
     @IsOptional()
     @IsString()
     @IsNotEmpty()
-    document: string;
+        document: string;
 
     @IsOptional()
     @IsString({ each: true })
     @IsNotEmpty({ each: true })
-    event: string | string[];
+        event: string | string[];
 
     @IsOptional()
     @IsArray()
     @IsString({ each: true })
     @IsNotEmpty({ each: true })
-    thing: string[];
+        thing: string[];
 }
 
 export default class {
@@ -61,41 +61,41 @@ export default class {
     @IsOptional()
     @IsNotEmptyObject()
     @ValidateNested()
-    actor: CodeOnlyObject;
+        actor: CodeOnlyObject;
 
     @Type(type => CodeOnlyObject)
     @IsObject()
     @IsOptional()
     @ValidateNested()
-    app: CodeOnlyObject;
+        app: CodeOnlyObject;
 
     @Type(type => CodeOnlyObject)
     @IsObject()
     @IsOptional()
     @ValidateNested()
-    wf: CodeOnlyObject;
+        wf: CodeOnlyObject;
 
     @IsOptional()
     @Type(type => CodeObject)
     @IsArray()
     @ValidateNested({ each: true })
-    document: CodeObject[];
+        document: CodeObject[];
 
     @IsOptional()
     @Type(type => CodeObject)
     @IsArray()
     @ValidateNested({ each: true })
-    event: CodeObject[];
+        event: CodeObject[];
 
     @IsOptional()
     @Type(type => CodeObject)
     @IsArray()
     @ValidateNested({ each: true })
-    thing: CodeObject[];
+        thing: CodeObject[];
 
     @IsOptional()
     @Type(type => Identifier)
     @IsArray()
     @ValidateNested({ each: true })
-    identifier: Identifier[];
+        identifier: Identifier[];
 }

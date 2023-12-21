@@ -24,13 +24,13 @@ import { transformToNumber } from '../../common/Transform';
  * POST: My-Condition-Data出力コード取得APIのリクエストDTO
  */
 export class CodeVersionObject {
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
     _value: number;
 
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsDefined()
     _ver: number;

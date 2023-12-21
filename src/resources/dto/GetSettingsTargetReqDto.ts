@@ -19,11 +19,11 @@ import { transformToNumber } from '../../common/Transform';
 export default class GetSettingsTargetReqDto {
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
-    offset: number = 0;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        offset: number = 0;
 
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
-    limit: number = 10;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        limit: number = 10;
 }

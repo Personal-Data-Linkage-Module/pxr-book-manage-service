@@ -22,11 +22,11 @@ import { IsDefined, IsNumber, IsString, ValidateNested } from 'class-validator';
 export class CodeObject {
     @IsDefined()
     @IsNumber()
-    _value: number;
+        _value: number;
 
     @IsDefined()
     @IsNumber()
-    _ver: number;
+        _ver: number;
 }
 
 /**
@@ -35,54 +35,54 @@ export class CodeObject {
 export default class PostOutputCondtionDataMngReqDto {
     @IsDefined()
     @IsNumber()
-    mcdOutputCodeActorId: number;
+        mcdOutputCodeActorId: number;
 
     @IsDefined()
     @IsString()
-    code: string;
+        code: string;
 
     @IsDefined()
     @Type(() => CodeObject)
     @ValidateNested()
-    actor: CodeObject;
+        actor: CodeObject;
 
     @IsDefined()
     @IsNumber()
-    outputApproved: number;
+        outputApproved: number;
 
     @IsDefined()
     @IsNumber()
-    outputFileType: number;
+        outputFileType: number;
 
     @IsDefined()
     @IsNumber()
-    uploadFileType: number;
+        uploadFileType: number;
 
     @IsDefined()
     @IsNumber()
-    extDataRequested: number;
+        extDataRequested: number;
 
     @IsDefined()
     @IsString()
-    fileName: string;
+        fileName: string;
 
     @IsDefined()
     @IsNumber()
-    inputFileIsReady: number;
+        inputFileIsReady: number;
 
     @IsDefined()
     @IsNumber()
-    outputStatus: number;
+        outputStatus: number;
 
     @IsDefined()
     @IsNumber()
-    isDeleteTarget: number;
+        isDeleteTarget: number;
 
     @IsDefined()
     @IsNumber()
-    deleteStatus: number;
+        deleteStatus: number;
 
     @IsDefined()
     @IsNumber()
-    processing: number;
+        processing: number;
 }

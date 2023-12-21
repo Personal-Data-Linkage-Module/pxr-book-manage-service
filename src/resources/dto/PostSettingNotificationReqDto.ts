@@ -9,5 +9,5 @@ import { IsDefined, IsNumber } from 'class-validator';
 export default class PostSettingNotificationReqDto {
     @IsDefined()
     @IsNumber()
-    id: number;
+        id: number;
 }

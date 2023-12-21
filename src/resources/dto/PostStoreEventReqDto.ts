@@ -11,13 +11,13 @@ import { transformToNumber } from '../../common/Transform';
 export class CodeObject {
     @IsNumber()
     @IsDefined()
-    @Transform(transformToNumber)
-    _value: number;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        _value: number;
 
     @IsNumber()
     @IsDefined()
-    @Transform(transformToNumber)
-    _ver: number;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        _ver: number;
 }
 /**
  * 蓄積イベント通知定義更新リクエストDTO
@@ -26,24 +26,24 @@ export default class PostStoreEventReqDto {
     @IsDefined()
     @IsNotEmpty()
     @IsString()
-    type: string;
+        type: string;
 
     @IsDefined()
     @IsNotEmptyObject()
     @Type(() => CodeObject)
     @ValidateNested()
-    notificateCatalog: CodeObject;
+        notificateCatalog: CodeObject;
 
     @IsDefined()
     @IsNotEmptyObject()
     @Type(() => CodeObject)
     @ValidateNested()
-    shareCode: CodeObject;
+        shareCode: CodeObject;
 
     @IsDefined()
     @IsNotEmpty()
     @IsArray()
     @IsUUID('all', { each: true })
     @Expose({ name: 'shareUUID' })
-    shareUuid: string[];
+        shareUuid: string[];
 }
