@@ -3,8 +3,8 @@ Released under the MIT license.
 https://opensource.org/licenses/mit-license.php
 */
 import Config from './Config';
-const configure = Config.ReadConfig('./config/config.json');
 import crypto = require('crypto');
+const configure = Config.ReadConfig('./config/config.json');
 
 /**
  * パスワード操作クラス

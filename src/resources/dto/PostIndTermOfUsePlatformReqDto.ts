@@ -22,11 +22,11 @@ import { IsDefined, IsNumber, ValidateNested } from 'class-validator';
 export class CodeObject {
     @IsDefined()
     @IsNumber()
-    _value: number;
+        _value: number;
 
     @IsDefined()
     @IsNumber()
-    _ver: number;
+        _ver: number;
 }
 
 /**
@@ -36,5 +36,5 @@ export default class PostIndTermOfUsePlatformReqDto {
     @IsDefined()
     @Type(() => CodeObject)
     @ValidateNested()
-    _code: CodeObject;
+        _code: CodeObject;
 }

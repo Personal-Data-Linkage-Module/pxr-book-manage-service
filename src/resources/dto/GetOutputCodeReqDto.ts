@@ -31,14 +31,14 @@ export default class GetOutputCodeReqDto {
      */
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
-    offset: number = 0;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        offset: number = 0;
 
     /**
      * 取得件数
      */
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
-    limit: number = 10;
+    @Transform(({ value }) => { return transformToNumber(value); })
+        limit: number = 10;
 }

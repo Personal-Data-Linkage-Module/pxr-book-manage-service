@@ -19,31 +19,31 @@ export default class DataOperationNotification {
      * コード
      */
     @Column({ type: 'bigint', nullable: false, name: '_value' })
-    _value: number;
+        _value: number;
 
     /**
      * バージョン
      */
     @Column({ type: 'bigint', nullable: false, name: '_ver' })
-    _ver: number;
+        _ver: number;
 
     /**
      * ステータス
      */
     @Column({ type: 'smallint', nullable: false, default: 0, name: 'status' })
-    status: number;
+        status: number;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string;
+        createdBy: string;
 
     /**
      * 登録日時
@@ -55,7 +55,7 @@ export default class DataOperationNotification {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string;
+        updatedBy: string;
 
     /**
      * 更新日時

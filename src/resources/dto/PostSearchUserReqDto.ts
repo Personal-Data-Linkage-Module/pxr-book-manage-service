@@ -25,20 +25,20 @@ export default class PostSearchUserReqDto {
     /** actor */
     @IsNumber()
     @IsOptional()
-    actor: number = null;
+        actor: number = null;
 
     /** app */
     @IsNumber()
     @IsOptional()
-    app: number = null;
+        app: number = null;
 
     /** wf */
     @IsNumber()
     @IsOptional()
-    wf: number = null;
+        wf: number = null;
 
     /** userId */
     @IsString()
     @IsDefined()
-    userId: string = null;
+        userId: string = null;
 }

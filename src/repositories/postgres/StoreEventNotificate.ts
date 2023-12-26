@@ -19,49 +19,49 @@ export default class StoreEventNotificate {
      * 送信種別
      */
     @Column({ type: 'varchar', length: 255, name: 'notificate_type' })
-    notificateType: string = '';
+        notificateType: string = '';
 
     /**
      * 蓄積イベント通知/共有トリガー定義カタログコード
      */
     @Column({ type: 'bigint', name: 'store_event_notificate_catalog_code' })
-    storeEventNotificateCatalogCode: number = 0;
+        storeEventNotificateCatalogCode: number = 0;
 
     /**
      * 蓄積イベント通知/共有トリガー定義カタログバージョン
      */
     @Column({ type: 'bigint', name: 'store_event_notificate_catalog_version' })
-    storeEventNotificateCatalogVersion: number = 0;
+        storeEventNotificateCatalogVersion: number = 0;
 
     /**
      * 共有定義カタログコード
      */
     @Column({ type: 'bigint', name: 'share_catalog_code' })
-    shareCatalogCode: number = 0;
+        shareCatalogCode: number = 0;
 
     /**
      * 共有定義カタログバージョン
      */
     @Column({ type: 'bigint', name: 'share_catalog_version' })
-    shareCatalogVersion: number = 0;
+        shareCatalogVersion: number = 0;
 
     /**
      * 共有定義UUID
      */
     @Column({ type: 'varchar', length: 255, name: 'share_uuid' })
-    shareUuid: string = '';
+        shareUuid: string = '';
 
     /**
      * 削除フラグ（削除済：true）
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -73,7 +73,7 @@ export default class StoreEventNotificate {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

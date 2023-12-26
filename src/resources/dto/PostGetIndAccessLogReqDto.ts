@@ -24,19 +24,19 @@ import { transformToDateTime, transformToNumber } from '../../common/Transform';
  * POST: 共有アクセス取得依頼APIのリクエストDTO
  */
 export class CodeVersionObject {
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsDefined()
     _value: number;
 
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsDefined()
     _ver: number;
 }
 
 export class CodeObject {
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
     @IsNotEmpty()
     @IsDefined()
@@ -44,12 +44,12 @@ export class CodeObject {
 }
 
 export class DateStartEndObject {
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsDate()
     @IsOptional()
     start: Date;
 
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsDate()
     @IsOptional()
     end: Date;

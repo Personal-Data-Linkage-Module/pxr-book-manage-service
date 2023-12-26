@@ -119,7 +119,7 @@ describe('book-mange API', () => {
                     {
                         property: 'identification',
                         value: null,
-                        message: 'オブジェクトもしくは配列である必要があります'
+                        message: 'この値は必須値です'
                     }
                 ]
             }));
@@ -339,6 +339,11 @@ describe('book-mange API', () => {
                     {
                         property: '_code',
                         value: null,
+                        message: 'この値はJSONではない、もしくは空であることを期待しません'
+                    },
+                    {
+                        property: '_code',
+                        value: null,
                         message: 'オブジェクトもしくは配列である必要があります'
                     }
                 ]
@@ -554,7 +559,7 @@ describe('book-mange API', () => {
                     {
                         property: 'item-group',
                         value: null,
-                        message: 'オブジェクトもしくは配列である必要があります'
+                        message: 'この値は必須値です'
                     }
                 ]
             }));
@@ -728,7 +733,7 @@ describe('book-mange API', () => {
                     {
                         property: 'item',
                         value: null,
-                        message: 'オブジェクトもしくは配列である必要があります'
+                        message: 'この値は必須値です'
                     }
                 ]
             }));
@@ -855,7 +860,7 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(JSON.stringify(response.body)).toBe(JSON.stringify({
                 status: 400,
-                reasons: [{ property: 'type', value: null, message: 'オブジェクトもしくは配列である必要があります' }]
+                reasons: [{ property: 'type', value: null, message: 'この値は必須値です' }]
             }));
             expect(response.status).toBe(400);
         });
@@ -874,7 +879,10 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(JSON.stringify(response.body)).toBe(JSON.stringify({
                 status: 400,
-                reasons: [{ property: 'type', value: null, message: 'オブジェクトもしくは配列である必要があります' }]
+                reasons: [
+                    { property: 'type', value: null, message: 'この値はJSONではない、もしくは空であることを期待しません' },
+                    { property: 'type', value: null, message: 'オブジェクトもしくは配列である必要があります' }
+                ]
             }));
             expect(response.status).toBe(400);
         });
@@ -1049,7 +1057,7 @@ describe('book-mange API', () => {
                     {
                         property: 'userInformation',
                         value: null,
-                        message: 'オブジェクトもしくは配列である必要があります'
+                        message: 'この値は必須値です'
                     }
                 ]
             }));
@@ -1128,6 +1136,11 @@ describe('book-mange API', () => {
             expect(JSON.stringify(response.body)).toBe(JSON.stringify({
                 status: 400,
                 reasons: [
+                    {
+                        property: '_code',
+                        value: null,
+                        message: 'この値はJSONではない、もしくは空であることを期待しません'
+                    },
                     {
                         property: '_code',
                         value: null,
@@ -1346,7 +1359,7 @@ describe('book-mange API', () => {
                     {
                         property: 'item-group',
                         value: null,
-                        message: 'オブジェクトもしくは配列である必要があります'
+                        message: 'この値は必須値です'
                     }
                 ]
             }));
@@ -1520,7 +1533,7 @@ describe('book-mange API', () => {
                     {
                         property: 'item',
                         value: null,
-                        message: 'オブジェクトもしくは配列である必要があります'
+                        message: 'この値は必須値です'
                     }
                 ]
             }));
@@ -1647,7 +1660,7 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(JSON.stringify(response.body)).toBe(JSON.stringify({
                 status: 400,
-                reasons: [{ property: 'type', value: null, message: 'オブジェクトもしくは配列である必要があります' }]
+                reasons: [{ property: 'type', value: null, message: 'この値は必須値です' }]
             }));
             expect(response.status).toBe(400);
         });
@@ -1666,7 +1679,10 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(JSON.stringify(response.body)).toBe(JSON.stringify({
                 status: 400,
-                reasons: [{ property: 'type', value: null, message: 'オブジェクトもしくは配列である必要があります' }]
+                reasons: [
+                    { property: 'type', value: null, message: 'この値はJSONではない、もしくは空であることを期待しません' },
+                    { property: 'type', value: null, message: 'オブジェクトもしくは配列である必要があります' }
+                ]
             }));
             expect(response.status).toBe(400);
         });
@@ -1856,7 +1872,7 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(JSON.stringify(response.body)).toBe(JSON.stringify({
                 status: 400,
-                reasons: [{ property: 'platform_terms_of_use', value: null, message: 'オブジェクトもしくは配列である必要があります' }]
+                reasons: [{ property: 'platform_terms_of_use', value: null, message: 'この値は必須値です' }]
             }));
             expect(response.status).toBe(400);
         });
@@ -1875,7 +1891,10 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(JSON.stringify(response.body)).toBe(JSON.stringify({
                 status: 400,
-                reasons: [{ property: 'platform_terms_of_use', value: null, message: 'オブジェクトもしくは配列である必要があります' }]
+                reasons: [
+                    { property: 'platform_terms_of_use', value: null, message: 'この値は空を期待しません' },
+                    { property: 'platform_terms_of_use', value: null, message: 'オブジェクトもしくは配列である必要があります' }
+                ]
             }));
             expect(response.status).toBe(400);
         });

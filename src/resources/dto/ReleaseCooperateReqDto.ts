@@ -26,5 +26,5 @@ export default class ReleaseCooperateReqDto {
     @IsString()
     @IsDefined()
     @IsNotEmpty()
-    identifyCode: string;
+        identifyCode: string;
 }

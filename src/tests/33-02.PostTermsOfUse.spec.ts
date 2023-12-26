@@ -136,6 +136,14 @@ describe('book-mange API', () => {
                         .set({ accept: 'application/json', 'Content-Type': 'application/json' })
                         .set('Cookie', ['operator_type0_session=ee59bbc7fa4d13d853f65c412fe57a3c79af64ee710f3719b5485039d227bd8a'])
                         .send(JSON.stringify({
+                            actor: {
+                                _value: 1000002,
+                                _ver: 1
+                            },
+                            region: {
+                                _value: 1000003,
+                                _ver: 1
+                            },
                             _code: {
                                 _value: 1001008,
                                 _ver: 1

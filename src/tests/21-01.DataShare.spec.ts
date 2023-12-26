@@ -64,7 +64,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000021,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(401);
@@ -90,7 +91,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000021,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(400);
@@ -114,7 +116,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000021,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(400);
@@ -163,7 +166,8 @@ describe('book-mange API', () => {
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(400);
@@ -190,7 +194,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000023,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(200);
@@ -216,7 +221,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000023,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(200);
@@ -242,7 +248,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000022,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(400);
@@ -269,7 +276,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000022,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(400);
@@ -296,7 +304,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000022,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(400);
@@ -323,7 +332,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000022,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(400);
@@ -350,7 +360,8 @@ describe('book-mange API', () => {
                     share: {
                         _value: 1000004,
                         _ver: 1
-                    }
+                    },
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(400);
@@ -360,7 +371,7 @@ describe('book-mange API', () => {
                 throw err;
             }
         });
-        test('正常：個人(蓄積データ更新)', async () => {
+        test('正常：個人(共有データ更新)', async () => {
             const response = await supertest(expressApp)
                 .post(Url.sharePersonURI)
                 .set({ accept: 'application/json', 'Content-Type': 'application/json' })
@@ -415,7 +426,8 @@ describe('book-mange API', () => {
                                 _ver: 1
                             }
                         }
-                    ]
+                    ],
+                    shareCatalogId: '85de42e5-7c36-4307-99c8-80fc60367419'
                 });
             try {
                 expect(response.status).toBe(200);

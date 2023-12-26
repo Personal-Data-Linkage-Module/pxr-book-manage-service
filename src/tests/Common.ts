@@ -2,9 +2,12 @@
 Released under the MIT license.
 https://opensource.org/licenses/mit-license.php
 */
+/* eslint-disable */
 import { connectDatabase } from '../common/Connection';
 import path = require('path');
 import fs = require('fs');
+import { Connection } from 'typeorm';
+/* eslint-enable */
 
 // テスト用にlisten数を無制限に設定
 require('events').EventEmitter.defaultMaxListeners = 0;
@@ -307,12 +310,15 @@ export namespace Url {
 /**
  * テスト用共通クラス
  */
+/* eslint-disable no-trailing-spaces */
 export default class Common {
-    /**
-     * DB接続
-     */
+    private conn: Connection;
     public async connect () {
-        await connectDatabase();
+        this.conn = await connectDatabase();
+    }
+
+    public async disconnect () {
+        this.conn.destroy();
     }
 
     /**
@@ -340,6 +346,7 @@ export default class Common {
     public async executeSqlString (sql: string) {
         // DBを初期化
         const connection = await connectDatabase();
-        await connection.query(sql);
+        const result = await connection.query(sql);
+        return result;
     }
 }

@@ -52,7 +52,7 @@ export default class {
         if (!operator.pxrId) {
             throw new AppError(Message.PXR_USER_ONLY, 400);
         }
-        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOne({
+        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOneBy({
             pxrId: operator.pxrId,
             isDisabled: false
         });
@@ -72,7 +72,7 @@ export default class {
             }
         });
         for (const dataOperateDefinition of dataOperateDefinitions) {
-            const temporaryCode = await getConnection('postgres').getRepository(TemporarilySharedCode).findOne({
+            const temporaryCode = await getConnection('postgres').getRepository(TemporarilySharedCode).findOneBy({
                 dataOperateDefinitionId: dataOperateDefinition.id,
                 isDisabled: false
             });
@@ -219,7 +219,7 @@ export default class {
         if (!operator.pxrId) {
             throw new AppError(Message.PXR_USER_ONLY, 400);
         }
-        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOne({
+        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOneBy({
             pxrId: operator.pxrId,
             isDisabled: false
         });
@@ -239,7 +239,7 @@ export default class {
             }
         });
         for (const dataOperateDefinition of dataOperateDefinitions) {
-            const temporaryCode = await getConnection('postgres').getRepository(TemporarilySharedCode).findOne({
+            const temporaryCode = await getConnection('postgres').getRepository(TemporarilySharedCode).findOneBy({
                 dataOperateDefinitionId: dataOperateDefinition.id,
                 isDisabled: false
             });
@@ -443,7 +443,7 @@ export default class {
         }
 
         // My-Condition-Bookが開設済みでなければ、エラーとする
-        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOne({
+        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOneBy({
             pxrId: operator.pxrId,
             isDisabled: false
         });
@@ -469,7 +469,7 @@ export default class {
             if (appCatalogArray && appCatalog && !appCatalogArray.some(item => item._value === appCatalog.catalogItem._code._value)) {
                 throw new AppError(Message.REQUEST_APPLICATION_IS_NOT_RELATION, 400);
             }
-            const e: DataOperation = await getConnection('postgres').getRepository(DataOperation).findOne({
+            const e: DataOperation = await getConnection('postgres').getRepository(DataOperation).findOneBy({
                 bookId: myBook.id,
                 type: 'temp',
                 actorCatalogCode: target.actor._value,
@@ -698,7 +698,7 @@ export default class {
         }
 
         // My-Condition-Bookが開設済みでなければ、エラーとする
-        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOne({
+        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOneBy({
             pxrId: operator.pxrId,
             isDisabled: false
         });
@@ -724,7 +724,7 @@ export default class {
             if (appCatalogArray && appCatalog && !appCatalogArray.some(item => item._value === appCatalog.catalogItem._code._value)) {
                 throw new AppError(Message.REQUEST_APPLICATION_IS_NOT_RELATION, 400);
             }
-            const e: DataOperation = await getConnection('postgres').getRepository(DataOperation).findOne({
+            const e: DataOperation = await getConnection('postgres').getRepository(DataOperation).findOneBy({
                 bookId: myBook.id,
                 type: 'temp',
                 actorCatalogCode: target.actor._value,
@@ -895,7 +895,7 @@ export default class {
     @UseBefore(CollationSharedCodeValidator)
     async collation (@Body() dto: CollationSharedCode, @Req() req: express.Request) {
         await OperatorService.authMe(req);
-        const entity = await getConnection('postgres').getRepository(TemporarilySharedCode).findOne({
+        const entity = await getConnection('postgres').getRepository(TemporarilySharedCode).findOneBy({
             id: dto.tempShareCode,
             isDisabled: false
         });
@@ -905,12 +905,12 @@ export default class {
         if (entity.expireAt.getTime() < new Date().getTime()) {
             throw new AppError(Message.EXPIRE_SHARE_CODE, 400);
         }
-        const dataOperateDefinition = await getConnection('postgres').getRepository(DataOperation).findOne({
+        const dataOperateDefinition = await getConnection('postgres').getRepository(DataOperation).findOneBy({
             id: entity.dataOperateDefinitionId,
             type: 'temp',
             isDisabled: false
         });
-        const dataOperateDefinitionType = await getConnection('postgres').getRepository(DataOperationDataType).find({
+        const dataOperateDefinitionType = await getConnection('postgres').getRepository(DataOperationDataType).findBy({
             dataOperationId: dataOperateDefinition.id,
             isDisabled: false
         });
@@ -923,7 +923,7 @@ export default class {
                 isDisabled: false
             }
         });
-        const myConditionBook = await getConnection('postgres').getRepository(MyConditionBook).findOne({
+        const myConditionBook = await getConnection('postgres').getRepository(MyConditionBook).findOneBy({
             id: Number(dataOperateDefinition.bookId)
         });
 
@@ -1077,10 +1077,12 @@ export default class {
             }
         }
 
-        return isEnabled ? {
-            actor: actor,
-            app: app,
-            wf: null
-        } : null;
+        return isEnabled
+            ? {
+                actor: actor,
+                app: app,
+                wf: null
+            }
+            : null;
     }
 }

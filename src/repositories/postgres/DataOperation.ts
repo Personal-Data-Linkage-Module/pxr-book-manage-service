@@ -19,85 +19,85 @@ export default class DataOperation {
      * ブックID
      */
     @Column({ type: 'bigint', nullable: false, name: 'book_id' })
-    bookId: number = 0;
+        bookId: number = 0;
 
     /**
      * Region利用設定ID
      */
     @Column({ type: 'bigint', name: 'region_use_id' })
-    regionUseId: number = null;
+        regionUseId: number = null;
 
     /**
      * 種別
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'type' })
-    type: string = '';
+        type: string = '';
 
     /**
      * データ操作カタログコード
      */
     @Column({ type: 'bigint', name: 'operation_catalog_code' })
-    operationCatalogCode: number;
+        operationCatalogCode: number;
 
     /**
      * データ操作カタログバージョン
      */
     @Column({ type: 'bigint', name: 'operation_catalog_version' })
-    operationCatalogVersion: number;
+        operationCatalogVersion: number;
 
     /**
      * アクターカタログコード
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_code' })
-    actorCatalogCode: number = 0;
+        actorCatalogCode: number = 0;
 
     /**
      * アクターカタログバージョン
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_version' })
-    actorCatalogVersion: number = 0;
+        actorCatalogVersion: number = 0;
 
     /**
      * アプリケーションカタログコード
      */
     @Column({ type: 'bigint', name: 'app_catalog_code' })
-    appCatalogCode: number = 0;
+        appCatalogCode: number = 0;
 
     /**
      * アプリケーションカタログバージョン
      */
     @Column({ type: 'bigint', name: 'app_catalog_version' })
-    appCatalogVersion: number = 0;
+        appCatalogVersion: number = 0;
 
     /**
      * ワークフローカタログコード
      */
     @Column({ type: 'bigint', name: 'wf_catalog_code' })
-    wfCatalogCode: number = 0;
+        wfCatalogCode: number = 0;
 
     /**
      * ワークフローカタログバージョン
      */
     @Column({ type: 'bigint', name: 'wf_catalog_version' })
-    wfCatalogVersion: number = 0;
+        wfCatalogVersion: number = 0;
 
     /**
      * 属性
      */
     @Column({ type: 'text' })
-    attributes: string = '';
+        attributes: string = '';
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -109,7 +109,7 @@ export default class DataOperation {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

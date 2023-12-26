@@ -17,12 +17,12 @@ import { transformToNumber } from '../../common/Transform';
 export class CodeObject {
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     _value: number;
 
     @IsDefined()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     _ver: number;
 }
 
@@ -30,85 +30,85 @@ export class CodeObject {
 export default class PostGetOutputConditionDataMngReqDto {
     /** 出力データ収集アクターID */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    mcdOutputCodeActorId: number;
+        mcdOutputCodeActorId: number;
 
     /** コード */
     @IsOptional()
     @IsString()
-    code: string;
+        code: string;
 
     /** 出力タイプ */
     @IsOptional()
     @IsArray()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    outputTypes: number[];
+        outputTypes: number[];
 
     /** actor */
     @IsOptional()
     @Type(() => CodeObject)
     @ValidateNested()
-    actor: CodeObject;
+        actor: CodeObject;
 
     /** app */
     @IsOptional()
     @Type(() => CodeObject)
     @ValidateNested()
-    app: CodeObject;
+        app: CodeObject;
 
     /** wf */
     @IsOptional()
     @Type(() => CodeObject)
     @ValidateNested()
-    wf: CodeObject;
+        wf: CodeObject;
 
     /** 出力ファイル種別(ダウンロード: 1, アップロード: 2) */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    outputFileType: number;
+        outputFileType: number;
 
     /** アップロードファイル種別(利用者データ: 1, 個別データ: 2) */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    uploadFileType: number;
+        uploadFileType: number;
 
     /** 個別データ通知ステータス（未通知:0, 通知済:1） */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    extDataRequested: number;
+        extDataRequested: number;
 
     /** 入力ファイル準備ステータス（未完了：0, 完了：1） */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    inputFileIsReady: number;
+        inputFileIsReady: number;
 
     /** 出力ステータス（未作成：0, 作成済：1） */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    outputStatus: number;
+        outputStatus: number;
 
     /** データ削除指定（削除不可：0, 削除可：1） */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    isDeleteTarget: number;
+        isDeleteTarget: number;
 
     /** 削除ステータス（削除なし:0, 削除準備中：1, 削除待ち:2, 削除済：3） */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    deleteStatus: number;
+        deleteStatus: number;
 
     /** 処理中フラグ（処理中：1） */
     @IsOptional()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     @IsNumber()
-    processing: number;
+        processing: number;
 }

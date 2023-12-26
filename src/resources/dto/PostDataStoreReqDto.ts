@@ -28,39 +28,39 @@ import { Type } from 'class-transformer';
 class Code {
     @IsDefined()
     @IsNumber()
-    _value: number;
+        _value: number;
 
     @IsDefined()
     @IsNumber()
-    _ver: number;
+        _ver: number;
 }
 
 class ExcludeDocument {
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    code: Code;
+        code: Code;
 }
 
 class ExcludeThing {
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    code: Code;
+        code: Code;
 }
 
 class ExcludeEvent {
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    code: Code;
+        code: Code;
 
     /** thing */
     @IsDefined()
     @IsArray()
     @Type(() => ExcludeThing)
     @ValidateNested({ each: true })
-    excludeThing: ExcludeThing[];
+        excludeThing: ExcludeThing[];
 }
 
 export default class PostDataStoreReqDto {
@@ -68,42 +68,42 @@ export default class PostDataStoreReqDto {
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    actor: Code;
+        actor: Code;
 
     /** app */
     @IsOptional()
     @Type(() => Code)
     @ValidateNested()
-    app: Code;
+        app: Code;
 
     /** wf */
     @IsOptional()
     @Type(() => Code)
     @ValidateNested()
-    wf: Code;
+        wf: Code;
 
     /** store */
     @IsDefined()
     @Type(() => Code)
     @ValidateNested()
-    store: Code;
+        store: Code;
 
     /** store_catalog_id */
     @IsDefined()
     @IsString()
-    storeCatalogId: string;
+        storeCatalogId: string;
 
     /** 蓄積対象外ドキュメント */
     @IsOptional()
     @IsArray()
     @Type(() => ExcludeDocument)
     @ValidateNested({ each: true })
-    excludeDocument: ExcludeDocument[];
+        excludeDocument: ExcludeDocument[];
 
     /** 蓄積対象外イベント */
     @IsOptional()
     @IsArray()
     @Type(() => ExcludeEvent)
     @ValidateNested({ each: true })
-    excludeEvent: ExcludeEvent[];
+        excludeEvent: ExcludeEvent[];
 }

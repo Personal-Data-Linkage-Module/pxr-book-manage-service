@@ -606,7 +606,7 @@ export default class DataShareService {
             });
         })();
         if (!cooperate) { throw new AppError(message.CAN_NOT_FIND_COOPERATE, 400); }
-        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOne({
+        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOneBy({
             id: parseInt(cooperate.bookId + ''),
             isDisabled: false
         });
@@ -616,7 +616,7 @@ export default class DataShareService {
                 where: {
                     bookId: myBook.id,
                     type: 'share',
-                    appCatalog: app,
+                    appCatalogCode: app,
                     wfCatalogCode: IsNull(),
                     actorCatalogCode: actorCode,
                     isDisabled: false

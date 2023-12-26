@@ -659,7 +659,7 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            expect(response.body.reasons[0].message).toBe(Message.validation.isDefined);
         });
         test('パラメータ不足：actor._value', async () => {
             // リクエストデータを読み込み
@@ -827,7 +827,7 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            expect(response.body.reasons[0].message).toBe(Message.validation.isDefined);
         });
         test('パラメータ不足：store._value', async () => {
             // リクエストデータを読み込み
@@ -1352,7 +1352,7 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            expect(response.body.reasons[0].message).toBe(Message.validation.isDefined);
         });
         test('パラメータ不足：excludeDocument.code._value', async () => {
             // リクエストデータを読み込み
@@ -1709,7 +1709,7 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            expect(response.body.reasons[0].message).toBe(Message.validation.isDefined);
         });
         test('パラメータ異常：excludeEvent.excludeThing（Array以外）', async () => {
             // リクエストデータを読み込み
@@ -1772,7 +1772,7 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(400);
-            expect(response.body.reasons[0].message).toBe(Message.validation.nestedValidation);
+            expect(response.body.reasons[0].message).toBe(Message.validation.isDefined);
         });
         test('パラメータ不足：excludeEvent.excludeThing.code._value', async () => {
             // リクエストデータを読み込み

@@ -223,9 +223,11 @@ export default class AccessLogService {
         if (accessAt && accessAt.end) {
             body.accessAt.end = transformFromDateTimeToString(Configure['timezone'], accessAt.end);
         }
-        body.app = app ? {
-            _value: app
-        } : null;
+        body.app = app
+            ? {
+                _value: app
+            }
+            : null;
         body.wf = null;
         body.userId = userId;
         if (document && document.length > 0) {

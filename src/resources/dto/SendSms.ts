@@ -9,9 +9,9 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export default class {
     @IsString()
     @IsNotEmpty()
-    pxrId: string;
+        pxrId: string;
 
     @IsString()
     @IsNotEmpty()
-    initialPassword: string;
+        initialPassword: string;
 }

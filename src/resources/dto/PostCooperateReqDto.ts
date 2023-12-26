@@ -28,7 +28,7 @@ export default class PostCooperateReqDto {
     @IsString()
     @IsDefined()
     @IsNotEmpty()
-    identifyCode: string;
+        identifyCode: string;
 
     public getIdentifyCode (): string {
         return this.identifyCode;

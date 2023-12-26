@@ -19,43 +19,43 @@ export default class Identification {
      * ブックID
      */
     @Column({ type: 'bigint', nullable: false, name: 'book_id' })
-    bookId: number = 0;
+        bookId: number = 0;
 
     /**
      * 本人性確認事項カタログコード
      */
     @Column({ type: 'bigint', nullable: false, name: 'identification_code' })
-    identificationCatalogCode: number = 0;
+        identificationCatalogCode: number = 0;
 
     /**
      * 本人性確認事項カタログバージョン
      */
     @Column({ type: 'bigint', nullable: false, name: 'identification_version' })
-    identificationCatalogVersion: number = 0;
+        identificationCatalogVersion: number = 0;
 
     /**
      * カタログテンプレート
      */
     @Column({ type: 'text', nullable: false })
-    template: string = '';
+        template: string = '';
 
     /**
      * カタログテンプレートハッシュ
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'template_hash' })
-    templateHash: string = '';
+        templateHash: string = '';
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -67,7 +67,7 @@ export default class Identification {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

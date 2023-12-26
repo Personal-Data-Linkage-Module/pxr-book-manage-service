@@ -15,16 +15,16 @@ export default class {
 
     @IsOptional()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     wf: number;
 
     @IsOptional()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     app: number;
 
     @IsOptional()
     @IsNumber()
-    @Transform(transformToNumber)
+    @Transform(({ value }) => { return transformToNumber(value); })
     actor: number;
 }

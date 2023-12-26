@@ -22,12 +22,12 @@ import { transformToDateTime } from '../../common/Transform';
 
 
 export class startEnd {
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsDate()
     @IsOptional()
     start: Date;
 
-    @Transform(transformToDateTime)
+    @Transform(({ value }) => { return transformToDateTime(value); })
     @IsDate()
     @IsOptional()
     end: Date;
@@ -36,5 +36,5 @@ export class startEnd {
 
 export default class PostCTokenSearchReqDto {
     @IsOptional()
-    createAt: startEnd;
+        createAt: startEnd;
 }

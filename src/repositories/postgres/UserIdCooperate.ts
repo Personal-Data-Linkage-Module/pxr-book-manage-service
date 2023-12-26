@@ -19,85 +19,85 @@ export default class UserIdCooperate {
      * ブックID
      */
     @Column({ type: 'bigint', nullable: false, name: 'book_id' })
-    bookId: number = 0;
+        bookId: number = 0;
 
     /**
      * アクターカタログコード
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_code' })
-    actorCatalogCode: number = 0;
+        actorCatalogCode: number = 0;
 
     /**
      * アクターカタログバージョン
      */
     @Column({ type: 'bigint', nullable: false, name: 'actor_catalog_version' })
-    actorCatalogVersion: number = 0;
+        actorCatalogVersion: number = 0;
 
     /**
      * リージョンカタログコード
      */
     @Column({ type: 'bigint', name: 'region_catalog_code' })
-    regionCatalogCode: number = 0;
+        regionCatalogCode: number = 0;
 
     /**
      * リージョンカタログバージョン
      */
     @Column({ type: 'bigint', name: 'region_catalog_version' })
-    regionCatalogVersion: number = 0;
+        regionCatalogVersion: number = 0;
 
     /**
      * アプリケーションカタログコード
      */
     @Column({ type: 'bigint', name: 'app_catalog_code' })
-    appCatalogCode: number = 0;
+        appCatalogCode: number = 0;
 
     /**
      * アプリケーションカタログバージョン
      */
     @Column({ type: 'bigint', name: 'app_catalog_version' })
-    appCatalogVersion: number = 0;
+        appCatalogVersion: number = 0;
 
     /**
      * ワークフローカタログコード
      */
     @Column({ type: 'bigint', name: 'wf_catalog_code' })
-    wfCatalogCode: number = 0;
+        wfCatalogCode: number = 0;
 
     /**
      * ワークフローカタログバージョン
      */
     @Column({ type: 'bigint', name: 'wf_catalog_version' })
-    wfCatalogVersion: number = 0;
+        wfCatalogVersion: number = 0;
 
     /**
      * 利用者ID
      */
     @Column({ type: 'varchar', length: 255, name: 'user_id' })
-    userId: string = null;
+        userId: string = null;
 
     /**
      * ステータス
      */
     @Column({ type: 'smallint', name: 'status' })
-    status: number = 0;
+        status: number = 0;
 
     /**
      * 連携開始日時
      */
     @Column({ type: 'timestamp without time zone', name: 'start_at' })
-    startAt: Date = null;
+        startAt: Date = null;
 
     /**
      * 削除フラグ
      */
     @Column({ type: 'boolean', nullable: false, default: false, name: 'is_disabled' })
-    isDisabled: boolean = false;
+        isDisabled: boolean = false;
 
     /**
      * 登録者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'created_by' })
-    createdBy: string = '';
+        createdBy: string = '';
 
     /**
      * 登録日時
@@ -109,7 +109,7 @@ export default class UserIdCooperate {
      * 更新者
      */
     @Column({ type: 'varchar', length: 255, nullable: false, name: 'updated_by' })
-    updatedBy: string = '';
+        updatedBy: string = '';
 
     /**
      * 更新日時

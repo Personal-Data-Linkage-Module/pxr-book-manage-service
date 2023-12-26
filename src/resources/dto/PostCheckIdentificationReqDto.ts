@@ -32,52 +32,52 @@ import { Type } from 'class-transformer';
 class Code {
     @IsDefined()
     @IsNumber()
-    _value: number;
+        _value: number;
 
     @IsDefined()
     @IsNumber()
-    _ver: number;
+        _ver: number;
 }
 
 class Item {
     @IsString()
     @IsDefined()
     @IsNotEmpty()
-    title: string
+        title: string;
 
     @IsDefined()
     @Type(() => Code)
-    type: Code;
+        type: Code;
 
     @IsOptional()
-    content: string | boolean | number | undefined | null;
+        content: string | boolean | number | undefined | null;
 }
 
 class ItemGroup {
     @IsString()
     @IsDefined()
     @IsNotEmpty()
-    title: string
+        title: string;
 
     @IsDefined()
     @Type(() => Item)
-    item: Item[];
+        item: Item[];
 }
 
 class Template {
     @IsDefined()
     @Type(() => Code)
-    _code: Code;
+        _code: Code;
 
     @IsDefined()
     @Type(() => ItemGroup)
-    'item-group': ItemGroup[];
+        'item-group': ItemGroup[];
 }
 
 class Identification {
     @IsDefined()
     @Type(() => Template)
-    template: Template;
+        template: Template;
 }
 export default class PostCheckIdentificationReqDto {
     /** identification */
@@ -85,5 +85,5 @@ export default class PostCheckIdentificationReqDto {
     @IsNotEmpty()
     @IsArray()
     @Type(() => Identification)
-    identification: Identification[];
+        identification: Identification[];
 }
