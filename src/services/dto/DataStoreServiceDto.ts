@@ -14,6 +14,7 @@ https://opensource.org/licenses/mit-license.php
  */
 /* eslint-disable */
 import Operator from '../../resources/dto/OperatorReqDto';
+import { CodeObject } from './CTokenLedgerDto';
 /* eslint-enable */
 /**
  * データ蓄積定義追加サービスデータ
@@ -40,6 +41,11 @@ export default class DataStoreServiceDto {
     private wf: object = null;
 
     /**
+     * アクターカタログコード
+     */
+    private actorCatalogCode: number = null;
+
+    /**
      * アプリケーションカタログコード
      */
     private appCatalogCode: number = null;
@@ -58,6 +64,11 @@ export default class DataStoreServiceDto {
      * モノカタログコードオブジェクト
      */
     private thing: any[] = null;
+
+    /**
+     * データ種カタログコードオブジェクト
+     */
+    private datatype: CodeObject[] = null;
 
     /**
      * 登録者（ログインID）
@@ -215,6 +226,21 @@ export default class DataStoreServiceDto {
     }
 
     /**
+     * データ種カタログコード配列取得
+     */
+    public getDatatype (): CodeObject[] {
+        return this.datatype;
+    }
+
+    /**
+     * データ種カタログコード配列設定
+     * @param datatype
+     */
+    public setDatatype (datatype: CodeObject[]) {
+        this.datatype = datatype;
+    }
+
+    /**
      * userId設定
      * @param userId
      */
@@ -257,6 +283,21 @@ export default class DataStoreServiceDto {
      */
     public setWfCatalogCode (wfCatalogCode: number) {
         this.wfCatalogCode = wfCatalogCode;
+    }
+
+    /**
+     * アクターカタログコード取得
+     */
+    public getActorCatalogCode (): number {
+        return this.actorCatalogCode;
+    }
+
+    /**
+     * アクターカタログコード設定
+     * @param actorCatalogCode
+     */
+    public setActorCatalogCode (actorCatalogCode: number) {
+        this.actorCatalogCode = actorCatalogCode;
     }
 
     /**

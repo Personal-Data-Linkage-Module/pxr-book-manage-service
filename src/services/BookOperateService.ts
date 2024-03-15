@@ -11,6 +11,7 @@ import ProxyService from './ProxyService';
 import AppError from '../common/AppError';
 import Config from '../common/Config';
 import { ResponseCode } from '../common/ResponseCode';
+import { IPostStoreEventReceiveRequest } from './StoreEventService';
 const Message = Config.ReadConfig('./config/message.json');
 /* eslint-enable */
 
@@ -87,7 +88,7 @@ export default class BookOperateService {
      * @param body
      * @param operator
      */
-    static async doLinkingPostStoreEventRequest (blockCode: number, body: {}, operator: Operator): Promise<any> {
+    static async doLinkingPostStoreEventRequest (blockCode: number, body: IPostStoreEventReceiveRequest, operator: Operator): Promise<any> {
         // 送信データを生成
         const data = JSON.stringify(body);
 

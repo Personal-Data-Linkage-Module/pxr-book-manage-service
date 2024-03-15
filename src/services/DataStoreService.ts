@@ -31,6 +31,9 @@ import { OperatorType } from '../common/Operator';
 import AppError from '../common/AppError';
 import { ResponseCode } from '../common/ResponseCode';
 import { connectDatabase } from '../common/Connection';
+import PostDataStorePermissionResDto from '../resources/dto/PostDataStorePermissionResDto';
+import { IDataOperationAsset, IDataOperationRequest } from '../common/DataOperationRequest';
+import PermissionAnalyzer from '../common/PermissionAnalyzer';
 const config = Config.ReadConfig('./config/config.json');
 const message = Config.ReadConfig('./config/message.json');
 
@@ -878,6 +881,72 @@ export default class DataStoreService {
             Number(ele['code']['_ver']) === version
         );
         return target;
+    }
+
+    /**
+     * 蓄積可否判定
+     * @param storePermissionDto
+     */
+    public async checkDataStorePermission (storePermissionDto: DataStoreServiceDto): Promise<PostDataStorePermissionResDto> {
+        const appCode = storePermissionDto.getAppCatalogCode() ? storePermissionDto.getAppCatalogCode() : null;
+        const wfCode = storePermissionDto.getWfCatalogCode() ? storePermissionDto.getWfCatalogCode() : null;
+        // pxrId取得
+        const book = await EntityOperation.getConditionBookRecordFromUser(storePermissionDto.getUserId(), storePermissionDto.getActorCatalogCode(), appCode, wfCode);
+        if (!book || book.length === 0) {
+            throw new AppError(message.CAN_NOT_FIND_BOOK, ResponseCode.BAD_REQUEST);
+        }
+        const pxrId = book[0].pxrId;
+
+        const catalogService = new CatalogService();
+        // analyzerインスタンス生成、有効な蓄積定義の特定
+        const asset: IDataOperationAsset[] = [{
+            actor: storePermissionDto.getActorCatalogCode(),
+            asset: appCode || wfCode
+        }];
+        const analyzer = PermissionAnalyzer
+            .create(storePermissionDto.getOperator(), EntityOperation.agreementAccessor, catalogService.catalogAccessor)
+            .setDataOperationType('STORE');
+        await analyzer.setAgreement(pxrId, 'STORE', asset);
+        await analyzer.setAssetCatalog();
+        await analyzer.specifyTarget();
+
+        // リクエストの各データ種について、蓄積可否判定
+        let isAllPermitted = true;
+        for (const datatype of storePermissionDto.getDatatype()) {
+            // リクエスト生成
+            const permissionRequest: IDataOperationRequest = {
+                pxrId: pxrId,
+                operationType: 'STORE',
+                storedBy: {
+                    actor: storePermissionDto.getActorCatalogCode(),
+                    asset: storePermissionDto.getAppCatalogCode() || storePermissionDto.getWfCatalogCode()
+                },
+                shareTo: null,
+                dataType: {
+                    type: null,
+                    code: datatype
+                }
+            };
+            // 判定
+            const isPermittedResponse = await analyzer.isPermitted(permissionRequest);
+            if (!isPermittedResponse.checkResult) {
+                // いずれかのデータ種で蓄積不可判定が出た場合、不可判定にする
+                isAllPermitted = false;
+                break;
+            }
+        }
+        // レスポンス生成
+        const res = new PostDataStorePermissionResDto();
+        if (isAllPermitted) {
+            // 可判定
+            res.setCheckResult(true);
+            res.setDatatype(storePermissionDto.getDatatype());
+        } else {
+            // 不可判定
+            res.setCheckResult(false);
+            res.setDatatype(null);
+        }
+        return res;
     }
 
     /**

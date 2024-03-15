@@ -921,6 +921,16 @@ export namespace Session {
         mobilePhone: '09011112222',
         lastLoginAt: '2020-01-01T00:00:00.000+0900',
         attributes: {},
+        roles: [
+            {
+                _value: 1002101,
+                _ver: 1
+            },
+            {
+                _value: 1001101,
+                _ver: 1
+            }
+        ],
         block: {
             _value: 1000110,
             _ver: 1
@@ -930,6 +940,7 @@ export namespace Session {
             _ver: 1
         }
     };
+
     /**
      * 正常（APP）
      */
@@ -942,6 +953,12 @@ export namespace Session {
         mobilePhone: '09011112222',
         lastLoginAt: '2020-01-01T00:00:00.000+0900',
         attributes: {},
+        roles: [
+            {
+                _value: 1001201,
+                _ver: 1
+            }
+        ],
         block: {
             _value: 1000110,
             _ver: 1

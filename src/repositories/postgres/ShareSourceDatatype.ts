@@ -112,7 +112,7 @@ export default class ShareSourceDatatype {
      */
     constructor (entity?: {}) {
         if (entity) {
-            const entityName = 'share_source_datatype';
+            const entityName = 'share_source_datatype_';
             this.id = Number(entity[entityName + 'id']);
             this.storeEventNotificateId = Number(entity[entityName + 'store_event_notificate_id']);
             this.shareCatalogCode = Number(entity[entityName + 'share_catalog_code']);

@@ -18,6 +18,9 @@ import DeleteDataStoreRequestValidator from './validator/DeleteDataStoreRequestV
 import EnableSimpleBackPressure from './backpressure/EnableSimpleBackPressure';
 import { OperatorType } from '../common/Operator';
 import Config from '../common/Config';
+import PostDataStorePermissionResDto from './dto/PostDataStorePermissionResDto';
+import PostDataStorePermissionReqDto from './dto/PostDataStorePermissionReqDto';
+import { transformAndValidate } from 'class-transformer-validator';
 /* eslint-enable */
 const config = Config.ReadConfig('./config/config.json');
 
@@ -93,6 +96,40 @@ export default class DataStoreController {
         serviceDto.setOperator(operator);
         // サービス層のデータ蓄積定義取得処理を実行
         const ret = await new DataStoreService().getDataStore(serviceDto);
+        return ret;
+    }
+
+    /**
+     * データ蓄積可否判定
+     */
+    @Post('/settings/store/permission')
+    @Header('X-Content-Type-Options', 'nosniff')
+    @Header('X-XSS-Protection', '1; mode=block')
+    @Header('X-Frame-Options', 'deny')
+    // SDE-MSA-PRIN 過負荷を回避する （MSA-PRIN-ID-02）
+    @EnableSimpleBackPressure()
+    async postDataStorePermission (@Req() req: Request, @Body() dto: PostDataStorePermissionReqDto) {
+        dto = await transformAndValidate(PostDataStorePermissionReqDto, dto) as PostDataStorePermissionReqDto;
+        // セッションチェックデータオブジェクトを生成
+        const sessionCheckDto = new SessionCheckDto();
+        sessionCheckDto.setRequest(req);
+        sessionCheckDto.setCatalogUrl(config['catalogUrl']);
+        sessionCheckDto.setOperatorUrl(config['operatorUrl']);
+        // 除外するオペレータタイプの指定
+        sessionCheckDto.setIgnoreOperatorTypeList([OperatorType.TYPE_IND, OperatorType.TYPE_MANAGE_MEMBER]);
+        // サービス層のセッションチェックを実行
+        const operator = await new SessionCheckService().isSessionCheck(sessionCheckDto);
+
+        // 蓄積可否判定データオブジェクトを生成
+        const serviceDto = new DataStoreServiceDto();
+        serviceDto.setUserId(dto.userId);
+        serviceDto.setAppCatalogCode(dto.appCode);
+        serviceDto.setWfCatalogCode(dto.wfCode);
+        serviceDto.setActorCatalogCode(dto.actorCode);
+        serviceDto.setDatatype(dto.datatype);
+        serviceDto.setOperator(operator);
+        // サービス層のデータ蓄積可否判定処理を実行
+        const ret: PostDataStorePermissionResDto = await new DataStoreService().checkDataStorePermission(serviceDto);
         return ret;
     }
 

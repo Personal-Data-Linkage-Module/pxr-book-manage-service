@@ -2,7 +2,8 @@
 Released under the MIT license.
 https://opensource.org/licenses/mit-license.php
 */
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
+import DataOperationDataType from './DataOperationDataType';
 
 /**
  * データ操作定義テーブルエンティティ
@@ -118,6 +119,12 @@ export default class DataOperation {
     readonly updatedAt: Date = new Date();
 
     /**
+     * DataOperationDataType
+     */
+    @OneToOne(() => DataOperationDataType, dataOperationDataType => dataOperationDataType.dataOperationId)
+        dataOperationDataType?: DataOperationDataType;
+
+    /**
      * コンストラクタ
      * @param entity
      */
@@ -142,6 +149,7 @@ export default class DataOperation {
             this.createdAt = new Date(entity[entityName + 'created_at']);
             this.updatedBy = entity[entityName + 'updated_by'];
             this.updatedAt = new Date(entity[entityName + 'updated_at']);
+            this.dataOperationDataType = new DataOperationDataType(entity);
         }
     }
 
@@ -227,5 +235,13 @@ export default class DataOperation {
 
     public setUpdatedBy (updatedBy: string): void {
         this.updatedBy = updatedBy;
+    }
+
+    public getDataOperationDataType (): DataOperationDataType {
+        return this.dataOperationDataType;
+    }
+
+    public setDataOperationDataType (dataOperationDataType: DataOperationDataType): void {
+        this.dataOperationDataType = dataOperationDataType;
     }
 }

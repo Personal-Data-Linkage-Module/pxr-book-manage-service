@@ -87,7 +87,7 @@ export default class StoreEventNotificate {
      */
     constructor (entity?: {}) {
         if (entity) {
-            const entityName = 'store_event_notificate';
+            const entityName = 'store_event_notificate_';
             this.id = Number(entity[entityName + 'id']);
             this.notificateType = entity[entityName + 'notificate_type'];
             this.storeEventNotificateCatalogCode = Number(entity[entityName + 'store_event_notificate_catalog_code']);

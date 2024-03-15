@@ -2,6 +2,9 @@
 Released under the MIT license.
 https://opensource.org/licenses/mit-license.php
 */
+
+import { CodeObject } from './PostBookOpenReqDto';
+
 /**
  * オペレータ情報
  */
@@ -45,6 +48,11 @@ export default class Operator {
      * 権限
      */
     private auth: object = null;
+
+    /**
+     * ロール
+     */
+    private roles: CodeObject[] = null;
 
     /**
      * ブロックコード
@@ -157,6 +165,13 @@ export default class Operator {
     }
 
     /**
+     * roles取得
+     */
+    public getRoles (): CodeObject[] {
+        return this.roles;
+    }
+
+    /**
      * エンコード済みデータ取得
      */
     public getEncodeData (): string {
@@ -182,6 +197,7 @@ export default class Operator {
         this.name = obj['name'];
         this.mobilePhone = obj['mobilePhone'];
         this.auth = obj['auth'];
+        this.roles = obj['roles'];
         this.pxrId = obj['pxrId'];
         if (obj['block']) {
             this.blockCode = Number(obj['block']['_value']);
