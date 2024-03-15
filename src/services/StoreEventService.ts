@@ -17,36 +17,139 @@ import { ResponseCode } from '../common/ResponseCode';
 import PostStoreEventReqDto from '../resources/dto/PostStoreEventReqDto';
 import BookOperateService from './BookOperateService';
 import { applicationLogger } from '../common/logging';
+import { CodeObject } from '../resources/dto/PostBookOpenReqDto';
+import PermissionAnalyzer from '../common/PermissionAnalyzer';
+import { IDataOperationRequest } from '../common/DataOperationRequest';
+import { IAllDataOperationRequestResponse } from '../common/DataOperationResponse';
+import UserIdCooperate from '../repositories/postgres/UserIdCooperate';
 /* eslint-enable */
 const message = Config.ReadConfig('./config/message.json');
 const config = Config.ReadConfig('./config/config.json');
 
+/**
+ * 蓄積イベント受信APIに送信するリクエストボディ定義
+ */
+export interface IPostStoreEventReceiveRequest {
+    /**
+     * 送信種別
+     */
+    type: 'store-event' | 'share-trigger';
+    /**
+     * 処理種別
+     */
+    operate: 'add' | 'update' | 'delete';
+    /**
+     * 利用者ID
+     */
+    userId: string;
+    /**
+     * データ識別子
+     */
+    identifier: string;
+    /**
+     * ドキュメント種別カタログコード
+     */
+    document: CodeObject | null;
+    /**
+     * イベント種別カタログコード
+     */
+    event: CodeObject | null;
+    /**
+     * モノ種別カタログコード
+     */
+    thing: CodeObject | null;
+    /**
+     * 共有元アクター
+     */
+    sourceActor: CodeObject;
+    /**
+     * 共有元アプリケーション
+     */
+    sourceApp: CodeObject | null;
+    /**
+     * 共有元ワークフロー
+     */
+    sourceWf: CodeObject | null;
+    /**
+     * 共有先アクター
+     */
+    destinationActor: CodeObject;
+    /**
+     * 共有先アプリケーション
+     */
+    destinationApp: CodeObject | null;
+    /**
+     * 共有先ワークフロー
+     */
+    destinationWf: CodeObject | null;
+    /**
+     * 共有トリガー定義カタログコード
+     */
+    trigger: CodeObject | null;
+}
+
 @Service()
 export default class StoreEventService {
-    /** ドキュメント */
-    private TYPE_DOCUMENT = 1;
-    /**  イベント */
-    private TYPE_EVENT = 2;
-    /** モノ */
-    private TYPE_THING = 3;
-
     /**
      * 蓄積イベント通知
      */
     public async postStoreEventNotificate (operator: Operator, dto: PostStoreEventNotificateReqDto) {
+        // リクエストのadd, update, delete 各CMatrixリストのうち、存在するものを用いてpxrIdを取得する
+        const cMatrix = dto.add && dto.add.length > 0 ? dto.add[0] : dto.update && dto.update.length > 0 ? dto.update[0] : dto.delete[0];
+        if (!cMatrix) {
+            // リクエストのCMatrixリストが全て空の場合、処理を行わない
+            return { result: 'success' };
+        }
+        // cMatrix.eventが無い場合はバリデーションチェックで確認済のため、考慮不要
+
+        // PXR-IDを取得
+        const userId = cMatrix.userId;
+        const app: number = cMatrix.event.eventAppCatalogCode;
+        const wf: number = cMatrix.event.eventWfCatalogCode;
+        const userIdCooperate = await EntityOperation.getUserIdCooperateRecordFromUserId(userId, app, wf);
+        const book = await EntityOperation.getBookRecordById(userIdCooperate.bookId);
+        const pxrId = book.pxrId;
+
+        // 蓄積元アクター、アセット情報を取得
+        const sourceActor: CodeObject = {
+            _value: userIdCooperate.actorCatalogCode,
+            _ver: userIdCooperate.actorCatalogVersion
+        };
+        const sourceApp: CodeObject = userIdCooperate.appCatalogCode
+            ? {
+                _value: userIdCooperate.appCatalogCode,
+                _ver: userIdCooperate.appCatalogVersion
+            }
+            : null;
+        const sourceWf: CodeObject = userIdCooperate.wfCatalogCode
+            ? {
+                _value: userIdCooperate.wfCatalogCode,
+                _ver: userIdCooperate.wfCatalogVersion
+            }
+            : null;
+
+        const catalogService = new CatalogService();
+        // analyzerインスタンス生成、有効な共有定義の特定
+        const analyzer = PermissionAnalyzer
+            .create(operator, EntityOperation.agreementAccessor, catalogService.catalogAccessor, catalogService.shareRestrictionAccessor, EntityOperation.storeEventNotificationAccessor)
+            .setDataOperationType('STORE_EVENT');
+        await analyzer.setAgreement(pxrId, 'SHARE_CONTINUOUS', null);
+        await analyzer.setAssetCatalog();
+        await analyzer.specifyTarget();
+
         if (dto.add && dto.add.length > 0) {
-            for (const add of dto.add) {
-                await this.storeEventNotificateProcess(add, 'add', operator);
+            for (const addCMatrices of dto.add) {
+                await this.storeEventNotificateProcess(operator, analyzer, pxrId, addCMatrices, 'add', sourceActor, sourceApp, sourceWf);
             }
         }
         if (dto.update && dto.update.length > 0) {
-            for (const update of dto.update) {
-                await this.storeEventNotificateProcess(update, 'update', operator);
+            for (const updateCMatrices of dto.update) {
+                await this.storeEventNotificateProcess(operator, analyzer, pxrId, updateCMatrices, 'update', sourceActor, sourceApp, sourceWf);
             }
         }
         if (dto.delete && dto.delete.length > 0) {
-            for (const delet of dto.delete) {
-                await this.storeEventNotificateProcess(delet, 'delete', operator);
+            for (const deleteCMatrices of dto.delete) {
+                await this.storeEventNotificateProcess(operator, analyzer, pxrId, deleteCMatrices, 'delete', sourceActor, sourceApp, sourceWf);
             }
         }
         const response = {
@@ -59,47 +162,36 @@ export default class StoreEventService {
      * 蓄積イベント通知 処理
      * リファクタ履歴
      *  seprate: storeNotificateEveryData（各データ種毎の蓄積イベント通知処理）
-     *  seprate : getSharingRestriction（共有制限定義取得）
-     *  seprate : checkRestrict（共有制限定義チェック）
      *  seprate : receiveStoreEvent（蓄積イベント受信API呼び出し）
      *  seprate : addStoreEventNotificateHistory（蓄積イベント通知履歴登録処理）
      */
-    public async storeEventNotificateProcess (cmatrix: CMatrix, type: string, operator: Operator) {
-        // PXR-IDを取得
-        const userId = cmatrix.userId;
-        const app: number = cmatrix.event.eventAppCatalogCode;
-        const wf: number = null;
-        const userIdCooperate = await EntityOperation.getUserIdCooperateRecordFromUserId(userId, app, wf);
-        const book = await EntityOperation.getBookRecordById(userIdCooperate.bookId);
-        const pxrId = book.pxrId;
-
+    public async storeEventNotificateProcess (operator: Operator, analyzer: PermissionAnalyzer, pxrId: string, cmatrix: CMatrix, operation: 'add' | 'update' | 'delete', sourceActor: CodeObject, sourceApp: CodeObject, sourceWf: CodeObject) {
         // ドキュメント
         if (cmatrix.document && cmatrix.document.length > 0) {
-            for (const document of cmatrix.document) {
-                const results = await EntityOperation.getStoreEventNotificateData(
-                    pxrId, this.TYPE_DOCUMENT,
-                    document.docCatalogCode, document.docCatalogVersion,
-                    document.docActorCode);
-                await this.storeNotificateEveryData(results, type, operator, userId, document, 'document');
+            for (const cMatrixDoc of cmatrix.document) {
+                const document = {
+                    _value: cMatrixDoc.docCatalogCode,
+                    _ver: cMatrixDoc.docCatalogVersion
+                };
+                await this.storeNotificateEveryData(operator, analyzer, pxrId, operation, 'document', document, cMatrixDoc.docIdentifier, sourceActor, sourceApp, sourceWf);
             }
         }
         // イベント
         if (cmatrix.event) {
-            const event = cmatrix.event;
-            const results = await EntityOperation.getStoreEventNotificateData(
-                pxrId, this.TYPE_EVENT,
-                event.eventCatalogCode, event.eventCatalogVersion,
-                event.eventActorCode);
-            await this.storeNotificateEveryData(results, type, operator, userId, event, 'event');
+            const event = {
+                _value: cmatrix.event.eventCatalogCode,
+                _ver: cmatrix.event.eventCatalogVersion
+            };
+            await this.storeNotificateEveryData(operator, analyzer, pxrId, operation, 'event', event, cmatrix.event.eventIdentifier, sourceActor, sourceApp, sourceWf);
         }
         // モノ
         if (cmatrix.thing && cmatrix.thing.length > 0) {
-            for (const thing of cmatrix.thing) {
-                const results = await EntityOperation.getStoreEventNotificateData(
-                    pxrId, this.TYPE_THING,
-                    thing.thingCatalogCode, thing.thingCatalogVersion,
-                    thing.thingActorCode);
-                await this.storeNotificateEveryData(results, type, operator, userId, thing, 'thing');
+            for (const cMatrixThing of cmatrix.thing) {
+                const thing = {
+                    _value: cMatrixThing.thingCatalogCode,
+                    _ver: cMatrixThing.thingCatalogVersion
+                };
+                await this.storeNotificateEveryData(operator, analyzer, pxrId, operation, 'thing', thing, cMatrixThing.thingIdentifier, sourceActor, sourceApp, sourceWf);
             }
         }
     }
@@ -113,112 +205,56 @@ export default class StoreEventService {
      * @param data
      * @param dataType
      */
-    private async storeNotificateEveryData (results: any[], type: string, operator: Operator, userId: string, data: any, dataType: 'document' | 'event' | 'thing') {
-        for (const res of results) {
-            // レコードが取得できない または
-            // 共有元指定データ種が存在し、共有元指定共有元が取得できなかった場合
-            if (!res || (res['shareSourceDatatypeId'] && !res['shareSourceSourceId'])) {
-                continue;
+    private async storeNotificateEveryData (operator: Operator, analyzer: PermissionAnalyzer, pxrId: string, operation: 'add' | 'update' | 'delete', type: 'document' | 'event' | 'thing', data: CodeObject, identifier: string, sourceActor: CodeObject, sourceApp: CodeObject, sourceWf: CodeObject) {
+        // analyzerによる判定、通知先取得
+        const permissionRequest: IDataOperationRequest = {
+            pxrId: pxrId,
+            operationType: 'STORE_EVENT',
+            storedBy: {
+                actor: sourceActor._value,
+                asset: sourceApp ? sourceApp._value : sourceWf._value
+            },
+            shareTo: null,
+            dataType: {
+                type: type,
+                code: data
             }
+        };
+        const storeEventRequestList = await analyzer.getAllPermitted(permissionRequest);
 
-            const dataOperationActorCode = res['dataOperationActorCode'] ? Number(res['dataOperationActorCode']) : null;
-            const dataOperationActorVersion = res['dataOperationActorVersion'] ? Number(res['dataOperationActorVersion']) : null;
-            const dataOperationAppCode = res['dataOperationAppCode'] ? Number(res['dataOperationAppCode']) : null;
-            const dataOperationAppVersion = res['dataOperationAppVersion'] ? Number(res['dataOperationAppVersion']) : null;
-
-            // 共有制限定義取得
-            const sharingRestriction = await this.getSharingRestriction(operator, data, dataOperationAppCode, dataType === 'document' ? 'doc' : dataType);
-            // 共有制限定義のデータ種が対象データ種の場合
-            await this.checkRestrict(sharingRestriction, operator, dataOperationAppCode, dataType);
-
-            // 共有先の利用者IDを取得
-            const shareTargetUserId = await EntityOperation.getShareUserIdCooperate(
-                userId, data,
-                dataOperationActorCode, dataOperationAppCode, null);
-
-            // 蓄積イベント受信APIを呼び出す
-            await this.receiveStoreEvent(res, type, shareTargetUserId, data, dataOperationActorCode, dataOperationActorVersion, dataOperationAppCode, dataOperationAppVersion, operator, dataType === 'document' ? 'doc' : dataType);
-
-            // 蓄積イベント通知履歴にデータを登録
-            await this.addStoreEventNotificateHistory(res, type, shareTargetUserId, data, dataOperationActorCode, dataOperationActorVersion, dataOperationAppCode, dataOperationAppVersion, operator, dataType === 'document' ? 'doc' : dataType);
-        }
-    }
-
-    /**
-     * 共有制限チェック
-     * @param sharingRestriction
-     * @param operator
-     * @param dataOperationAppCode
-     * @param type
-     * リファクタ履歴
-     *  inner : checkPermissionOrProhibition（制限許可チェック共通処理）
-     */
-    private async checkRestrict (sharingRestriction: any, operator: Operator, dataOperationAppCode: number, type: 'document' | 'event' | 'thing') {
-        if (sharingRestriction) {
-            const catalogDto = new CatalogDto();
-            catalogDto.setMessage(message);
-            catalogDto.setOperator(operator);
-            catalogDto.setUrl(config['catalogUrl']);
-            let permissionFlag = false;
-            let prohibitionFlag = true;
-            const permission = sharingRestriction['permission'];
-            const prohibition = sharingRestriction['prohibition'];
-            // appのリージョンを取得
-            applicationLogger.info('storeEvent' + type + 'catalogDto_1: ' + JSON.stringify(catalogDto));
-            catalogDto.setCode(dataOperationAppCode);
-            catalogDto.setProcNum(0);
-            applicationLogger.info('storeEvent' + type + 'catalogDto_2: ' + JSON.stringify(catalogDto));
-            const appWfCatalog = await new CatalogService().getCatalogInfo(catalogDto);
-            const regions: number[] = [];
-            if (appWfCatalog['template']['region-alliance']) {
-                for (const region of appWfCatalog['template']['region-alliance']) {
-                    regions.push(Number(region['_value']));
+        if (storeEventRequestList && storeEventRequestList.length > 0) {
+            const reqList: IPostStoreEventReceiveRequest[] = [];
+            for (const storeEventRequest of storeEventRequestList) {
+                if (storeEventRequest.shareTo.asset === storeEventRequest.storedBy.asset) {
+                    // 蓄積元アセットと通知先アセットが一致する場合は、通知対象外
+                    continue;
                 }
-            }
-            // 許可リストと禁止リストの両方に値が設定されている場合エラー
-            if (permission && permission.length > 0 && prohibition && prohibition.length > 0) {
-                throw new AppError('共有制限許可リストと禁止リストの両方に値が設定されています', ResponseCode.BAD_REQUEST);
-                // 許可リストが設定されている場合
-            } else if (permission && permission.length > 0) {
-                for (const service of permission) {
-                    permissionFlag = checkPermissionOrProhibition(service, regions, permissionFlag, true);
+                // 共有先の利用者IDを取得
+                const shareTargetUser = await EntityOperation.getShareUserIdCooperateByPxrId(pxrId, storeEventRequest.shareTo.actor, storeEventRequest.shareTo.asset);
+                if (!shareTargetUser || shareTargetUser.status === 0) {
+                    // 連携ステータスが0: 連携申請中 の場合は利用者が未作成のため、通知しない
+                    applicationLogger.info('通知先アセットに対する対象個人の利用者連携が未完了のため、蓄積イベント通知送信をスキップします。');
+                    continue;
                 }
-                // 禁止リストが設定されている場合
-            } else if (prohibition && prohibition.length > 0) {
-                permissionFlag = true;
-                for (const service of prohibition) {
-                    prohibitionFlag = checkPermissionOrProhibition(service, regions, prohibitionFlag, false);
-                }
-            }
-            // 許可フラグがtrueでない場合エラー
-            if (!permissionFlag) {
-                throw new AppError('共有制限許可リストに含まれていません', ResponseCode.BAD_REQUEST);
-            }
-            // 禁止フラグがtrueでない場合エラー
-            if (!prohibitionFlag) {
-                throw new AppError('共有制限禁止リストに含まれています', ResponseCode.BAD_REQUEST);
-            }
-        }
-        // 制限許可チェック
-        function checkPermissionOrProhibition (service: any, regions: number[], permissionFlag: boolean, isPermission: boolean) {
-            if (service['region'] && service['region'].length > 0 && !service['service']) {
-                for (const targetRegion of service['region']) {
-                    for (const regionValue of regions) {
-                        if (regionValue === Number(targetRegion['_value'])) {
-                            // 許可リストにリージョンが一致する場合
-                            permissionFlag = isPermission;
-                        }
+                // リクエスト整形
+                const request = this.createReceiveStoreEventReqBodyByAnalyzer(storeEventRequest, operation, sourceActor, sourceApp, sourceWf, shareTargetUser, identifier);
+                if (reqList.length > 0) {
+                    // 既にリクエスト配列に入っているものと同じ内容であれば追加しない
+                    if (reqList.some((ele) => JSON.stringify(ele) === JSON.stringify(request))) {
+                        continue;
                     }
                 }
-            } else if (service['service'] && service['service'].length > 0) {
-                for (const code of service['service']) {
-                    if (Number(code['_value']) === dataOperationAppCode) {
-                        // 許可リストにappのコードが含まれている場合
-                        permissionFlag = isPermission;
-                    }
+                reqList.push(request);
+            }
+            if (reqList.length > 0) {
+                for (const req of reqList) {
+                    // 蓄積イベント受信APIを呼び出す
+                    await this.receiveStoreEvent(operator, req);
+
+                    // 蓄積イベント通知履歴にデータを登録
+                    await this.addStoreEventNotificateHistory(operator, req);
                 }
             }
-            return permissionFlag;
         }
     }
 
@@ -232,127 +268,117 @@ export default class StoreEventService {
      * @param dataOperationActorVersion
      * @param dataOperationAppCode
      * @param dataOperationAppVersion
+     * @param dataOperationWfCode
+     * @param dataOperationWfVersion
      * @param operator
      * @param dataType
      * リファクタ履歴
      *  separate : createReceiveStoreEventReqBody（蓄積イベント受信リクエストボディ作成）
      */
-    private async receiveStoreEvent (res: any, type: string, shareTargetUserId: any, data: any, dataOperationActorCode: number, dataOperationActorVersion: number, dataOperationAppCode: number, dataOperationAppVersion: number, operator: Operator, dataType: 'doc' | 'event' | 'thing') {
-        const reqBody: any = this.createReceiveStoreEventReqBody(res, type, shareTargetUserId, data, dataType, dataOperationActorCode, dataOperationActorVersion);
-        if (data[dataType + 'AppCatalogCode'] && data[dataType + 'AppCatalogVersion']) {
-            reqBody['sourceApp'] = {
-                _value: data[dataType + 'AppCatalogCode'],
-                _ver: data[dataType + 'AppCatalogVersion']
-            };
-        }
-        if (dataOperationAppCode && dataOperationAppVersion) {
-            reqBody['destinationApp'] = {
-                _value: dataOperationAppCode,
-                _ver: dataOperationAppVersion
-            };
-        }
+    private async receiveStoreEvent (operator: Operator, req: IPostStoreEventReceiveRequest) {
         // アクターカタログの取得
-        const actorCatalog = await CatalogService.getActorCatalog(dataOperationActorCode, operator);
+        const actorCatalog = await CatalogService.getActorCatalog(req.destinationActor._value, operator);
 
         // ブロックコードの取得
         const blockCode = actorCatalog['template']['main-block'] ? Number(actorCatalog['template']['main-block']['_value']) : null;
         if (!blockCode) {
             throw new AppError(message.NOT_EXIST_BLOCK_CODE, ResponseCode.INTERNAL_SERVER_ERROR);
         }
-        await BookOperateService.doLinkingPostStoreEventRequest(blockCode, reqBody, operator);
+        await BookOperateService.doLinkingPostStoreEventRequest(blockCode, req, operator);
     }
 
     /**
      * 蓄積イベント受信 リクエストボディ作成
-     * @param res
-     * @param type
-     * @param shareTargetUserId
-     * @param data
-     * @param dataType
-     * @param dataOperationActorCode
-     * @param dataOperationActorVersion
-     * @returns
+     * @param res データ操作実行許可レスポンス
+     * @param operation リクエストの処理種別
+     * @param sourceActor 蓄積アクター
+     * @param sourceApp 蓄積アプリケーション
+     * @param sourceWf 蓄積ワークフロー
+     * @param cooperation 通知先の利用者連携情報
+     * @param identifier 蓄積データ種の識別子
+     * @returns IPostStoreEventReceiveRequest
      */
-    private createReceiveStoreEventReqBody (res: any, type: string, shareTargetUserId: any, data: any, dataType: string, dataOperationActorCode: number, dataOperationActorVersion: number): any {
+    private createReceiveStoreEventReqBodyByAnalyzer (res: IAllDataOperationRequestResponse, operation: 'add' | 'update' | 'delete', sourceActor: CodeObject, sourceApp: CodeObject, sourceWf: CodeObject, cooperation: UserIdCooperate, identifier: string): IPostStoreEventReceiveRequest {
+        // 共有先アセットがWFかAPPかについて => 利用者連携から取る
         return {
-            type: res['eventType'],
-            operate: type,
-            userId: shareTargetUserId,
-            identifier: data[dataType + 'Identifier'],
-            document: data.docCatalogCode
-                ? {
-                    _value: data.docCatalogCode,
-                    _ver: data.docCatalogVersion
-                }
-                : undefined,
-            event: data.eventCatalogCode
-                ? {
-                    _value: data.eventCatalogCode,
-                    _ver: data.eventCatalogVersion
-                }
-                : undefined,
-            thing: data.thingCatalogCode
-                ? {
-                    _value: data.thingCatalogCode,
-                    _ver: data.thingCatalogVersion
-                }
-                : undefined,
-            sourceActor: {
-                _value: data[dataType + 'ActorCode'],
-                _ver: data[dataType + 'ActorVersion']
-            },
+            type: res.notificationType,
+            operate: operation,
+            userId: cooperation.userId,
+            identifier: identifier,
+            document: res.document ? res.document : undefined,
+            event: res.event ? res.event : undefined,
+            thing: res.thing ? res.thing : undefined,
+            sourceActor: sourceActor,
+            sourceApp: sourceApp,
+            sourceWf: sourceWf,
             destinationActor: {
-                _value: dataOperationActorCode,
-                _ver: dataOperationActorVersion
-            }
+                _value: cooperation.actorCatalogCode,
+                _ver: cooperation.actorCatalogVersion
+            },
+            destinationApp: cooperation.appCatalogCode
+                ? {
+                    _value: cooperation.appCatalogCode,
+                    _ver: cooperation.appCatalogVersion
+                }
+                : null,
+            destinationWf: cooperation.wfCatalogCode
+                ? {
+                    _value: cooperation.wfCatalogCode,
+                    _ver: cooperation.wfCatalogVersion
+                }
+                : null,
+            trigger: res.notificationType === 'share-trigger'
+                ? {
+                    _value: res.storeEventNotificationCode._value,
+                    _ver: res.storeEventNotificationCode._ver
+                }
+                : null
         };
     }
 
     /**
      * 蓄積イベント通知履歴登録
-     * @param res
-     * @param type
-     * @param shareTargetUserId
-     * @param data
-     * @param dataOperationActorCode
-     * @param dataOperationActorVersion
-     * @param dataOperationAppCode
-     * @param dataOperationAppVersion
-     * @param operator
-     * @param dataType
+     * @param operator オペレータ
+     * @param storeEventReq 蓄積イベント通知リクエスト内容
+     * @param sourceIdStoreEventReq ソース蓄積イベント通知リクエスト内容
      */
-    private async addStoreEventNotificateHistory (res: any, type: string, shareTargetUserId: any, data: any, dataOperationActorCode: number, dataOperationActorVersion: number, dataOperationAppCode: number, dataOperationAppVersion: number, operator: Operator, dataType: 'doc' | 'event' | 'thing') {
+    private async addStoreEventNotificateHistory (operator: Operator, storeEventReq: IPostStoreEventReceiveRequest) {
         const entity = new StoreEventNotificateHistory();
-        entity.notificateType = res['eventType'];
-        entity.processType = type;
-        entity.userId = shareTargetUserId;
-        if (dataType === 'doc') {
-            entity.dataId = data.docIdentifier;
-            entity.documentCatalogCode = data.docCatalogCode;
-            entity.documentCatalogVersion = data.docCatalogVersion;
+        if (storeEventReq) {
+            // 通常の蓄積イベント通知の場合
+            entity.notificateType = storeEventReq.type;
+            entity.processType = storeEventReq.operate;
+            entity.userId = storeEventReq.userId;
+            if (storeEventReq.document) {
+                entity.dataId = storeEventReq.identifier;
+                entity.documentCatalogCode = storeEventReq.document._value;
+                entity.documentCatalogVersion = storeEventReq.document._ver;
+            }
+            if (storeEventReq.event) {
+                entity.dataId = storeEventReq.identifier;
+                entity.eventCatalogCode = storeEventReq.event._value;
+                entity.eventCatalogVersion = storeEventReq.event._ver;
+            }
+            if (storeEventReq.thing) {
+                entity.dataId = storeEventReq.identifier;
+                entity.thingCatalogCode = storeEventReq.thing._value;
+                entity.thingCatalogVersion = storeEventReq.thing._ver;
+            }
+            entity.shareSourceActorCatalogCode = storeEventReq.sourceActor._value;
+            entity.shareSourceActorCatalogVersion = storeEventReq.sourceActor._ver;
+            entity.shareSourceAppCatalogCode = storeEventReq.sourceApp ? storeEventReq.sourceApp._value : null;
+            entity.shareSourceAppCatalogVersion = storeEventReq.sourceApp ? storeEventReq.sourceApp._ver : null;
+            entity.shareSourceWfCatalogCode = storeEventReq.sourceWf ? storeEventReq.sourceWf._value : null;
+            entity.shareSourceWfCatalogVersion = storeEventReq.sourceWf ? storeEventReq.sourceWf._ver : null;
+
+            entity.shareTargetActorCatalogCode = storeEventReq.destinationActor._value;
+            entity.shareTargetActorCatalogVersion = storeEventReq.destinationActor._ver;
+            entity.shareTargetAppCatalogCode = storeEventReq.destinationApp ? storeEventReq.destinationApp._value : null;
+            entity.shareTargetAppCatalogVersion = storeEventReq.destinationApp ? storeEventReq.destinationApp._ver : null;
+            entity.shareTargetWfCatalogCode = storeEventReq.destinationWf ? storeEventReq.destinationWf._value : null;
+            entity.shareTargetWfCatalogVersion = storeEventReq.destinationWf ? storeEventReq.destinationWf._ver : null;
         }
-        if (dataType === 'event') {
-            entity.dataId = data.eventIdentifier;
-            entity.eventCatalogCode = data.eventCatalogCode;
-            entity.eventCatalogVersion = data.eventCatalogVersion;
-        }
-        if (dataType === 'thing') {
-            entity.dataId = data.thingIdentifier;
-            entity.thingCatalogCode = data.thingCatalogCode;
-            entity.thingCatalogVersion = data.thingCatalogVersion;
-        }
-        entity.shareSourceActorCatalogCode = Number(data[dataType + 'ActorCode']);
-        entity.shareSourceActorCatalogVersion = Number(data[dataType + 'ActorVersion']);
-        entity.shareSourceAppCatalogCode = Number(data[dataType + 'AppCatalogCode']);
-        entity.shareSourceAppCatalogVersion = Number(data[dataType + 'AppCatalogVersion']);
-        entity.shareSourceWfCatalogCode = null;
-        entity.shareSourceWfCatalogVersion = null;
-        entity.shareTargetActorCatalogCode = dataOperationActorCode;
-        entity.shareTargetActorCatalogVersion = dataOperationActorVersion;
-        entity.shareTargetAppCatalogCode = dataOperationAppCode;
-        entity.shareTargetAppCatalogVersion = dataOperationAppVersion;
-        entity.shareTargetWfCatalogCode = null;
-        entity.shareTargetWfCatalogVersion = null;
+
         entity.isDisabled = false;
         entity.createdBy = operator.getLoginId();
         entity.updatedBy = operator.getLoginId();
@@ -360,53 +386,6 @@ export default class StoreEventService {
         await connection.transaction(async (trans) => {
             await EntityOperation.insertStoreEventNotificateHistory(trans, entity);
         });
-    }
-
-    /**
-     * 共有制限定義の取得
-     * @param operator
-     * @param data
-     * @param dataOperationAppCode
-     * @param type
-     * @returns
-     */
-    private async getSharingRestriction (operator: Operator, data: any, dataOperationAppCode: number, type: 'doc' | 'event' | 'thing') {
-        // 共有制限カタログnsの取得
-        const catalogDto = new CatalogDto();
-        catalogDto.setMessage(message);
-        catalogDto.setOperator(operator);
-        const extName = await new CatalogService().getExtName(catalogDto);
-        let sharingRestrictionCatalogNs: string = config['sharingRestrictionCatalogNs'];
-        sharingRestrictionCatalogNs = sharingRestrictionCatalogNs
-            .replace('{ext_name}', extName)
-            .replace('{app_or_wf}', 'app')
-            .replace('{actor_code}', data[type + 'ActorCode'].toString());
-        catalogDto.setCode(dataOperationAppCode);
-
-        // 共有制限カタログを取得
-        catalogDto.setProcNum(1);
-        catalogDto.setNs(sharingRestrictionCatalogNs);
-        catalogDto.setUrl(config['catalogUrl']);
-        let sharingRestrictionCatalog;
-        try {
-            sharingRestrictionCatalog = (await new CatalogService().getCatalogInfo(catalogDto))[0];
-        } catch (e) {
-            if (e.statusCode !== 401) {
-                throw e;
-            }
-        }
-        const dataType: string = type === 'doc' ? 'document' : type;
-        const sharingRestrictions = sharingRestrictionCatalog ? sharingRestrictionCatalog['template'][dataType] : null;
-        let sharingRestriction = null;
-        if (sharingRestrictions) {
-            for (const ele of sharingRestrictions) {
-                if (Number(ele['code']['_value']) === data[type + 'CatalogCode'] &&
-                    Number(ele['code']['_ver']) === data[type + 'CatalogVersion']) {
-                    sharingRestriction = ele;
-                }
-            }
-        }
-        return sharingRestriction;
     }
 
     /**

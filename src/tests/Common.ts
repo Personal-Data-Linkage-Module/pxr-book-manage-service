@@ -97,6 +97,11 @@ export namespace Url {
     export const dataStoreURI: string = baseURI + '/settings/store';
 
     /**
+     * データ蓄積可否判定URL
+     */
+    export const dataStorePermissionURI: string = baseURI + '/settings/store/permission';
+
+    /**
      * データ蓄積定義URL
      */
     export const loginCodeURI: string = baseURI + '/login-code';
@@ -155,6 +160,11 @@ export namespace Url {
      * データ共有URL(個人)(非推奨)
      */
     export const sharePersonURI: string = baseURI + '/ind/setting/share';
+
+    /**
+     * データ共有可否判定URL
+     */
+    export const dataSharePermissionURI: string = baseURI + '/setting/share/permission';
 
     /**
      * 利用者管理情報による個人の特定

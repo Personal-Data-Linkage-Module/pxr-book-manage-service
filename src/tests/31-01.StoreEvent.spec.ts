@@ -11,8 +11,15 @@ import Config from '../common/Config';
 import { StubCatalogServerStoreEvent, StubCatalogServerStoreEventNotificate, StubCatalogServerStoreEventNotificateInvalidActor } from './StubCatalogServer';
 import { StubOperatorServerType0 } from './StubOperatorServer';
 import StubProxyServer from './StubProxyServer';
+import PermissionAnalyzer, { IStoreEventNotificate } from '../common/PermissionAnalyzer';
+import { changeNotificationType, getAllPermitted, getNoPermitted, setNotificationCatalogCode, setNotificationToActors } from './accessor/MockGetAllPermitted';
+import EntityOperation from '../repositories/EntityOperation';
 const Message = Config.ReadConfig('./config/message.json');
 /* eslint-enable */
+
+/*
+    TBD: WF関連処理、呼出オペレータからの削除、ソース蓄積イベント通知関連処理の削除、あと蓄積、共有、蓄積イベント通知のUTそれぞれ。
+*/
 
 // 対象アプリケーションを取得
 const app = new Application();
@@ -24,6 +31,18 @@ app.start();
 let _catalogServer: any = null;
 let _operatorServer: StubOperatorServerType0 = null;
 let _proxyServer: StubProxyServer = null;
+
+// analyzerのmock
+jest.mock('../common/PermissionAnalyzer', () => ({
+    ...jest.requireActual('../common/PermissionAnalyzer') as any,
+    getAllPermitted: jest.fn(),
+    setAssetCatalog: jest.fn(),
+    specifyTarget: jest.fn()
+}));
+
+jest.spyOn(PermissionAnalyzer.prototype, 'getAllPermitted').mockImplementation(getAllPermitted);
+jest.spyOn(PermissionAnalyzer.prototype, 'setAssetCatalog').mockImplementation();
+jest.spyOn(PermissionAnalyzer.prototype, 'specifyTarget').mockImplementation();
 
 /**
  * book-manage API のユニットテスト
@@ -37,6 +56,19 @@ describe('book-manage API', () => {
         await common.connect();
         // DB初期化
         await common.executeSqlFile('initialData.sql');
+        // analyzerのmock用に初期値設定
+        changeNotificationType('store-event');
+        setNotificationCatalogCode({ _value: 1001023, _ver: 1 });
+        setNotificationToActors([
+            {
+                actor: 1000437,
+                asset: 1000471
+            },
+            {
+                actor: 1000445,
+                asset: 1000601
+            }
+        ]);
     });
 
     /**
@@ -70,6 +102,10 @@ describe('book-manage API', () => {
      * 全テスト実行の後処理
      */
     afterAll(async () => {
+        // analyzerのmockの設定値戻し
+        changeNotificationType('store-event');
+        setNotificationCatalogCode(null);
+        setNotificationToActors([]);
         // サーバ停止
         app.stop();
     });
@@ -252,7 +288,7 @@ describe('book-manage API', () => {
                     {
                         add: [
                             {
-                                '1_1': 'testuserwf',
+                                '1_1': 'testuserapp',
                                 document: [
                                     {
                                         serialNumber: 1,
@@ -300,7 +336,7 @@ describe('book-manage API', () => {
                         ],
                         update: [
                             {
-                                '1_1': 'testuserwf',
+                                '1_1': 'testuserapp',
                                 document: [
                                     {
                                         serialNumber: 1,
@@ -348,7 +384,7 @@ describe('book-manage API', () => {
                         ],
                         delete: [
                             {
-                                '1_1': 'testuserwf',
+                                '1_1': 'testuserapp',
                                 document: [
                                     {
                                         serialNumber: 1,
@@ -618,7 +654,7 @@ describe('book-manage API', () => {
                     {
                         add: [
                             {
-                                '1_1': 'testuserapp2',
+                                '1_1': 'testuserapp',
                                 document: [
                                     {
                                         serialNumber: 1,
@@ -666,7 +702,7 @@ describe('book-manage API', () => {
                         ],
                         update: [
                             {
-                                '1_1': 'testuserapp2',
+                                '1_1': 'testuserapp',
                                 document: [
                                     {
                                         serialNumber: 1,
@@ -714,7 +750,7 @@ describe('book-manage API', () => {
                         ],
                         delete: [
                             {
-                                '1_1': 'testuserapp2',
+                                '1_1': 'testuserapp',
                                 document: [
                                     {
                                         serialNumber: 1,
@@ -921,67 +957,6 @@ describe('book-manage API', () => {
             // レスポンスチェック
             expect(response.status).toBe(400);
             expect(response.body.message).toBe(Message.COULD_NOT_SPECIFY_USER_BOOK);
-        });
-
-        test('異常：共有制限カタログ取得時 401応答', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 1, 0, 401);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(200);
-            expect(JSON.stringify(response.body)).toBe(JSON.stringify({ result: 'success' }));
         });
 
         test('異常：オペレータータイプがwf、app以外', async () => {
@@ -1322,832 +1297,6 @@ describe('book-manage API', () => {
             expect(response.body.message).toBe(Message.FAILED_CATALOG_GET);
         });
 
-        test('異常：ドキュメント：appが設定されていない', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 0);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': null,
-                                        '2_n_3_5_2': null
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        delete: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe(Message.EMPTY_WF_AND_APP);
-        });
-
-        test('異常：ドキュメント：共有制限カタログ取得時 400応答', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 1, 0, 400);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe(Message.FAILED_CATALOG_GET);
-        });
-
-        test('異常：ドキュメント：共有制限の禁止と許可どちらも値が設定されている', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 1, 1);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        delete: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストと禁止リストの両方に値が設定されています');
-        });
-
-        test('異常：ドキュメント：共有制限の禁止と許可どちらも値が設定されていない', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 2, 2, 200);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストに含まれていません');
-        });
-
-        test('異常：ドキュメント：共有制限許可リストに含まれていない', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 2, 0);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        delete: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストに含まれていません');
-        });
-
-        test('異常：ドキュメント：共有制限禁止リストに含まれている', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 1);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        delete: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限禁止リストに含まれています');
-        });
-
         test('異常：ドキュメント：アクターカタログ不正', async () => {
             _operatorServer = new StubOperatorServerType0(200, 2);
             _catalogServer = new StubCatalogServerStoreEventNotificateInvalidActor(3001, 200, 0, 1);
@@ -2392,381 +1541,6 @@ describe('book-manage API', () => {
             expect(response.body.message).toBe(Message.EMPTY_WF_AND_APP);
         });
 
-        test('異常：イベント：共有制限カタログ取得時 400応答', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 1, 0, 400);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe(Message.FAILED_CATALOG_GET);
-        });
-
-        test('異常：イベント：共有制限の禁止と許可どちらも値が設定されている', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 1, 1);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1000000,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000000,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストと禁止リストの両方に値が設定されています');
-        });
-
-        test('異常：イベント：共有制限の禁止と許可どちらも値が設定されていない', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 2, 2);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1000000,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000000,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストに含まれていません');
-        });
-
-        test('異常：イベント：共有制限許可リストに含まれていない', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 2, 0);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1000000,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000000,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストに含まれていません');
-        });
-
-        test('異常：イベント：共有制限禁止リストに含まれている', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 1);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1000000,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000000,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限禁止リストに含まれています');
-        });
-
         test('異常：イベント：アクターカタログ不正', async () => {
             _operatorServer = new StubOperatorServerType0(200, 2);
             _catalogServer = new StubCatalogServerStoreEventNotificateInvalidActor(3001, 200, 0, 1);
@@ -2808,7 +1582,7 @@ describe('book-manage API', () => {
                                     '3_1_2_2': 1,
                                     '3_2_1': '2020-07-01T00:00:00.000+0900',
                                     '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
+                                    '3_5_1_1': 1000471,
                                     '3_5_1_2': 1,
                                     '3_5_2_1': null,
                                     '3_5_2_2': null,
@@ -2840,550 +1614,6 @@ describe('book-manage API', () => {
             // レスポンスチェック
             expect(response.status).toBe(500);
             expect(response.body.message).toBe(Message.NOT_EXIST_BLOCK_CODE);
-        });
-
-        test('異常：モノ：appが設定されていない', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 0);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': null,
-                                        '4_4_5_2': null,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        delete: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe(Message.EMPTY_WF_AND_APP);
-        });
-
-        test('異常：モノ：共有制限カタログ取得時 400応答', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 1, 0, 400);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1099999,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000008,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000437,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe(Message.FAILED_CATALOG_GET);
-        });
-
-        test('異常：モノ：共有制限の禁止と許可どちらも値が設定されている', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 1, 1);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1000000,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000000,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000471,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストと禁止リストの両方に値が設定されています');
-        });
-
-        test('異常：モノ：共有制限の禁止と許可どちらも値が設定されていない', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 2, 2);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1000000,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000000,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000471,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストに含まれていません');
-        });
-
-        test('異常：モノ：共有制限許可リストに含まれていない', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 2, 0);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1000000,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000000,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000471,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限許可リストに含まれていません');
-        });
-
-        test('異常：モノ：共有制限禁止リストに含まれている', async () => {
-            _operatorServer = new StubOperatorServerType0(200, 2);
-            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 1);
-            _proxyServer = new StubProxyServer(200);
-
-            // 初期データの設定
-            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
-
-            // 送信データを作成
-            const url = Url.postStoreEventNotificate;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type0_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        add: [
-                            {
-                                '1_1': 'testuserapp',
-                                document: [
-                                    {
-                                        serialNumber: 1,
-                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                        '2_n_1_2_1': 1000000,
-                                        '2_n_1_2_2': 1,
-                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
-                                        '2_n_3_1_1': 1000437,
-                                        '2_n_3_1_2': 1,
-                                        '2_n_3_2_1': null,
-                                        '2_n_3_2_2': null,
-                                        '2_n_3_5_1': 1000471,
-                                        '2_n_3_5_2': 1
-                                    }
-                                ],
-                                event: {
-                                    '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
-                                    '3_1_2_1': 1000000,
-                                    '3_1_2_2': 1,
-                                    '3_2_1': '2020-07-01T00:00:00.000+0900',
-                                    '3_2_2': '2020-07-01T00:00:00.000+0900',
-                                    '3_5_1_1': 1000471,
-                                    '3_5_1_2': 1,
-                                    '3_5_2_1': null,
-                                    '3_5_2_2': null,
-                                    '3_5_5_1': 1000471,
-                                    '3_5_5_2': 1
-                                },
-                                thing: [
-                                    {
-                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
-                                        '4_1_2_1': 1000922,
-                                        '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
-                                        '4_4_1_2': 1,
-                                        '4_4_2_1': null,
-                                        '4_4_2_2': null,
-                                        '4_4_5_1': 1000471,
-                                        '4_4_5_2': 1,
-                                        rowHash: 'rowHash...',
-                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
-                                    }
-                                ]
-                            }
-                        ],
-                        update: [],
-                        delete: []
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe('共有制限禁止リストに含まれています');
         });
 
         test('異常：モノ：アクターカタログ不正', async () => {
@@ -3439,7 +1669,7 @@ describe('book-manage API', () => {
                                         '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
                                         '4_1_2_1': 1000922,
                                         '4_1_2_2': 1,
-                                        '4_4_1_1': 1000437,
+                                        '4_4_1_1': 1000471,
                                         '4_4_1_2': 1,
                                         '4_4_2_1': null,
                                         '4_4_2_2': null,
@@ -3925,6 +2155,71 @@ describe('book-manage API', () => {
             expect(response.body.message).toBe(Message.FAILED_CONNECT_TO_LINKAGE_SERVICE);
         });
 
+        test('異常：リクエストのCMatrixにイベント情報がない', async () => {
+            _operatorServer = new StubOperatorServerType0(200, 2);
+            _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 0);
+            _proxyServer = new StubProxyServer(200);
+
+            // 初期データの設定
+            await common.executeSqlFile('initialDataStoreEventNotificate.sql');
+
+            // 送信データを作成
+            const url = Url.postStoreEventNotificate;
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(url)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
+                .send(JSON.stringify(
+                    {
+                        add: [
+                            {
+                                '1_1': 'testuserapp',
+                                document: [
+                                    {
+                                        serialNumber: 1,
+                                        '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                        '2_n_1_2_1': 1099999,
+                                        '2_n_1_2_2': 1,
+                                        '2_n_2_1': '2020-07-01T00:00:00.000+0900',
+                                        '2_n_3_1_1': 1000445,
+                                        '2_n_3_1_2': 1,
+                                        '2_n_3_2_1': 1000601,
+                                        '2_n_3_2_2': 1,
+                                        '2_n_3_5_1': null,
+                                        '2_n_3_5_2': null
+                                    }
+                                ],
+                                event: null,
+                                thing: [
+                                    {
+                                        '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
+                                        '4_1_2_1': 1000922,
+                                        '4_1_2_2': 1,
+                                        '4_4_1_1': 1000445,
+                                        '4_4_1_2': 1,
+                                        '4_4_2_1': 1000601,
+                                        '4_4_2_2': 1,
+                                        '4_4_5_1': null,
+                                        '4_4_5_2': null,
+                                        rowHash: 'rowHash...',
+                                        rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
+                                    }
+                                ]
+                            }
+                        ],
+                        update: [],
+                        delete: []
+                    }
+                ));
+
+            // レスポンスチェック
+            expect(response.status).toBe(400);
+            expect(response.body.reasons[0].property).toBe('event');
+            expect(response.body.reasons[0].value).toBe(null);
+            expect(response.body.reasons[0].message).toBe(Message.validation.isDefined);
+        });
+
         describe('利用者ID重複対応追加ケース', () => {
             // DoRequestメソッドのmock化
             const doRequet = require('../common/DoRequest');
@@ -3935,9 +2230,562 @@ describe('book-manage API', () => {
             beforeEach(async () => {
                 await common.executeSqlFile('initialData.sql');
                 await common.executeSqlFile('initialDataStoreEventNotificate.sql');
+                await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.user_id_cooperate
+                        (
+                            book_id,
+                            actor_catalog_code, actor_catalog_version,
+                            app_catalog_code, app_catalog_version,
+                            wf_catalog_code, wf_catalog_version,
+                            user_id,
+                            status,
+                            is_disabled,
+                            created_by, created_at,
+                            updated_by, updated_at
+                        )
+                        VALUES
+                        (
+                            1,
+                            1000445,1,
+                            1000602,1,
+                            null,null,
+                            'testDestApp',
+                            2,
+                            false,
+                            'pxr_user',
+                            NOW(),
+                            'pxr_user',
+                            NOW()
+                        );
+                    `);
                 mockDoPostRequest.mockClear();
+                // analyzerのmock用に初期値設定
+                changeNotificationType('share-trigger');
+                setNotificationToActors([
+                    {
+                        actor: 1000445,
+                        asset: 1000601
+                    },
+                    {
+                        actor: 1000445,
+                        asset: 1000602
+                    }
+                ]);
             });
             describe('正常系', () => {
+                test('判定の結果、許可される通知先が無い', async () => {
+                    // モックの上書き
+                    jest.spyOn(PermissionAnalyzer.prototype, 'getAllPermitted').mockImplementation(getNoPermitted);
+
+                    _operatorServer = new StubOperatorServerType0(200, 2);
+                    _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 0);
+                    _proxyServer = new StubProxyServer(200);
+
+                    // 送信データを作成
+                    const url = Url.postStoreEventNotificate;
+
+                    const response = await supertest(expressApp).post(url)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
+                        .send(JSON.stringify(
+                            {
+                                add: [
+                                    {
+                                        '1_1': 'testuserapp',
+                                        document: [
+                                            {
+                                                serialNumber: 1,
+                                                '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                                '2_n_1_2_1': 1099999,
+                                                '2_n_1_2_2': 1,
+                                                '2_n_2_1': '2020-07-01T00:00:00.000+0900',
+                                                '2_n_3_1_1': 1000445,
+                                                '2_n_3_1_2': 1,
+                                                '2_n_3_2_1': null,
+                                                '2_n_3_2_2': 1000601,
+                                                '2_n_3_5_1': 1,
+                                                '2_n_3_5_2': null
+                                            }
+                                        ],
+                                        event: {
+                                            '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                            '3_1_2_1': 1000008,
+                                            '3_1_2_2': 1,
+                                            '3_2_1': '2020-07-01T00:00:00.000+0900',
+                                            '3_2_2': '2020-07-01T00:00:00.000+0900',
+                                            '3_5_1_1': 1000445,
+                                            '3_5_1_2': 1,
+                                            '3_5_2_1': null,
+                                            '3_5_2_2': null,
+                                            '3_5_5_1': 1000601,
+                                            '3_5_5_2': 1
+                                        },
+                                        thing: [
+                                            {
+                                                '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
+                                                '4_1_2_1': 1000922,
+                                                '4_1_2_2': 1,
+                                                '4_4_1_1': 1000445,
+                                                '4_4_1_2': 1,
+                                                '4_4_2_1': null,
+                                                '4_4_2_2': null,
+                                                '4_4_5_1': 1000601,
+                                                '4_4_5_2': 1,
+                                                rowHash: 'rowHash...',
+                                                rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
+                                            }
+                                        ]
+                                    }
+                                ],
+                                update: [],
+                                delete: []
+                            }
+                        ));
+
+                    // モック戻し
+                    jest.spyOn(PermissionAnalyzer.prototype, 'getAllPermitted').mockImplementation(getAllPermitted);
+                    // レスポンスチェック
+                    expect(response.status).toBe(200);
+                    expect(JSON.stringify(response.body)).toBe(JSON.stringify({ result: 'success' }));
+                    // 蓄積イベント受信へのリクエストの確認
+                    const storeEventRequestApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                    expect(storeEventRequestApiInfo.length).toBe(0);
+                    // 蓄積イベント通知履歴テーブルの確認
+                    const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
+                    expect(history.length).toBe(0);
+                });
+                test('同一リクエストの重複除去するケース', async () => {
+                    // モック設定変更
+                    setNotificationToActors([
+                        {
+                            actor: 1000437,
+                            asset: 1000471
+                        },
+                        {
+                            actor: 1000445,
+                            asset: 1000602
+                        },
+                        {
+                            actor: 1000445,
+                            asset: 1000602
+                        },
+                        {
+                            actor: 1000445,
+                            asset: 1000601
+                        }
+                    ]);
+
+                    // 利用者追加
+                    await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.user_id_cooperate
+                        (
+                            book_id,
+                            actor_catalog_code, actor_catalog_version,
+                            app_catalog_code, app_catalog_version,
+                            wf_catalog_code, wf_catalog_version,
+                            user_id,
+                            status,
+                            is_disabled,
+                            created_by, created_at,
+                            updated_by, updated_at
+                        )
+                        VALUES
+                        (
+                            1,
+                            1000437,1,
+                            1000471,1,
+                            null,null,
+                            'testuserapp',
+                            2,
+                            false,
+                            'pxr_user',
+                            NOW(),
+                            'pxr_user',
+                            NOW()
+                        )
+                    `);
+
+                    _operatorServer = new StubOperatorServerType0(200, 2);
+                    _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 0);
+                    _proxyServer = new StubProxyServer(200);
+
+                    // 送信データを作成
+                    const url = Url.postStoreEventNotificate;
+
+                    // 対象APIに送信
+                    const response = await supertest(expressApp).post(url)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
+                        .send(JSON.stringify(
+                            {
+                                add: [
+                                    {
+                                        '1_1': 'testuserapp',
+                                        document: [
+                                            {
+                                                serialNumber: 1,
+                                                '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                                '2_n_1_2_1': 1099999,
+                                                '2_n_1_2_2': 1,
+                                                '2_n_2_1': '2020-07-01T00:00:00.000+0900',
+                                                '2_n_3_1_1': 1000445,
+                                                '2_n_3_1_2': 1,
+                                                '2_n_3_2_1': null,
+                                                '2_n_3_2_2': 1000601,
+                                                '2_n_3_5_1': 1,
+                                                '2_n_3_5_2': null
+                                            }
+                                        ],
+                                        event: {
+                                            '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                            '3_1_2_1': 1000008,
+                                            '3_1_2_2': 1,
+                                            '3_2_1': '2020-07-01T00:00:00.000+0900',
+                                            '3_2_2': '2020-07-01T00:00:00.000+0900',
+                                            '3_5_1_1': 1000445,
+                                            '3_5_1_2': 1,
+                                            '3_5_2_1': null,
+                                            '3_5_2_2': null,
+                                            '3_5_5_1': 1000601,
+                                            '3_5_5_2': 1
+                                        },
+                                        thing: [
+                                            {
+                                                '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
+                                                '4_1_2_1': 1000922,
+                                                '4_1_2_2': 1,
+                                                '4_4_1_1': 1000445,
+                                                '4_4_1_2': 1,
+                                                '4_4_2_1': null,
+                                                '4_4_2_2': null,
+                                                '4_4_5_1': 1000601,
+                                                '4_4_5_2': 1,
+                                                rowHash: 'rowHash...',
+                                                rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
+                                            }
+                                        ]
+                                    }
+                                ],
+                                update: [],
+                                delete: []
+                            }
+                        ));
+
+                    // モック設定戻し
+                    setNotificationToActors([
+                        {
+                            actor: 1000445,
+                            asset: 1000601
+                        }
+                    ]);
+                    // レスポンスチェック
+                    expect(response.status).toBe(200);
+                    expect(JSON.stringify(response.body)).toBe(JSON.stringify({ result: 'success' }));
+                    // 蓄積イベント受信へのリクエストの確認
+                    const storeEventRequestApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                    expect(storeEventRequestApiInfo.length).toBe(6);
+                    const requestBody1 = JSON.parse(storeEventRequestApiInfo[0][1]['body']);
+                    expect(requestBody1['type']).toBe('share-trigger');
+                    expect(requestBody1['operate']).toBe('add');
+                    expect(requestBody1['userId']).toBe('testuserapp');
+                    expect(requestBody1['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
+                    expect(requestBody1['document']['_value']).toBe(1099999);
+                    expect(requestBody1['document']['_ver']).toBe(1);
+                    expect(requestBody1['sourceActor']['_value']).toBe(1000445);
+                    expect(requestBody1['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody1['trigger']['_value']).toBe(1001023);
+                    expect(requestBody1['sourceApp']['_value']).toBe(1000601);
+                    expect(requestBody1['destinationApp']['_value']).toBe(1000471);
+                    const requestBody4 = JSON.parse(storeEventRequestApiInfo[1][1]['body']);
+                    expect(requestBody4['type']).toBe('share-trigger');
+                    expect(requestBody4['operate']).toBe('add');
+                    expect(requestBody4['userId']).toBe('testDestApp');
+                    expect(requestBody4['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
+                    expect(requestBody4['document']['_value']).toBe(1099999);
+                    expect(requestBody4['document']['_ver']).toBe(1);
+                    expect(requestBody4['sourceActor']['_value']).toBe(1000445);
+                    expect(requestBody4['destinationActor']['_value']).toBe(1000445);
+                    expect(requestBody4['trigger']['_value']).toBe(1001023);
+                    expect(requestBody4['sourceApp']['_value']).toBe(1000601);
+                    expect(requestBody4['destinationApp']['_value']).toBe(1000602);
+                    const requestBody2 = JSON.parse(storeEventRequestApiInfo[2][1]['body']);
+                    expect(requestBody2['type']).toBe('share-trigger');
+                    expect(requestBody2['operate']).toBe('add');
+                    expect(requestBody2['userId']).toBe('testuserapp');
+                    expect(requestBody2['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
+                    expect(requestBody2['event']['_value']).toBe(1000008);
+                    expect(requestBody2['event']['_ver']).toBe(1);
+                    expect(requestBody2['sourceActor']['_value']).toBe(1000445);
+                    expect(requestBody2['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody2['trigger']['_value']).toBe(1001023);
+                    expect(requestBody2['sourceApp']['_value']).toBe(1000601);
+                    expect(requestBody2['destinationApp']['_value']).toBe(1000471);
+                    const requestBody5 = JSON.parse(storeEventRequestApiInfo[3][1]['body']);
+                    expect(requestBody5['type']).toBe('share-trigger');
+                    expect(requestBody5['operate']).toBe('add');
+                    expect(requestBody5['userId']).toBe('testDestApp');
+                    expect(requestBody5['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
+                    expect(requestBody5['event']['_value']).toBe(1000008);
+                    expect(requestBody5['event']['_ver']).toBe(1);
+                    expect(requestBody5['sourceActor']['_value']).toBe(1000445);
+                    expect(requestBody5['destinationActor']['_value']).toBe(1000445);
+                    expect(requestBody5['trigger']['_value']).toBe(1001023);
+                    expect(requestBody5['sourceApp']['_value']).toBe(1000601);
+                    expect(requestBody5['destinationApp']['_value']).toBe(1000602);
+                    const requestBody3 = JSON.parse(storeEventRequestApiInfo[4][1]['body']);
+                    expect(requestBody3['type']).toBe('share-trigger');
+                    expect(requestBody3['operate']).toBe('add');
+                    expect(requestBody3['userId']).toBe('testuserapp');
+                    expect(requestBody3['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c6');
+                    expect(requestBody3['thing']['_value']).toBe(1000922);
+                    expect(requestBody3['thing']['_ver']).toBe(1);
+                    expect(requestBody3['sourceActor']['_value']).toBe(1000445);
+                    expect(requestBody3['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody3['trigger']['_value']).toBe(1001023);
+                    expect(requestBody3['sourceApp']['_value']).toBe(1000601);
+                    expect(requestBody3['destinationApp']['_value']).toBe(1000471);
+                    const requestBody6 = JSON.parse(storeEventRequestApiInfo[5][1]['body']);
+                    expect(requestBody6['type']).toBe('share-trigger');
+                    expect(requestBody6['operate']).toBe('add');
+                    expect(requestBody6['userId']).toBe('testDestApp');
+                    expect(requestBody6['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c6');
+                    expect(requestBody6['thing']['_value']).toBe(1000922);
+                    expect(requestBody6['thing']['_ver']).toBe(1);
+                    expect(requestBody6['sourceActor']['_value']).toBe(1000445);
+                    expect(requestBody6['destinationActor']['_value']).toBe(1000445);
+                    expect(requestBody6['trigger']['_value']).toBe(1001023);
+                    expect(requestBody6['sourceApp']['_value']).toBe(1000601);
+                    expect(requestBody6['destinationApp']['_value']).toBe(1000602);
+                    // 蓄積イベント通知履歴テーブルの確認
+                    const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
+                    expect(history.length).toBe(6);
+                    expect(history[0]['notificate_type']).toBe(requestBody1['type']);
+                    expect(history[0]['process_type']).toBe(requestBody1['operate']);
+                    expect(history[0]['user_id']).toBe(requestBody1['userId']);
+                    expect(history[0]['data_id']).toBe(requestBody1['identifier']);
+                    expect(parseInt(history[0]['document_catalog_code'])).toBe(requestBody1['document']['_value']);
+                    expect(parseInt(history[0]['document_catalog_version'])).toBe(requestBody1['document']['_ver']);
+                    expect(parseInt(history[0]['share_source_actor_catalog_code'])).toBe(requestBody1['sourceActor']['_value']);
+                    expect(parseInt(history[0]['share_source_app_catalog_code'])).toBe(requestBody1['sourceApp']['_value']);
+                    expect(parseInt(history[0]['share_target_actor_catalog_code'])).toBe(requestBody1['destinationActor']['_value']);
+                    expect(parseInt(history[0]['share_target_app_catalog_code'])).toBe(requestBody1['destinationApp']['_value']);
+                    expect(history[1]['notificate_type']).toBe(requestBody4['type']);
+                    expect(history[1]['process_type']).toBe(requestBody4['operate']);
+                    expect(history[1]['user_id']).toBe(requestBody4['userId']);
+                    expect(history[1]['data_id']).toBe(requestBody4['identifier']);
+                    expect(parseInt(history[1]['document_catalog_code'])).toBe(requestBody4['document']['_value']);
+                    expect(parseInt(history[1]['document_catalog_version'])).toBe(requestBody4['document']['_ver']);
+                    expect(parseInt(history[1]['share_source_actor_catalog_code'])).toBe(requestBody4['sourceActor']['_value']);
+                    expect(parseInt(history[1]['share_source_app_catalog_code'])).toBe(requestBody4['sourceApp']['_value']);
+                    expect(parseInt(history[1]['share_target_actor_catalog_code'])).toBe(requestBody4['destinationActor']['_value']);
+                    expect(parseInt(history[1]['share_target_app_catalog_code'])).toBe(requestBody4['destinationApp']['_value']);
+                    expect(history[2]['notificate_type']).toBe(requestBody2['type']);
+                    expect(history[2]['process_type']).toBe(requestBody2['operate']);
+                    expect(history[2]['user_id']).toBe(requestBody2['userId']);
+                    expect(history[2]['data_id']).toBe(requestBody2['identifier']);
+                    expect(parseInt(history[2]['event_catalog_code'])).toBe(requestBody2['event']['_value']);
+                    expect(parseInt(history[2]['event_catalog_version'])).toBe(requestBody2['event']['_ver']);
+                    expect(parseInt(history[2]['share_source_actor_catalog_code'])).toBe(requestBody2['sourceActor']['_value']);
+                    expect(parseInt(history[2]['share_source_app_catalog_code'])).toBe(requestBody2['sourceApp']['_value']);
+                    expect(parseInt(history[2]['share_target_actor_catalog_code'])).toBe(requestBody2['destinationActor']['_value']);
+                    expect(parseInt(history[2]['share_target_app_catalog_code'])).toBe(requestBody2['destinationApp']['_value']);
+                    expect(history[3]['notificate_type']).toBe(requestBody5['type']);
+                    expect(history[3]['process_type']).toBe(requestBody5['operate']);
+                    expect(history[3]['user_id']).toBe(requestBody5['userId']);
+                    expect(history[3]['data_id']).toBe(requestBody5['identifier']);
+                    expect(parseInt(history[3]['event_catalog_code'])).toBe(requestBody5['event']['_value']);
+                    expect(parseInt(history[3]['event_catalog_version'])).toBe(requestBody5['event']['_ver']);
+                    expect(parseInt(history[3]['share_source_actor_catalog_code'])).toBe(requestBody5['sourceActor']['_value']);
+                    expect(parseInt(history[3]['share_source_app_catalog_code'])).toBe(requestBody5['sourceApp']['_value']);
+                    expect(parseInt(history[3]['share_target_actor_catalog_code'])).toBe(requestBody5['destinationActor']['_value']);
+                    expect(parseInt(history[3]['share_target_app_catalog_code'])).toBe(requestBody5['destinationApp']['_value']);
+                    expect(history[4]['notificate_type']).toBe(requestBody3['type']);
+                    expect(history[4]['process_type']).toBe(requestBody3['operate']);
+                    expect(history[4]['user_id']).toBe(requestBody3['userId']);
+                    expect(history[4]['data_id']).toBe(requestBody3['identifier']);
+                    expect(parseInt(history[4]['thing_catalog_code'])).toBe(requestBody3['thing']['_value']);
+                    expect(parseInt(history[4]['thing_catalog_version'])).toBe(requestBody3['thing']['_ver']);
+                    expect(parseInt(history[4]['share_source_actor_catalog_code'])).toBe(requestBody3['sourceActor']['_value']);
+                    expect(parseInt(history[4]['share_source_app_catalog_code'])).toBe(requestBody3['sourceApp']['_value']);
+                    expect(parseInt(history[4]['share_target_actor_catalog_code'])).toBe(requestBody3['destinationActor']['_value']);
+                    expect(parseInt(history[4]['share_target_app_catalog_code'])).toBe(requestBody3['destinationApp']['_value']);
+                    expect(history[5]['notificate_type']).toBe(requestBody6['type']);
+                    expect(history[5]['process_type']).toBe(requestBody6['operate']);
+                    expect(history[5]['user_id']).toBe(requestBody6['userId']);
+                    expect(history[5]['data_id']).toBe(requestBody6['identifier']);
+                    expect(parseInt(history[5]['thing_catalog_code'])).toBe(requestBody6['thing']['_value']);
+                    expect(parseInt(history[5]['thing_catalog_version'])).toBe(requestBody6['thing']['_ver']);
+                    expect(parseInt(history[5]['share_source_actor_catalog_code'])).toBe(requestBody6['sourceActor']['_value']);
+                    expect(parseInt(history[5]['share_source_app_catalog_code'])).toBe(requestBody6['sourceApp']['_value']);
+                    expect(parseInt(history[5]['share_target_actor_catalog_code'])).toBe(requestBody6['destinationActor']['_value']);
+                    expect(parseInt(history[5]['share_target_app_catalog_code'])).toBe(requestBody6['destinationApp']['_value']);
+                });
+                test('蓄積元と通知先アセットが同一のためスキップ', async () => {
+                    _operatorServer = new StubOperatorServerType0(200, 2);
+                    _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 0);
+                    _proxyServer = new StubProxyServer(200);
+
+                    await common.executeSqlString(`
+                        UPDATE pxr_book_manage.user_id_cooperate
+                        SET is_disabled = true
+                        WHERE user_id = 'testDestApp';
+                    `);
+
+                    // 送信データを作成
+                    const url = Url.postStoreEventNotificate;
+
+                    // 対象APIに送信
+                    const response = await supertest(expressApp).post(url)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
+                        .send(JSON.stringify(
+                            {
+                                add: [
+                                    {
+                                        '1_1': 'testuserapp',
+                                        document: [
+                                            {
+                                                serialNumber: 1,
+                                                '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                                '2_n_1_2_1': 1099999,
+                                                '2_n_1_2_2': 1,
+                                                '2_n_2_1': '2020-07-01T00:00:00.000+0900',
+                                                '2_n_3_1_1': 1000445,
+                                                '2_n_3_1_2': 1,
+                                                '2_n_3_2_1': null,
+                                                '2_n_3_2_2': 1000601,
+                                                '2_n_3_5_1': 1,
+                                                '2_n_3_5_2': null
+                                            }
+                                        ],
+                                        event: {
+                                            '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                            '3_1_2_1': 1000008,
+                                            '3_1_2_2': 1,
+                                            '3_2_1': '2020-07-01T00:00:00.000+0900',
+                                            '3_2_2': '2020-07-01T00:00:00.000+0900',
+                                            '3_5_1_1': 1000445,
+                                            '3_5_1_2': 1,
+                                            '3_5_2_1': null,
+                                            '3_5_2_2': null,
+                                            '3_5_5_1': 1000601,
+                                            '3_5_5_2': 1
+                                        },
+                                        thing: [
+                                            {
+                                                '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
+                                                '4_1_2_1': 1000922,
+                                                '4_1_2_2': 1,
+                                                '4_4_1_1': 1000445,
+                                                '4_4_1_2': 1,
+                                                '4_4_2_1': null,
+                                                '4_4_2_2': null,
+                                                '4_4_5_1': 1000601,
+                                                '4_4_5_2': 1,
+                                                rowHash: 'rowHash...',
+                                                rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
+                                            }
+                                        ]
+                                    }
+                                ],
+                                update: [],
+                                delete: []
+                            }
+                        ));
+
+                    // レスポンスチェック
+                    expect(response.status).toBe(200);
+                    expect(JSON.stringify(response.body)).toBe(JSON.stringify({ result: 'success' }));
+                    // 蓄積イベント受信へのリクエストの確認
+                    const storeEventRequestApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                    expect(storeEventRequestApiInfo.length).toBe(0);
+                    // 蓄積イベント通知履歴テーブルの確認
+                    const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
+                    expect(history.length).toBe(0);
+                });
+                test('通知先の連携ステータスが0: 連携申請中のためスキップ', async () => {
+                    _operatorServer = new StubOperatorServerType0(200, 2);
+                    _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 0);
+                    _proxyServer = new StubProxyServer(200);
+
+                    await common.executeSqlString(`
+                        UPDATE pxr_book_manage.user_id_cooperate
+                        SET status = 0
+                        WHERE user_id = 'testDestApp';
+                    `);
+
+                    // 送信データを作成
+                    const url = Url.postStoreEventNotificate;
+
+                    // 対象APIに送信
+                    const response = await supertest(expressApp).post(url)
+                        .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                        .set({ session: encodeURIComponent(Session.postStoreEventNotificate) })
+                        .send(JSON.stringify(
+                            {
+                                add: [
+                                    {
+                                        '1_1': 'testuserapp',
+                                        document: [
+                                            {
+                                                serialNumber: 1,
+                                                '2_n_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                                '2_n_1_2_1': 1099999,
+                                                '2_n_1_2_2': 1,
+                                                '2_n_2_1': '2020-07-01T00:00:00.000+0900',
+                                                '2_n_3_1_1': 1000445,
+                                                '2_n_3_1_2': 1,
+                                                '2_n_3_2_1': null,
+                                                '2_n_3_2_2': 1000601,
+                                                '2_n_3_5_1': 1,
+                                                '2_n_3_5_2': null
+                                            }
+                                        ],
+                                        event: {
+                                            '3_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c7',
+                                            '3_1_2_1': 1000008,
+                                            '3_1_2_2': 1,
+                                            '3_2_1': '2020-07-01T00:00:00.000+0900',
+                                            '3_2_2': '2020-07-01T00:00:00.000+0900',
+                                            '3_5_1_1': 1000445,
+                                            '3_5_1_2': 1,
+                                            '3_5_2_1': null,
+                                            '3_5_2_2': null,
+                                            '3_5_5_1': 1000601,
+                                            '3_5_5_2': 1
+                                        },
+                                        thing: [
+                                            {
+                                                '4_1_1': 'fedc51ce-2efd-4ade-9bbe-45dc445ae9c6',
+                                                '4_1_2_1': 1000922,
+                                                '4_1_2_2': 1,
+                                                '4_4_1_1': 1000445,
+                                                '4_4_1_2': 1,
+                                                '4_4_2_1': null,
+                                                '4_4_2_2': null,
+                                                '4_4_5_1': 1000601,
+                                                '4_4_5_2': 1,
+                                                rowHash: 'rowHash...',
+                                                rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
+                                            }
+                                        ]
+                                    }
+                                ],
+                                update: [],
+                                delete: []
+                            }
+                        ));
+
+                    // レスポンスチェック
+                    expect(response.status).toBe(200);
+                    expect(JSON.stringify(response.body)).toBe(JSON.stringify({ result: 'success' }));
+                    // 蓄積イベント受信へのリクエストの確認
+                    const storeEventRequestApiInfo = mockDoPostRequest.mock.calls.filter(elem => (elem[0] as string).startsWith('http://localhost:3003/pxr-block-proxy'));
+                    expect(storeEventRequestApiInfo.length).toBe(0);
+                    // 蓄積イベント通知履歴テーブルの確認
+                    const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
+                    expect(history.length).toBe(0);
+                });
                 test('利用者ID連携テーブルに 同じuserIdの利用者が存在しない', async () => {
                     _operatorServer = new StubOperatorServerType0(200, 2);
                     _catalogServer = new StubCatalogServerStoreEventNotificate(3001, 200, 0, 0);
@@ -4014,36 +2862,36 @@ describe('book-manage API', () => {
                     const requestBody1 = JSON.parse(storeEventRequestApiInfo[0][1]['body']);
                     expect(requestBody1['type']).toBe('share-trigger');
                     expect(requestBody1['operate']).toBe('add');
-                    expect(requestBody1['userId']).toBe('testuserapp');
+                    expect(requestBody1['userId']).toBe('testuserapp2');
                     expect(requestBody1['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody1['document']['_value']).toBe(1099999);
                     expect(requestBody1['document']['_ver']).toBe(1);
                     expect(requestBody1['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody1['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody1['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody1['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody1['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody1['destinationApp']['_value']).toBe(1000601);
                     const requestBody2 = JSON.parse(storeEventRequestApiInfo[1][1]['body']);
                     expect(requestBody2['type']).toBe('share-trigger');
                     expect(requestBody2['operate']).toBe('add');
-                    expect(requestBody2['userId']).toBe('testuserapp');
+                    expect(requestBody2['userId']).toBe('testuserapp2');
                     expect(requestBody2['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody2['event']['_value']).toBe(1000008);
                     expect(requestBody2['event']['_ver']).toBe(1);
                     expect(requestBody2['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody2['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody2['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody2['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody2['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody2['destinationApp']['_value']).toBe(1000601);
                     const requestBody3 = JSON.parse(storeEventRequestApiInfo[2][1]['body']);
                     expect(requestBody3['type']).toBe('share-trigger');
                     expect(requestBody3['operate']).toBe('add');
-                    expect(requestBody3['userId']).toBe('testuserapp');
+                    expect(requestBody3['userId']).toBe('testuserapp2');
                     expect(requestBody3['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c6');
                     expect(requestBody3['thing']['_value']).toBe(1000922);
                     expect(requestBody3['thing']['_ver']).toBe(1);
                     expect(requestBody3['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody3['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody3['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody3['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody3['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody3['destinationApp']['_value']).toBe(1000601);
                     // 蓄積イベント通知履歴テーブルの確認
                     const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
                     expect(history.length).toBe(3);
@@ -4183,36 +3031,36 @@ describe('book-manage API', () => {
                     const requestBody1 = JSON.parse(storeEventRequestApiInfo[0][1]['body']);
                     expect(requestBody1['type']).toBe('share-trigger');
                     expect(requestBody1['operate']).toBe('add');
-                    expect(requestBody1['userId']).toBe('testuserapp');
+                    expect(requestBody1['userId']).toBe('testuserapp2');
                     expect(requestBody1['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody1['document']['_value']).toBe(1099999);
                     expect(requestBody1['document']['_ver']).toBe(1);
                     expect(requestBody1['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody1['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody1['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody1['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody1['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody1['destinationApp']['_value']).toBe(1000601);
                     const requestBody2 = JSON.parse(storeEventRequestApiInfo[1][1]['body']);
                     expect(requestBody2['type']).toBe('share-trigger');
                     expect(requestBody2['operate']).toBe('add');
-                    expect(requestBody2['userId']).toBe('testuserapp');
+                    expect(requestBody2['userId']).toBe('testuserapp2');
                     expect(requestBody2['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody2['event']['_value']).toBe(1000008);
                     expect(requestBody2['event']['_ver']).toBe(1);
                     expect(requestBody2['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody2['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody2['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody2['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody2['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody2['destinationApp']['_value']).toBe(1000601);
                     const requestBody3 = JSON.parse(storeEventRequestApiInfo[2][1]['body']);
                     expect(requestBody3['type']).toBe('share-trigger');
                     expect(requestBody3['operate']).toBe('add');
-                    expect(requestBody3['userId']).toBe('testuserapp');
+                    expect(requestBody3['userId']).toBe('testuserapp2');
                     expect(requestBody3['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c6');
                     expect(requestBody3['thing']['_value']).toBe(1000922);
                     expect(requestBody3['thing']['_ver']).toBe(1);
                     expect(requestBody3['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody3['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody3['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody3['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody3['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody3['destinationApp']['_value']).toBe(1000601);
                     // 蓄積イベント通知履歴テーブルの確認
                     const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
                     expect(history.length).toBe(3);
@@ -4352,36 +3200,36 @@ describe('book-manage API', () => {
                     const requestBody1 = JSON.parse(storeEventRequestApiInfo[0][1]['body']);
                     expect(requestBody1['type']).toBe('share-trigger');
                     expect(requestBody1['operate']).toBe('add');
-                    expect(requestBody1['userId']).toBe('testuserapp');
+                    expect(requestBody1['userId']).toBe('testuserapp2');
                     expect(requestBody1['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody1['document']['_value']).toBe(1099999);
                     expect(requestBody1['document']['_ver']).toBe(1);
                     expect(requestBody1['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody1['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody1['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody1['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody1['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody1['destinationApp']['_value']).toBe(1000601);
                     const requestBody2 = JSON.parse(storeEventRequestApiInfo[1][1]['body']);
                     expect(requestBody2['type']).toBe('share-trigger');
                     expect(requestBody2['operate']).toBe('add');
-                    expect(requestBody2['userId']).toBe('testuserapp');
+                    expect(requestBody2['userId']).toBe('testuserapp2');
                     expect(requestBody2['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody2['event']['_value']).toBe(1000008);
                     expect(requestBody2['event']['_ver']).toBe(1);
                     expect(requestBody2['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody2['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody2['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody2['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody2['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody2['destinationApp']['_value']).toBe(1000601);
                     const requestBody3 = JSON.parse(storeEventRequestApiInfo[2][1]['body']);
                     expect(requestBody3['type']).toBe('share-trigger');
                     expect(requestBody3['operate']).toBe('add');
-                    expect(requestBody3['userId']).toBe('testuserapp');
+                    expect(requestBody3['userId']).toBe('testuserapp2');
                     expect(requestBody3['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c6');
                     expect(requestBody3['thing']['_value']).toBe(1000922);
                     expect(requestBody3['thing']['_ver']).toBe(1);
                     expect(requestBody3['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody3['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody3['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody3['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody3['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody3['destinationApp']['_value']).toBe(1000601);
                     // 蓄積イベント通知履歴テーブルの確認
                     const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
                     expect(history.length).toBe(3);
@@ -4521,36 +3369,36 @@ describe('book-manage API', () => {
                     const requestBody1 = JSON.parse(storeEventRequestApiInfo[0][1]['body']);
                     expect(requestBody1['type']).toBe('share-trigger');
                     expect(requestBody1['operate']).toBe('add');
-                    expect(requestBody1['userId']).toBe('testuserapp');
+                    expect(requestBody1['userId']).toBe('testuserapp2');
                     expect(requestBody1['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody1['document']['_value']).toBe(1099999);
                     expect(requestBody1['document']['_ver']).toBe(1);
                     expect(requestBody1['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody1['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody1['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody1['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody1['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody1['destinationApp']['_value']).toBe(1000601);
                     const requestBody2 = JSON.parse(storeEventRequestApiInfo[1][1]['body']);
                     expect(requestBody2['type']).toBe('share-trigger');
                     expect(requestBody2['operate']).toBe('add');
-                    expect(requestBody2['userId']).toBe('testuserapp');
+                    expect(requestBody2['userId']).toBe('testuserapp2');
                     expect(requestBody2['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody2['event']['_value']).toBe(1000008);
                     expect(requestBody2['event']['_ver']).toBe(1);
                     expect(requestBody2['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody2['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody2['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody2['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody2['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody2['destinationApp']['_value']).toBe(1000601);
                     const requestBody3 = JSON.parse(storeEventRequestApiInfo[2][1]['body']);
                     expect(requestBody3['type']).toBe('share-trigger');
                     expect(requestBody3['operate']).toBe('add');
-                    expect(requestBody3['userId']).toBe('testuserapp');
+                    expect(requestBody3['userId']).toBe('testuserapp2');
                     expect(requestBody3['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c6');
                     expect(requestBody3['thing']['_value']).toBe(1000922);
                     expect(requestBody3['thing']['_ver']).toBe(1);
                     expect(requestBody3['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody3['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody3['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody3['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody3['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody3['destinationApp']['_value']).toBe(1000601);
                     // 蓄積イベント通知履歴テーブルの確認
                     const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
                     expect(history.length).toBe(3);
@@ -4690,36 +3538,36 @@ describe('book-manage API', () => {
                     const requestBody1 = JSON.parse(storeEventRequestApiInfo[0][1]['body']);
                     expect(requestBody1['type']).toBe('share-trigger');
                     expect(requestBody1['operate']).toBe('add');
-                    expect(requestBody1['userId']).toBe('testuserapp');
+                    expect(requestBody1['userId']).toBe('testuserapp2');
                     expect(requestBody1['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody1['document']['_value']).toBe(1099999);
                     expect(requestBody1['document']['_ver']).toBe(1);
                     expect(requestBody1['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody1['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody1['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody1['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody1['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody1['destinationApp']['_value']).toBe(1000601);
                     const requestBody2 = JSON.parse(storeEventRequestApiInfo[1][1]['body']);
                     expect(requestBody2['type']).toBe('share-trigger');
                     expect(requestBody2['operate']).toBe('add');
-                    expect(requestBody2['userId']).toBe('testuserapp');
+                    expect(requestBody2['userId']).toBe('testuserapp2');
                     expect(requestBody2['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c7');
                     expect(requestBody2['event']['_value']).toBe(1000008);
                     expect(requestBody2['event']['_ver']).toBe(1);
                     expect(requestBody2['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody2['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody2['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody2['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody2['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody2['destinationApp']['_value']).toBe(1000601);
                     const requestBody3 = JSON.parse(storeEventRequestApiInfo[2][1]['body']);
                     expect(requestBody3['type']).toBe('share-trigger');
                     expect(requestBody3['operate']).toBe('add');
-                    expect(requestBody3['userId']).toBe('testuserapp');
+                    expect(requestBody3['userId']).toBe('testuserapp2');
                     expect(requestBody3['identifier']).toBe('fedc51ce-2efd-4ade-9bbe-45dc445ae9c6');
                     expect(requestBody3['thing']['_value']).toBe(1000922);
                     expect(requestBody3['thing']['_ver']).toBe(1);
                     expect(requestBody3['sourceActor']['_value']).toBe(1000437);
-                    expect(requestBody3['destinationActor']['_value']).toBe(1000437);
+                    expect(requestBody3['destinationActor']['_value']).toBe(1000445);
                     expect(requestBody3['sourceApp']['_value']).toBe(1000471);
-                    expect(requestBody3['destinationApp']['_value']).toBe(1000471);
+                    expect(requestBody3['destinationApp']['_value']).toBe(1000601);
                     // 蓄積イベント通知履歴テーブルの確認
                     const history = await common.executeSqlString('select * from pxr_book_manage.store_event_notificate_history order by id;');
                     expect(history.length).toBe(3);
@@ -4774,7 +3622,7 @@ describe('book-manage API', () => {
                             {
                                 add: [
                                     {
-                                        '1_1': 'testuserwf',
+                                        '1_1': 'testuserapp',
                                         document: [
                                             {
                                                 serialNumber: 1,
@@ -4810,10 +3658,10 @@ describe('book-manage API', () => {
                                                 '4_1_2_2': 1,
                                                 '4_4_1_1': 1000445,
                                                 '4_4_1_2': 1,
-                                                '4_4_2_1': 1000601,
-                                                '4_4_2_2': 1,
-                                                '4_4_5_1': null,
-                                                '4_4_5_2': null,
+                                                '4_4_2_1': null,
+                                                '4_4_2_2': null,
+                                                '4_4_5_1': 1000601,
+                                                '4_4_5_2': 1,
                                                 rowHash: 'rowHash...',
                                                 rowHashCreateAt: '2020-07-01T00:00:00.000+0900'
                                             }
@@ -4926,6 +3774,315 @@ describe('book-manage API', () => {
                     // レスポンスチェック
                     expect(response.status).toBe(400);
                     expect(response.body.message).toBe(Message.COULD_NOT_SPECIFY_USER_BOOK);
+                });
+            });
+            describe('蓄積イベント通知定義取得関数のテスト', () => {
+                beforeEach(async () => {
+                    await common.executeSqlFile('initialData.sql');
+                    await common.executeSqlFile('initialDataStoreEventNotificate.sql');
+                });
+                test('正常：共有定義に紐づく蓄積イベント通知定義が0件', async () => {
+                    // データ取得
+                    const storeEventDef = await EntityOperation.storeEventNotificationAccessor(1000130, 1);
+                    // 想定レスポンス定義
+                    expect(storeEventDef).toBe(null);
+                });
+                test('正常：蓄積イベント通知定義取得', async () => {
+                    // データ準備
+                    await common.executeSqlString(`
+                    INSERT INTO pxr_book_manage.store_event_notificate
+                        (
+                            notificate_type,
+                            store_event_notificate_catalog_code, store_event_notificate_catalog_version,
+                            share_catalog_code, share_catalog_version,
+                            share_uuid,
+                            is_disabled,
+                            created_by, created_at,
+                            updated_by, updated_at
+                        )
+                        VALUES
+                        (
+                            'store-event',
+                            1001023, 1,
+                            1000475, 1,
+                            '97161717-0898-7e9f-47bb-3bda5b6b9f88',
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        );
+                    INSERT INTO pxr_book_manage.share_source_datatype
+                        (
+                            store_event_notificate_id,
+                            document_catalog_code, document_catalog_version,
+                            event_catalog_code, event_catalog_version,
+                            thing_catalog_code, thing_catalog_version,
+                            is_disabled,
+                            created_by, created_at,
+                            updated_by, updated_at
+                        )
+                        VALUES
+                        (
+                            2,
+                            null, null,
+                            1000108, 1,
+                            null, null,
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        ),
+                        (
+                            2,
+                            null, null,
+                            null, null,
+                            1000908, 1,
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        );
+                    INSERT INTO pxr_book_manage.share_source_source
+                        (
+                            share_source_datatype_id,
+                            actor_catalog_code, actor_catalog_version,
+                            is_disabled,
+                            created_by, created_at,
+                            updated_by, updated_at
+                        )
+                        VALUES
+                        (
+                            4,
+                            1004430, 1,
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        ),
+                        (
+                            5,
+                            1004430, 1,
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        );
+                    `);
+                    // データ取得
+                    const storeEventDef = await EntityOperation.storeEventNotificationAccessor(1000475, 1);
+                    // 想定レスポンス定義
+                    const expectRes: Map<string, IStoreEventNotificate> = new Map()
+                        .set('97161717-0898-7e9f-47bb-3bda5b6b9f88', {
+                            type: 'store-event',
+                            notificationCatalogCode: {
+                                _value: 1000475,
+                                _ver: 1
+                            },
+                            uuid: '97161717-0898-7e9f-47bb-3bda5b6b9f88',
+                            shareSourceDatatype: [
+                                {
+                                    code: {
+                                        _value: 1000108,
+                                        _ver: 1
+                                    },
+                                    shareSourceSource: [
+                                        {
+                                            _value: 1004430,
+                                            _ver: 1
+                                        }
+                                    ]
+                                },
+                                {
+                                    code: {
+                                        _value: 1000908,
+                                        _ver: 1
+                                    },
+                                    shareSourceSource: [
+                                        {
+                                            _value: 1004430,
+                                            _ver: 1
+                                        }
+                                    ]
+                                }
+                            ]
+                        });
+                    expect(storeEventDef.size).toBe(1);
+                    expect(storeEventDef.get(1001023)).toEqual(expectRes);
+                });
+                test('正常：共有トリガー定義取得', async () => {
+                    // データ取得
+                    const storeEventDef = await EntityOperation.storeEventNotificationAccessor(1000473, 1);
+                    // 想定レスポンス定義
+                    const expectRes: Map<string, IStoreEventNotificate> = new Map()
+                        .set('a5baf9b6-1c7d-836b-019c-cf16a69656f0', {
+                            type: 'share-trigger',
+                            notificationCatalogCode: {
+                                _value: 1000473,
+                                _ver: 1
+                            },
+                            uuid: 'a5baf9b6-1c7d-836b-019c-cf16a69656f0',
+                            shareSourceDatatype: [
+                                {
+                                    code: {
+                                        _value: 1099999,
+                                        _ver: 1
+                                    },
+                                    shareSourceSource: [
+                                        {
+                                            _value: 1000437,
+                                            _ver: 1
+                                        },
+                                        {
+                                            _value: 1000445,
+                                            _ver: 1
+                                        }
+                                    ]
+                                },
+                                {
+                                    code: {
+                                        _value: 1000008,
+                                        _ver: 1
+                                    },
+                                    shareSourceSource: [
+                                        {
+                                            _value: 1000437,
+                                            _ver: 1
+                                        },
+                                        {
+                                            _value: 1000445,
+                                            _ver: 1
+                                        }
+                                    ]
+                                },
+                                {
+                                    code: {
+                                        _value: 1000922,
+                                        _ver: 1
+                                    },
+                                    shareSourceSource: [
+                                        {
+                                            _value: 1000437,
+                                            _ver: 1
+                                        },
+                                        {
+                                            _value: 1000445,
+                                            _ver: 1
+                                        }
+                                    ]
+                                }
+                            ]
+                        });
+                    expect(storeEventDef.size).toBe(1);
+                    expect(storeEventDef.get(1001023)).toEqual(expectRes);
+                });
+                test('正常：共有元指定なしの定義', async () => {
+                    // データ準備
+                    await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.store_event_notificate
+                        (
+                            notificate_type,
+                            store_event_notificate_catalog_code, store_event_notificate_catalog_version,
+                            share_catalog_code, share_catalog_version,
+                            share_uuid,
+                            is_disabled,
+                            created_by, created_at,
+                            updated_by, updated_at
+                        )
+                        VALUES
+                        (
+                            'store-event',
+                            1001023, 1,
+                            1000475, 1,
+                            '4726798a-c9d0-526a-855d-a0a6620032f1',
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        ),
+                        (
+                            'store-event',
+                            1001023, 1,
+                            1000475, 1,
+                            '680426bf-1321-f7ce-a75e-db5f774f7459',
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        );
+                        INSERT INTO pxr_book_manage.share_source_datatype
+                        (
+                            store_event_notificate_id,
+                            document_catalog_code, document_catalog_version,
+                            event_catalog_code, event_catalog_version,
+                            thing_catalog_code, thing_catalog_version,
+                            is_disabled,
+                            created_by, created_at,
+                            updated_by, updated_at
+                        )
+                        VALUES
+                        (
+                            2,
+                            null, null,
+                            null, null,
+                            1000521, 1,
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        );
+                    `);
+                    // データ取得
+                    const storeEventDef = await EntityOperation.storeEventNotificationAccessor(1000475, 1);
+                    // 想定レスポンス定義
+                    const expectRes: Map<string, IStoreEventNotificate> = new Map()
+                        .set('4726798a-c9d0-526a-855d-a0a6620032f1', {
+                            type: 'store-event',
+                            notificationCatalogCode: {
+                                _value: 1000475,
+                                _ver: 1
+                            },
+                            uuid: '4726798a-c9d0-526a-855d-a0a6620032f1',
+                            shareSourceDatatype: [
+                                {
+                                    code: {
+                                        _value: 1000521,
+                                        _ver: 1
+                                    },
+                                    shareSourceSource: []
+                                }
+                            ]
+                        })
+                        .set('680426bf-1321-f7ce-a75e-db5f774f7459', {
+                            type: 'store-event',
+                            notificationCatalogCode: {
+                                _value: 1000475,
+                                _ver: 1
+                            },
+                            uuid: '680426bf-1321-f7ce-a75e-db5f774f7459',
+                            shareSourceDatatype: []
+                        });
+                    expect(storeEventDef.size).toBe(1);
+                    expect(storeEventDef.get(1001023)).toEqual(expectRes);
+                });
+                test('正常：通知種別がstore-event, share-trigger以外の蓄積イベント通知定義', async () => {
+                    // データ準備
+                    await common.executeSqlString(`
+                        INSERT INTO pxr_book_manage.store_event_notificate
+                        (
+                            notificate_type,
+                            store_event_notificate_catalog_code, store_event_notificate_catalog_version,
+                            share_catalog_code, share_catalog_version,
+                            share_uuid,
+                            is_disabled,
+                            created_by, created_at,
+                            updated_by, updated_at
+                        )
+                        VALUES
+                        (
+                            'dummy-notification',
+                            1001023, 1,
+                            1000400, 1,
+                            'a5baf9b6-1c7d-836b-019c-cf16a69656f0',
+                            false,
+                            'test', NOW(),
+                            'test', NOW()
+                        );
+                    `);
+                    // データ取得
+                    const storeEventDef = await EntityOperation.storeEventNotificationAccessor(1000400, 1);
+                    expect(storeEventDef.size).toBe(0);
                 });
             });
         });

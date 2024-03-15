@@ -37,6 +37,9 @@ import { Document, Event, Thing } from '../resources/dto/PostStoreEventNotificat
 import StoreEventNotificateHistory from './postgres/StoreEventNotificateHistory';
 import e = require('express');
 import { ResponseCode } from '../common/ResponseCode';
+import { IDataOperationAsset } from 'common/DataOperationRequest';
+import { IAgreementForAsset, IAgreementForDataType, IStoreEventNotificate, shareSourceDataType } from 'common/PermissionAnalyzer';
+import { CodeObject } from 'resources/dto/PostBookOpenReqDto';
 /* eslint-enable */
 
 /**
@@ -523,6 +526,187 @@ export default class EntityOperation {
 
         const ret = await sql.getRawOne();
         return ret ? new DataOperation(ret) : null;
+    }
+
+    /**
+     * PXR-ID、同意種別、アセット・アクター情報から個人の蓄積・共有同意を取得する
+     * @param pxrId 取得対象個人のPXR-ID
+     * @param type 同意種別
+     * @param assets 取得対象のアクター、アセットコードで構成されるオブジェクト配列
+     * @returns
+     */
+    static async agreementAccessor (pxrId: string, type: 'STORE' | 'SHARE_CONTINUOUS', assets: IDataOperationAsset[] | null): Promise<IAgreementForAsset[]> {
+        const connection = await connectDatabase();
+        const repository = getRepository(DataOperation, connection.name);
+        let sql;
+        sql = repository.createQueryBuilder('data_operation')
+            .addSelect('data_operation_data_type', 'data_operation_data_type')
+            .innerJoin(MyConditionBook, 'my_condition_book', 'my_condition_book.id = data_operation.book_id')
+            .innerJoin(DataOperationDataType, 'data_operation_data_type', 'data_operation.id = data_operation_data_type.data_operation_id')
+            .where('my_condition_book.pxr_id = :pxr_id', { pxr_id: pxrId })
+            .andWhere('my_condition_book.is_disabled = :is_disabled', { is_disabled: false });
+        if (type === 'STORE') {
+            sql.andWhere('data_operation.type = :type', { type: 'store' })
+                .andWhere('data_operation.is_disabled = :is_disabled', { is_disabled: false })
+                .andWhere('data_operation_data_type.is_disabled = :is_disabled', { is_disabled: false });
+        } else {
+            // 共有の場合、蓄積定義に関しては非同意状態のものも取得する
+            sql = sql.orWhere('data_operation.type = :type', { type: 'store' })
+                .orWhere(
+                    new Brackets(subQb2 => {
+                        subQb2.andWhere('data_operation.type = :type', { type: 'share' })
+                            .andWhere('data_operation.is_disabled = :is_disabled', { is_disabled: false });
+                    })
+                );
+        }
+        if (assets && assets.length > 0) {
+            sql = sql.andWhere(
+                new Brackets(subQb => {
+                    for (let index = 0; index < assets.length; index++) {
+                        subQb.orWhere(
+                            new Brackets(subQb2 => {
+                                if (assets[index].actor) {
+                                    subQb2.andWhere(`data_operation.actor_catalog_code = :actor_catalog_code${index}`, { [`actor_catalog_code${index}`]: assets[index].actor });
+                                }
+                                if (assets[index].asset) {
+                                    subQb2.andWhere(
+                                        new Brackets(subQb3 => {
+                                            subQb3.orWhere(`data_operation.wf_catalog_code = :wf_catalog_code${index}`, { [`wf_catalog_code${index}`]: assets[index].asset });
+                                            subQb3.orWhere(`data_operation.app_catalog_code = :app_catalog_code${index}`, { [`app_catalog_code${index}`]: assets[index].asset });
+                                        })
+                                    );
+                                }
+                            })
+                        );
+                    }
+                })
+            );
+        }
+        const ret = await sql.getRawMany();
+        const list: DataOperation[] = [];
+        ret.forEach(element => {
+            list.push(new DataOperation(element));
+        });
+        const res: IAgreementForAsset[] = EntityOperation.createAgreementObjects(list, pxrId);
+        return res;
+    }
+
+    /**
+     * データ操作定義レコード取得結果から、アセットに対する個人同意オブジェクトを生成する
+     * @param list
+     * @param pxrId
+     * @returns
+     */
+    private static createAgreementObjects (list: DataOperation[], pxrId: string): IAgreementForAsset[] {
+        const response: IAgreementForAsset[] = [];
+        for (const record of list) {
+            // データ種情報を IAgreementForDataType の形式に変換する（eventは配下のthingとセットで入っているため、配列型にする）
+            const agreementDataTypeList: IAgreementForDataType[] = EntityOperation.convertDataOperationDataType(record);
+
+            if (!response.some((ele) => ele.asset._value === record.appCatalogCode || ele.asset._value === record.wfCatalogCode)) {
+                // 対象アセットに対する個人同意オブジェクトがレスポンスに無い場合は作成
+                const agreementForAsset: IAgreementForAsset = {
+                    pxrId: pxrId,
+                    actor: {
+                        _value: record.actorCatalogCode,
+                        _ver: record.actorCatalogVersion
+                    },
+                    asset: {
+                        _value: record.appCatalogCode ? record.appCatalogCode : record.wfCatalogCode,
+                        _ver: record.appCatalogCode ? record.actorCatalogVersion : record.wfCatalogVersion
+                    },
+                    store: [],
+                    share: []
+                };
+                response.push(agreementForAsset);
+            }
+            // レスポンス配列から、アセット情報が一致する個人同意オブジェクトを取得
+            const resEle: IAgreementForAsset = response.find((ele) => ele.asset._value === record.appCatalogCode || ele.asset._value === record.wfCatalogCode);
+            // データ操作定義カタログコードが一致する蓄積/共有定義オブジェクトを取得し、そこにデータ種情報をpushする
+            if (record.type === 'store') {
+                const storeEle = resEle.store.find((ele) => ele.target._value === record.operationCatalogCode);
+                if (storeEle) {
+                    storeEle.dataType.push(...agreementDataTypeList);
+                } else {
+                    // 該当の蓄積定義オブジェクトが未作成であれば作成してpushする
+                    resEle.store.push({
+                        id: record.id,
+                        target: {
+                            _value: record.operationCatalogCode,
+                            _ver: record.operationCatalogVersion
+                        },
+                        dataType: agreementDataTypeList
+                    });
+                }
+            } else {
+                // type === (store || share) 指定で取得しているため、storeでない場合は必ずshare
+                const shareEle = resEle.share.find((ele) => ele.target._value === record.operationCatalogCode);
+                if (shareEle) {
+                    shareEle.dataType.push(...agreementDataTypeList);
+                } else {
+                    // 該当の共有定義オブジェクトが未作成であれば作成してpushする
+                    resEle.share.push({
+                        id: record.id,
+                        target: {
+                            _value: record.operationCatalogCode,
+                            _ver: record.operationCatalogVersion
+                        },
+                        dataType: agreementDataTypeList
+                    });
+                }
+            }
+        }
+        return response;
+    }
+
+    /**
+     * データ操作定義レコード取得結果を、データ種に対する同意オブジェクト配列に変換する
+     * @param record DataOperation + DataOperationDataType
+     * @returns データ種に対する同意リスト
+     */
+    private static convertDataOperationDataType (record: DataOperation): IAgreementForDataType[] {
+        const agreementDataTypeList: IAgreementForDataType[] = [];
+        const dataType = record.dataOperationDataType;
+        if (dataType.documentCatalogCode) {
+            // documentのみのパターン
+            agreementDataTypeList.push({
+                uuid: dataType.catalogUuid,
+                code: {
+                    _value: dataType.documentCatalogCode,
+                    _ver: dataType.documentCatalogVersion
+                },
+                consentFlag: dataType.consentFlg
+            });
+        } else if (dataType.eventCatalogCode) {
+            // event + thing のパターン (event単体のパターンは無い)
+            agreementDataTypeList.push({
+                uuid: dataType.catalogUuid,
+                code: {
+                    _value: dataType.eventCatalogCode,
+                    _ver: dataType.eventCatalogVersion
+                },
+                consentFlag: dataType.consentFlg
+            });
+            agreementDataTypeList.push({
+                uuid: dataType.catalogUuid,
+                code: {
+                    _value: dataType.thingCatalogCode,
+                    _ver: dataType.thingCatalogVersion
+                },
+                consentFlag: dataType.consentFlg
+            });
+        } else {
+            // thingのみのパターン（共有定義のみ有り得る）
+            agreementDataTypeList.push({
+                uuid: dataType.catalogUuid,
+                code: {
+                    _value: dataType.thingCatalogCode,
+                    _ver: dataType.thingCatalogVersion
+                },
+                consentFlag: dataType.consentFlg
+            });
+        }
+        return agreementDataTypeList;
     }
 
     /**
@@ -2046,88 +2230,6 @@ export default class EntityOperation {
     }
 
     /**
-     * 蓄積イベント通知データ取得
-     */
-    static async getStoreEventNotificateData (pxrId: string, type: number, code: number, version: number, actorCode: number) {
-        let subQuery = '';
-        let params = {};
-        // ドキュメントの場合
-        if (type === 1) {
-            subQuery = subQuery + 'share_source_datatype.document_catalog_code = :code';
-            params = { ...params, code: code };
-            subQuery = subQuery + ' and share_source_datatype.document_catalog_version = :version';
-            params = { ...params, version: version };
-        }
-        // イベントの場合
-        if (type === 2) {
-            subQuery = subQuery + 'share_source_datatype.event_catalog_code = :code';
-            params = { ...params, code: code };
-            subQuery = subQuery + ' and share_source_datatype.event_catalog_version = :version';
-            params = { ...params, version: version };
-        }
-        // モノの場合
-        if (type === 3) {
-            subQuery = subQuery + 'share_source_datatype.thing_catalog_code = :code';
-            params = { ...params, code: code };
-            subQuery = subQuery + ' and share_source_datatype.thing_catalog_version = :version';
-            params = { ...params, version: version };
-        }
-        subQuery = subQuery + ' and share_source_source.actor_catalog_code = :actorCode';
-        params = { ...params, actorCode: actorCode };
-
-        const connection = await connectDatabase();
-        const repository = getRepository(MyConditionBook, connection.name);
-        let sql = repository.createQueryBuilder('my_condition_book')
-            .select('store_event_notificate.notificate_type', 'eventType')
-            .distinct()
-            .addSelect('data_operation.actor_catalog_code', 'dataOperationActorCode')
-            .addSelect('data_operation.actor_catalog_version', 'dataOperationActorVersion')
-            .addSelect('data_operation.app_catalog_code', 'dataOperationAppCode')
-            .addSelect('data_operation.app_catalog_version', 'dataOperationAppVersion')
-            .addSelect('store_event_notificate.store_event_notificate_catalog_code', 'storeEventNotificateCatalogCode')
-            .addSelect('store_event_notificate.store_event_notificate_catalog_version', 'storeEventNotificateCatalogVersion')
-            .addSelect('share_source_datatype.id', 'shareSourceDatatypeId')
-            .addSelect('share_source_source.id', 'shareSourceSourceId')
-            .innerJoin(DataOperation, 'data_operation', 'data_operation.book_id = my_condition_book.id')
-            .innerJoin(DataOperationDataType, 'data_operation_data_type', 'data_operation_data_type.data_operation_id = data_operation.id')
-            .innerJoin(StoreEventNotificate, 'store_event_notificate',
-                `store_event_notificate.share_catalog_code = data_operation.operation_catalog_code
-                and store_event_notificate.share_catalog_version = data_operation.operation_catalog_version
-                and store_event_notificate.share_uuid = data_operation_data_type.catalog_uuid`)
-            .leftJoin(ShareSourceDatatype, 'share_source_datatype', 'share_source_datatype.store_event_notificate_id = store_event_notificate.id')
-            .leftJoin(ShareSourceSource, 'share_source_source',
-                'share_source_source.share_source_datatype_id = share_source_datatype.id and ' + subQuery, params)
-            .where('my_condition_book.pxr_id = :pxrId', { pxrId: pxrId })
-            .andWhere('my_condition_book.is_disabled = :isDisabled', { isDisabled: false })
-            .andWhere('data_operation.type = :type', { type: 'share' })
-            .andWhere('data_operation.is_disabled = :isDisabled', { isDisabled: false })
-            .andWhere('data_operation.wf_catalog_code  IS NULL');
-        // ドキュメントの場合
-        if (type === 1) {
-            sql = sql.andWhere('data_operation_data_type.document_catalog_code = :code', { code: code })
-                .andWhere('data_operation_data_type.document_catalog_version = :version', { version: version });
-        }
-        // イベントの場合
-        if (type === 2) {
-            sql = sql.andWhere('data_operation_data_type.event_catalog_code = :code', { code: code })
-                .andWhere('data_operation_data_type.event_catalog_version = :version', { version: version });
-        }
-        // モノの場合
-        if (type === 3) {
-            sql = sql.andWhere('data_operation_data_type.thing_catalog_code = :code', { code: code })
-                .andWhere('data_operation_data_type.thing_catalog_version = :version', { version: version });
-        }
-        sql = sql.andWhere('data_operation_data_type.consent_flg= :consentFlag ', { consentFlag: true })
-            .andWhere('data_operation_data_type.is_disabled = :isDisabled', { isDisabled: false })
-            .andWhere('store_event_notificate.is_disabled = :isDisabled', { isDisabled: false });
-        applicationLogger.info(sql.getSql());
-        applicationLogger.info(sql.getParameters());
-        const ret = await sql.getRawMany();
-        applicationLogger.info('store-event data: ' + JSON.stringify(ret));
-        return ret;
-    }
-
-    /**
      * 共有先利用者ID取得
      */
     static async getShareUserIdCooperate (userId: string, data: Document | Event | Thing, dataOperationActorCode: number, dataOperationAppCode: number, dataOperationWfCode: number) {
@@ -2171,6 +2273,33 @@ export default class EntityOperation {
         applicationLogger.info(query.getParameters());
         const ret = await query.getRawOne();
         return ret ? ret['userId'] : null;
+    }
+
+    /**
+     * PXR-IDを用いて共有先利用者ID取得
+     */
+    static async getShareUserIdCooperateByPxrId (pxrId: string, actorCode: number, assetCode: number): Promise<UserIdCooperate> {
+        const connection = await connectDatabase();
+        const repository = getRepository(UserIdCooperate, connection.name);
+        const query = repository.createQueryBuilder('user_id_cooperate')
+            .innerJoin(MyConditionBook, 'my_condition_book', 'my_condition_book.id = user_id_cooperate.book_id')
+            .where('my_condition_book.pxr_id = :pxr_id', { pxr_id: pxrId })
+            .andWhere('user_id_cooperate.actor_catalog_code = :actorCode', { actorCode: actorCode })
+            .andWhere(
+                new Brackets(subQb => {
+                    subQb.orWhere('user_id_cooperate.wf_catalog_code = :wf_catalog_code', { wf_catalog_code: assetCode })
+                        .orWhere('user_id_cooperate.app_catalog_code = :app_catalog_code', { app_catalog_code: assetCode });
+                })
+            )
+            .andWhere('user_id_cooperate.is_disabled = :is_disabled', { is_disabled: false })
+            .andWhere('my_condition_book.is_disabled = :is_disabled', { is_disabled: false });
+
+        const ret: UserIdCooperate = await query.getRawOne();
+        if (ret) {
+            return new UserIdCooperate(ret);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -2292,6 +2421,137 @@ export default class EntityOperation {
                 }
             ).execute();
         return ret;
+    }
+
+    /**
+     * 蓄積イベント通知レコード取得
+     */
+    static async getStoreEventNotificateRecord (code: number, version: number): Promise<StoreEventNotificate[]> {
+        const connection = await connectDatabase();
+        const repository = getRepository(StoreEventNotificate, connection.name);
+        const result = await repository
+            .createQueryBuilder('store_event_notificate')
+            .where('share_catalog_code = :code', { code: code })
+            .andWhere('share_catalog_version = :version', { version: version })
+            .andWhere('is_disabled = :isDisabled', { isDisabled: false })
+            .getRawMany();
+        const list: StoreEventNotificate[] = [];
+        result.forEach(element => {
+            list.push(new StoreEventNotificate(element));
+        });
+        return list;
+    }
+
+    /**
+     * 共有元指定データ種取得
+     */
+    static async getShareSourceDataType (storeEventNotificateId: number): Promise<ShareSourceDatatype[]> {
+        const connection = await connectDatabase();
+        const repository = getRepository(ShareSourceDatatype, connection.name);
+        const result = await repository
+            .createQueryBuilder('share_source_datatype')
+            .where('share_source_datatype.store_event_notificate_id = :store_event_notificate_id', { store_event_notificate_id: storeEventNotificateId })
+            .andWhere('share_source_datatype.is_disabled = :isDisabled', { isDisabled: false })
+            .getRawMany();
+        const list: ShareSourceDatatype[] = [];
+        result.forEach(element => {
+            list.push(new ShareSourceDatatype(element));
+        });
+        return list;
+    }
+
+    /**
+     * 共有元指定共有元取得
+     */
+    static async getShareSourceSource (shareSourceDatatypeId: number): Promise<ShareSourceSource[]> {
+        const connection = await connectDatabase();
+        const repository = getRepository(ShareSourceSource, connection.name);
+        const result = await repository
+            .createQueryBuilder('share_source_source')
+            .where('share_source_source.share_source_datatype_id = :share_source_datatype_id', { share_source_datatype_id: shareSourceDatatypeId })
+            .andWhere('share_source_source.is_disabled = :isDisabled', { isDisabled: false })
+            .getRawMany();
+        const list: ShareSourceSource[] = [];
+        result.forEach(element => {
+            list.push(new ShareSourceSource(element));
+        });
+        return list;
+    }
+
+    /**
+     * 蓄積イベント通知定義取得関数
+     * @param shareCatalogCode 共有定義カタログコード
+     * @param shareCatalogVersion 共有定義カタログバージョン
+     */
+    static async storeEventNotificationAccessor (shareCatalogCode: number, shareCatalogVersion: number):Promise<Map<number, Map<string, IStoreEventNotificate>>> {
+        const storeEventNotifications = await EntityOperation.getStoreEventNotificateRecord(shareCatalogCode, shareCatalogVersion);
+
+        // 蓄積イベント通知定義が取得できなかった場合は、nullを返却する
+        if (!storeEventNotifications || storeEventNotifications.length === 0) {
+            return null;
+        }
+
+        const storeEventNotificateMap: Map<number, Map<string, IStoreEventNotificate>> = new Map();
+        for (const notification of storeEventNotifications) {
+            if (notification.notificateType !== 'store-event' && notification.notificateType !== 'share-trigger') {
+                // 通知種別が'store-event', 'share-trigger' 以外の蓄積イベント通知定義レコードは想定しないため、処理スキップ
+                continue;
+            }
+            // 共有元指定情報を取得
+            const shareSourceDatatype = await this.getShareSources(notification);
+            const storeEventNotificateEle: IStoreEventNotificate = {
+                type: notification.notificateType,
+                notificationCatalogCode: {
+                    _value: notification.shareCatalogCode,
+                    _ver: notification.shareCatalogVersion
+                },
+                uuid: notification.shareUuid,
+                shareSourceDatatype: shareSourceDatatype
+            };
+
+            // 蓄積イベント通知定義マップに対象蓄積イベント通知定義カタログコードの要素があれば、その値のMapにプッシュ
+            // なければ新たにそのコードをキーにして、マップにMap（キー:UUID、値：蓄積イベント通知定義）を追加する
+            const storeEventNotificateValueMap = storeEventNotificateMap.get(notification.storeEventNotificateCatalogCode);
+            if (storeEventNotificateValueMap) {
+                storeEventNotificateValueMap.set(notification.shareUuid, storeEventNotificateEle);
+            } else {
+                storeEventNotificateMap.set(notification.storeEventNotificateCatalogCode, new Map().set(notification.shareUuid, storeEventNotificateEle));
+            }
+        }
+        return storeEventNotificateMap;
+    }
+
+    /**
+     * 蓄積イベント通知定義の子テーブル、孫テーブルから共有元指定情報を取得する
+     * @param storeEventNotificate 蓄積イベント通知定義レコード情報
+     * @returns 共有元指定データ種オブジェクト
+     */
+    private static async getShareSources (storeEventNotificate: StoreEventNotificate): Promise<shareSourceDataType[]> {
+        // 共有元指定データ種テーブルを取得
+        const resSourceDataTypes: shareSourceDataType[] = [];
+        const shareSourceDatatypes = await EntityOperation.getShareSourceDataType(storeEventNotificate.id);
+        if (shareSourceDatatypes && shareSourceDatatypes.length > 0) {
+            for (const shareSourceDataType of shareSourceDatatypes) {
+                // document, event, thingのうち、値が設定されているカラムからデータ種コードを取得する
+                const code = shareSourceDataType.documentCatalogCode ? shareSourceDataType.documentCatalogCode : shareSourceDataType.eventCatalogCode ? shareSourceDataType.eventCatalogCode : shareSourceDataType.thingCatalogCode;
+                const version = shareSourceDataType.documentCatalogCode ? shareSourceDataType.documentCatalogVersion : shareSourceDataType.eventCatalogCode ? shareSourceDataType.eventCatalogVersion : shareSourceDataType.thingCatalogVersion;
+
+                // 共有元指定共有元テーブルを取得
+                const sourceActors: CodeObject[] = [];
+                const shareSourceSources = await EntityOperation.getShareSourceSource(shareSourceDataType.id);
+                if (shareSourceSources && shareSourceSources.length > 0) {
+                    shareSourceSources.forEach((ele) => sourceActors.push({ _value: ele.actorCatalogCode, _ver: ele.actorCatalogVersion }));
+                }
+                resSourceDataTypes.push({
+                    code: {
+                        _value: code,
+                        _ver: version
+                    },
+                    shareSourceSource: sourceActors
+                });
+            }
+        }
+        return resSourceDataTypes;
     }
 
     /**

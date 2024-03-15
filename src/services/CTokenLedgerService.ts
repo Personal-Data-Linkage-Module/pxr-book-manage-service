@@ -63,6 +63,61 @@ export default class CTokenLedgerService {
     }
 
     /**
+     * データ種指定で件数取得APIを呼び出す
+     * @param operator
+     * @param document
+     * @param event
+     * @param thing
+     */
+    public async postCTokenSearchByData (cTokenLedgerDto: CTokenLedgerDto): Promise<any[]> {
+        const url = urljoin(cTokenLedgerDto.getUrl(), '/count');
+        const bodyStr = JSON.stringify({
+            pxrId: cTokenLedgerDto.getPxrId(),
+            document: cTokenLedgerDto.getType() === 'document' ? cTokenLedgerDto.getData() : [],
+            event: cTokenLedgerDto.getType() === 'event' ? cTokenLedgerDto.getData() : [],
+            thing: cTokenLedgerDto.getType() === 'thing' ? cTokenLedgerDto.getData() : [],
+            includeDeleted: true
+        });
+        const options = {
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json',
+                session: cTokenLedgerDto.getOperator() ? encodeURIComponent(JSON.stringify(cTokenLedgerDto.getOperator())) : cTokenLedgerDto.getOperatorDomain().encoded
+            },
+            body: bodyStr
+        };
+        const message = cTokenLedgerDto.getMessage();
+        try {
+            // CToken台帳サービスからCToken件数を取得
+            const result = await doPostRequest(url, options);
+
+            // ステータスコードを判定
+            const statusCode: string = result.response.statusCode.toString();
+            if (result.response.statusCode === ResponseCode.BAD_REQUEST) {
+                // 応答が400の場合、エラーを返す
+                throw new AppError(message.FAILED_CTOKEN_COUNT_GET, ResponseCode.BAD_REQUEST);
+            } else if (statusCode.match(/^5.+/)) {
+                // 応答が500系の場合、エラーを返す
+                throw new AppError(message.FAILED_CTOKEN_COUNT_GET, ResponseCode.SERVICE_UNAVAILABLE);
+            } else if (result.response.statusCode === ResponseCode.NO_CONTENT) {
+                // 応答が204 の場合、空配列を返す
+                return [];
+            } else if (result.response.statusCode !== ResponseCode.OK) {
+                // 応答が200 OK以外の場合、エラーを返す
+                throw new AppError(message.FAILED_CTOKEN_COUNT_GET, ResponseCode.UNAUTHORIZED);
+            }
+            // CToken件数を戻す
+            return result.body;
+        } catch (err) {
+            if (err.name === AppError.NAME) {
+                throw err;
+            }
+            // サービスへの接続に失敗した場合
+            throw new AppError(message.FAILED_CONNECT_TO_CTOKEN_LEDGER, ResponseCode.SERVICE_UNAVAILABLE, err);
+        }
+    }
+
+    /**
      * CToken取得
      * @param cTokenLedgerDto
      */

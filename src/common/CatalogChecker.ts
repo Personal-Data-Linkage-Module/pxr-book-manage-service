@@ -53,7 +53,7 @@ export async function checkShareCatalog (data: any, arg: number | string) {
  * @param data
  * @param arg
  */
-export async function checkActorCatalog (data: any, arg: number | string) {
+export async function checkActorCatalog (data: any, arg: number | string): Promise<Actor | Actor[]> {
     try {
         const domain = await transformAndValidate(Actor, data);
         if (Array.isArray(domain) !== Array.isArray(data)) {
