@@ -388,3 +388,35 @@ export const getNoShareRestrictionCatalogs =
     ): Promise<ISharingRestrictionCatalog[]> => {
         return [];
     }
+
+/**
+ * 共有制限定義カタログ取得関数（取得結果なしパターン）
+ * @param actorCode 
+ * @returns 
+ */
+export const getNoDataTypeShareRestrictionCatalogs =
+    async (
+        operator: Operator,
+        actorCode: number
+    ): Promise<ISharingRestrictionCatalog[]> => {
+        return [
+            {
+                catalogItem: {
+                    ns: '/share-restriction',
+                    _code: {
+                        _value: 1000141,
+                        _ver: 1
+                    }
+                },
+                template: {
+                    _code: {
+                        _value: 1000140,
+                        _ver: 1
+                    },
+                    document: null,
+                    event: null,
+                    thing: null
+                }
+            }
+        ];
+    }

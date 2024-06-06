@@ -373,7 +373,13 @@ export default class CatalogService {
      * @returns
      */
     private async getCatalogHistory (operator: Operator, code: number, minVersion?: number, maxVersion?: number): Promise<Catalog[]> {
-        const url = urljoin(Configure['catalogUrl'], 'history', code.toString(), '', '?min=' + minVersion, '&max=' + maxVersion);
+        let query: string;
+        if (!maxVersion) {
+            query = '?min=' + minVersion;
+        } else {
+            query = '?min=' + minVersion + '&max=' + maxVersion;
+        }
+        const url = urljoin(Configure['catalogUrl'], 'history', code.toString(), '', query);
         const options = {
             headers: {
                 accept: 'application/json',

@@ -5,7 +5,7 @@ import PermissionAnalyzer from '../common/PermissionAnalyzer';
 import { changeAgreement, changeAgreementVersion, changeConsentFlg, getAgreement, shareDatatype1000132_1, shareDatatype1000132_4, shareDatatype1000132_5, shareDatatype1000132_6, shareDatatype1000133_6, storeDatatype1000122_1, storeDatatype1000122_4, storeDatatype1000122_5, storeDatatype1000220_1 } from './accessor/AgreementAccessor';
 import { changeMaxCatalogVersion, getCatalog, getNoDataOperationCatalog } from './accessor/CatalogAccessor';
 import AppError from 'common/AppError';
-import { getNoShareRestrictionCatalogs, getShareRestrictionCatalogs } from './accessor/ShareRestrictionAccessor';
+import { getNoDataTypeShareRestrictionCatalogs, getNoShareRestrictionCatalogs, getShareRestrictionCatalogs } from './accessor/ShareRestrictionAccessor';
 import Operator from '../resources/dto/OperatorReqDto';
 import { Session } from './Session';
 import { IPermissionResponse } from 'common/DataOperationResponse';
@@ -8033,6 +8033,66 @@ describe('book-mange API', () => {
                 expect(result.sourceActor).toEqual([]);
                 expect(result.prohibitedSourceActor).toEqual([]);
                 });
+                describe('複数event、複数thingで別々に個人同意除外が指定されるケース', () => {
+                    test('正常：複数thingが紐づくデータ種Ev1 event、一方のみ個人同意除外　可判定', async () => {
+                        // 判定対象のリクエスト生成
+                        shareReqApp03.dataType.type = 'event';
+                        shareReqApp03.dataType.code._value = 1000714;
+                        shareReqApp03.dataType.code._ver = 1;
+                        // analyzerインスタンス生成
+                        const operator = new Operator();
+                        operator.setFromJson(Session.dataStoreGetApp);
+                        const analyzer = PermissionAnalyzer
+                            .create(operator, getAgreement, getCatalog, getShareRestrictionCatalogs)
+                            .setDataOperationType('SHARE_CONTINUOUS');
+                        await analyzer.setAgreement('pxrId01', 'SHARE_CONTINUOUS', null);
+                        await analyzer.setAssetCatalog();
+                        await analyzer.specifyTarget();
+
+                        // 判定
+                        let result: IPermissionResponse;
+                        let error: AppError;
+                        try {
+                            result = await analyzer.isPermitted(shareReqApp03);
+                        } catch (err) {
+                            error = err;
+                        }
+
+                        // レスポンスチェック
+                        expect(result.checkResult).toBe(true);
+                        expect(result.sourceActor).toEqual([]);
+                        expect(result.prohibitedSourceActor).toEqual([]);
+                    });
+                    test('正常：複数event配下にあるデータ種Fv1 thing 、一方のイベントでのみ個人同意除外　不可判定', async () => {
+                        // 判定対象のリクエスト生成
+                        shareReqApp03.dataType.type = 'thing';
+                        shareReqApp03.dataType.code._value = 1000727;
+                        shareReqApp03.dataType.code._ver = 1;
+                        // analyzerインスタンス生成
+                        const operator = new Operator();
+                        operator.setFromJson(Session.dataStoreGetApp);
+                        const analyzer = PermissionAnalyzer
+                            .create(operator, getAgreement, getCatalog, getShareRestrictionCatalogs)
+                            .setDataOperationType('SHARE_CONTINUOUS');
+                        await analyzer.setAgreement('pxrId01', 'SHARE_CONTINUOUS', null);
+                        await analyzer.setAssetCatalog();
+                        await analyzer.specifyTarget();
+
+                        // 判定
+                        let result: IPermissionResponse;
+                        let error: AppError;
+                        try {
+                            result = await analyzer.isPermitted(shareReqApp03);
+                        } catch (err) {
+                            error = err;
+                        }
+
+                        // レスポンスチェック
+                        expect(result.checkResult).toBe(false);
+                        expect(result.sourceActor).toBe(null);
+                        expect(result.prohibitedSourceActor).toBe(null);
+                    });
+                });
             });
         });
         describe('共有元指定または共有制限定義によって共有元が制限されるケース', () => {
@@ -8329,6 +8389,33 @@ describe('book-mange API', () => {
                 operator.setFromJson(Session.dataStoreGetApp);
                 const analyzer = PermissionAnalyzer
                     .create(operator, getAgreement, getCatalog, getNoShareRestrictionCatalogs)
+                    .setDataOperationType('SHARE_CONTINUOUS');
+                await analyzer.setAgreement('pxrId01', 'SHARE_CONTINUOUS', null);
+                await analyzer.setAssetCatalog();
+                await analyzer.specifyTarget();
+
+                // 判定
+                let result: IPermissionResponse;
+                let error: AppError;
+                try {
+                    result = await analyzer.isPermitted(shareReqApp03);
+                } catch (err) {
+                    error = err;
+                }
+
+                // レスポンスチェック
+                expect(result.checkResult).toBe(true);
+            });
+            test('正常：共有制限定義カタログは存在するが各データ種の定義がnull　可判定', async () => {
+                // 判定対象のリクエスト生成
+                shareReqApp03.dataType.type = 'document';
+                shareReqApp03.dataType.code._value = 1000501;
+                shareReqApp03.dataType.code._ver = 1;
+                // analyzerインスタンス生成
+                const operator = new Operator();
+                operator.setFromJson(Session.dataStoreGetApp);
+                const analyzer = PermissionAnalyzer
+                    .create(operator, getAgreement, getCatalog, getNoDataTypeShareRestrictionCatalogs)
                     .setDataOperationType('SHARE_CONTINUOUS');
                 await analyzer.setAgreement('pxrId01', 'SHARE_CONTINUOUS', null);
                 await analyzer.setAssetCatalog();

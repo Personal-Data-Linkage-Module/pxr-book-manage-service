@@ -7,6 +7,10 @@ VALUES
 (
     1, 'pxrId01', null,
     false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    2, 'pxrId02', null,
+    false, 'test_user', NOW(), 'test_user', NOW()
 );
 INSERT INTO pxr_book_manage.user_id_cooperate
 (
@@ -29,6 +33,16 @@ VALUES
     3, 1, 1000101, 1,
     1000111, 1, null, null,
     'appUser02', false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    4, 2, 1000101, 1,
+    1000110, 1, null, null,
+    'appUser11', false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    5, 2, 1000201, 1,
+    1000210, 1, null, null,
+    'appUser11', false, 'test_user', NOW(), 'test_user', NOW()
 );
 INSERT INTO pxr_book_manage.data_operation
 (
@@ -102,6 +116,38 @@ VALUES
     null, null,
     1000111, 1,
     1000132, 5,
+    null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    9, 2, 'store',
+    1000101, 1,
+    1000110, 1,
+    null, null,
+    1000120, 5,
+    null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    10, 2, 'store',
+    1000201, 1,
+    1000210, 1,
+    null, null,
+    1000220, 5,
+    null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 2, 'share',
+    1000101, 1,
+    1000110, 1,
+    null, null,
+    1000130, 5,
+    null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 2, 'share',
+    1000201, 1,
+    1000210, 1,
+    null, null,
+    1000230, 5,
     null, false, 'test_user', NOW(), 'test_user', NOW()
 );
 
@@ -302,4 +348,116 @@ VALUES
     1000513, 1,
     1000523, 1,
     true, null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 'e87b27c1-5da8-37dd-6ee6-2c7831cf6a11',
+    1000501, 1,
+    null, null,
+    null, null,
+    false, null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 'e87b27c1-5da8-37dd-6ee6-2c7831cf6a11',
+    null, null,
+    1000511, 1,
+    1000521, 1,
+    false, null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 'f87b27c1-5da8-37dd-6ee6-2c7831cf6a11',
+    1000501, 1,
+    null, null,
+    null, null,
+    true, null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 'f87b27c1-5da8-37dd-6ee6-2c7831cf6a11',
+    null, null,
+    1000511, 1,
+    1000521, 1,
+    true, null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 'g87b27c1-5da8-37dd-6ee6-2c7831cf6a11',
+    1000601, 1,
+    null, null,
+    null, null,
+    true, null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 'g87b27c1-5da8-37dd-6ee6-2c7831cf6a11',
+    null, null,
+    1000611, 1,
+    1000621, 1,
+    true, null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 'h87b27c1-5da8-37dd-6ee6-2c7831cf6a11',
+    1000601, 1,
+    null, null,
+    null, null,
+    false, null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    11, 'h87b27c1-5da8-37dd-6ee6-2c7831cf6a11',
+    null, null,
+    1000611, 1,
+    1000621, 1,
+    false, null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 'c87b27c1-5da8-37dd-6ee6-2c7831cf6a10',
+    1000501, 1,
+    null, null,
+    null, null,
+    false, null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 'c87b27c1-5da8-37dd-6ee6-2c7831cf6a10',
+    null, null,
+    1000511, 1,
+    1000521, 1,
+    false, null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 'd87b27c1-5da8-37dd-6ee6-2c7831cf6a10',
+    1000501, 1,
+    null, null,
+    null, null,
+    true, null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 'd87b27c1-5da8-37dd-6ee6-2c7831cf6a10',
+    null, null,
+    1000511, 1,
+    1000521, 1,
+    true, null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 'e87b27c1-5da8-37dd-6ee6-2c7831cf6a10',
+    1000801, 1,
+    null, null,
+    null, null,
+    true, null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 'e87b27c1-5da8-37dd-6ee6-2c7831cf6a10',
+    null, null,
+    1000811, 1,
+    1000821, 1,
+    true, null, true, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 'f87b27c1-5da8-37dd-6ee6-2c7831cf6a10',
+    1000801, 1,
+    null, null,
+    null, null,
+    false, null, false, 'test_user', NOW(), 'test_user', NOW()
+),
+(
+    12, 'f87b27c1-5da8-37dd-6ee6-2c7831cf6a10',
+    null, null,
+    1000811, 1,
+    1000821, 1,
+    false, null, false, 'test_user', NOW(), 'test_user', NOW()
 );
