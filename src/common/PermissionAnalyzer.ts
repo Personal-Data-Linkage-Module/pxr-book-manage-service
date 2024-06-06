@@ -1,7 +1,17 @@
-/** Copyright 2022 NEC Corporation
-Released under the MIT license.
-https://opensource.org/licenses/mit-license.php
-*/
+/**
+ * THIS PROGRAM IS GENERATED UNDER LICENSE FROM NEC CORPORATION.
+ *
+ * THE OWNERSHIP OF PROGRAM WRITTEN IN OWN-CODING REGION
+ * IS HOLDED BY WRITER.
+ *
+ *
+ * $Date$
+ * $Revision$
+ * $Author$
+ *
+ * TEMPLATE VERSION :  76463
+ */
+
 /* eslint-disable */
 import { applicationLogger } from './logging';
 import { Service } from 'typedi';
@@ -41,10 +51,6 @@ export interface IAgreementForDataType {
      * データ操作定義UUID
      */
     uuid: string | null;
-    /**
-     * データ種別
-     */
-    type: 'document' | 'event' | 'thing' | null;
     /**
      * 同意対象データのカタログ項目コード
      */
@@ -553,12 +559,10 @@ export default class PermissionAnalyzer {
          * @param shareRestrictionDataType
          */
         function validateShareRestriction (shareRestrictionDataType: IRestrictionDataType[]) {
-            if (shareRestrictionDataType && shareRestrictionDataType.length > 0) {
-                for (const dataType of shareRestrictionDataType) {
-                    if (dataType.permission && dataType.permission.length > 0 &&
-                        dataType.prohibition && dataType.prohibition.length > 0) {
-                        throw new AppError(message.SET_PERMISSION_AND_PROHIBITION, ResponseCode.BAD_REQUEST);
-                    }
+            for (const dataType of shareRestrictionDataType) {
+                if (dataType.permission && dataType.permission.length > 0 &&
+                    dataType.prohibition && dataType.prohibition.length > 0) {
+                    throw new AppError(message.SET_PERMISSION_AND_PROHIBITION, ResponseCode.BAD_REQUEST);
                 }
             }
         }
@@ -1002,37 +1006,19 @@ export default class PermissionAnalyzer {
 
         // 処理を明瞭にするために、バージョン一致の同意を見つけるループと、コードのみ一致のものを見つけるループを分ける
         for (const dataOperationConsent of dataOperationConsents) {
-            // IAgreementForDataType配列に同コード・バージョンの要素が存在するため、filterで複数取得する
-            // 1つのイベント配下に複数モノが定義されている、複数のイベント配下に共通のモノが定義されているケースの考慮
-            const targetConsents = dataOperationConsent.dataType.filter((elem: IAgreementForDataType) => elem.code._value === dataType.code._value &&
+            const targetConsent = dataOperationConsent.dataType.find((elem: IAgreementForDataType) => elem.code._value === dataType.code._value &&
                 elem.code._ver === dataType.code._ver);
-            // 対象データ種バージョンの個人同意がある場合
-            if (targetConsents && targetConsents.length > 0) {
-                let consentResult: 'PERMIT' | 'PROHIBIT' = null;
-                if (targetConsents[0].type === 'thing') {
-                    // モノの判定では、1つでも同意除外されている場合は不可判定
-                    if (targetConsents.some((ele) => ele.consentFlag === false)) {
-                        consentResult = 'PROHIBIT';
-                    } else {
-                        consentResult = 'PERMIT';
-                    }
-                } else {
-                    // イベント、ドキュメントの判定では、いずれかが同意除外されていなければ可判定
-                    if (targetConsents.some((ele) => ele.consentFlag === true)) {
-                        consentResult = 'PERMIT';
-                    } else {
-                        consentResult = 'PROHIBIT';
-                    }
-                }
-                if (consentResult === 'PROHIBIT') {
+            if (targetConsent) {
+                // 対象データ種バージョンの個人同意がある場合
+                if (targetConsent.consentFlag === false) {
                     // 個人同意フラグがfalseの場合（= 同意時にそのデータ種が除外指定されている場合）、そのデータ種に関しては明示的に非同意のため判定結果false
                     // もし他の定義で対象データ種の蓄積/共有に同意している場合でも、この判定結果を最優先するためループ離脱
                     result.checkResult = 'PROHIBIT';
                     break;
-                } else if (consentResult === 'PERMIT') {
+                } else {
                     // 同意除外していなければ判定結果をtrueに上書きし、ループ継続
-                    // データ操作定義カタログによる可否判定で使用するため、定義カタログコードをレスポンスに追加する
                     result.checkResult = 'PERMIT';
+                    // データ操作定義カタログによる可否判定で使用するため、定義カタログコードをレスポンスに追加する
                     result.targetOperationCatalogCodes.push(dataOperationConsent.target._value);
                     continue;
                 }
@@ -1048,30 +1034,13 @@ export default class PermissionAnalyzer {
                     const versions: number[] = [];
                     targetDataConsents.forEach(e => versions.push(e.code._ver));
                     const latestVersion = Math.max.apply(null, versions);
-                    const targetDataNewestConsents = targetDataConsents.filter((elem: IAgreementForDataType) => elem.code._ver === latestVersion);
+                    const targetDataNewestConsent = targetDataConsents.find((elem: IAgreementForDataType) => elem.code._ver === latestVersion);
 
-                    // 対象データ種バージョンの個人同意がある場合
-                    let newestConsentResult: 'POSSIBILITY' | 'PROHIBIT' = null;
-                    if (targetDataNewestConsents[0].type === 'thing') {
-                        // モノの判定では、1つでも同意除外されている場合は不可判定
-                        if (targetDataNewestConsents.some((ele) => ele.consentFlag === false)) {
-                            newestConsentResult = 'PROHIBIT';
-                        } else {
-                            newestConsentResult = 'POSSIBILITY';
-                        }
-                    } else {
-                        // イベント、ドキュメントの判定では、いずれかが同意除外されていなければ可判定
-                        if (targetDataNewestConsents.some((ele) => ele.consentFlag === true)) {
-                            newestConsentResult = 'POSSIBILITY';
-                        } else {
-                            newestConsentResult = 'PROHIBIT';
-                        }
-                    }
-                    if (newestConsentResult === 'PROHIBIT') {
-                        // それが除外指定されている場合は有効な定義カタログによる判定の対象外
+                    // それが除外指定されている場合は有効な定義カタログによる判定の対象外
+                    if (targetDataNewestConsent.consentFlag === false) {
                         result.checkResult = 'PROHIBIT';
                         break;
-                    } else if (newestConsentResult === 'POSSIBILITY') {
+                    } else {
                         // 除外指定されていなければ、定義カタログによる可否判定の対象として定義カタログコードをレスポンスに追加する
                         result.checkResult = 'POSSIBILITY';
                         result.targetOperationCatalogCodes.push(dataOperationConsent.target._value);
@@ -1393,10 +1362,6 @@ export default class PermissionAnalyzer {
     */
     private checkRestriction (restrictionCatalogs: ISharingRestrictionCatalog[], dataType: IDataOperationRequestDataType, regionCodes: number[], assetCode: number): boolean {
         for (const restrictionCatalog of restrictionCatalogs) {
-            if (!restrictionCatalog.template[dataType.type] || restrictionCatalog.template[dataType.type].length < 1) {
-                // 共有制限定義の対象データ種配列がnull、空配列の場合は処理スキップ
-                continue;
-            }
             const restriction = restrictionCatalog.template[dataType.type].find((elem: IRestrictionDataType) => elem.code._value === dataType.code._value &&
                 elem.code._ver === dataType.code._ver);
             const permissionList = restriction && restriction.permission ? restriction.permission : null;

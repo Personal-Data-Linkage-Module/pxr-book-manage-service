@@ -4,7 +4,7 @@ import { Application } from '../resources/config/Application';
 import Common, { Url } from './Common';
 import { Session } from './Session';
 import Config from '../common/Config';
-import { changeMaxCatalogVersion, getCatalog, getNoDataOperationCatalog } from './accessor/CatalogAccessor';
+import { getCatalog, getNoDataOperationCatalog } from './accessor/CatalogAccessor';
 import CatalogService from '../services/CatalogService';
 import PostDataSharePermissionReqDto from 'resources/dto/PostDataSharePermissionReqDto';
 import StubCTokenLedgerServer from './StubCTokenLedgerServer';
@@ -74,7 +74,6 @@ describe('book-mange API', () => {
      */
     describe('データ共有可否判定', () => {
         // catalogAccessorメソッドのmock化
-        changeMaxCatalogVersion(6);
         jest.spyOn(CatalogService.prototype, 'catalogAccessor').mockImplementation(getCatalog);
         jest.spyOn(CatalogService.prototype, 'shareRestrictionAccessor').mockImplementation(getShareRestrictionCatalogs);
         describe('アプリケーションによるリクエスト', () => {
@@ -1163,135 +1162,6 @@ describe('book-mange API', () => {
                         ]
                     }
                 ]);
-            });
-            test('正常：同バージョンの共有定義に再同意、データ種の除外指定あり→除外指定なし　可判定', async () => {
-                // スタブ起動
-                cTokenServer = new StubCTokenLedgerServer(3008, 2, 200);
-                // 送信データを生成
-                const json: PostDataSharePermissionReqDto = {
-                    userId: 'appUser11',
-                    appCode: 1000210,
-                    wfCode: null,
-                    actorCode: 1000201,
-                    sourceActorCode: null,
-                    sourceAssetCode: null,
-                    isTriggerRequest: null,
-                    document: [
-                        {
-                            _value: 1000501,
-                            _ver: 1
-                        }
-                    ],
-                    event: [
-                        {
-                            _value: 1000511,
-                            _ver: 1
-                        }
-                    ],
-                    thing: [
-                        {
-                            _value: 1000521,
-                            _ver: 1
-                        }
-                    ]
-                };
-    
-                // 対象APIに送信
-                const response = await supertest(expressApp).post(Url.dataSharePermissionURI)
-                    .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                    .set({ session: JSON.stringify(Session.dataStoreGetApp) })
-                    .send(json);
-    
-                // レスポンスチェック
-                expect(response.status).toBe(200);
-                expect(response.body.checkResult).toBe(true);
-                expect(response.body.permission).toEqual([
-                    {
-                        sourceActorCode: 1000101,
-                        document: [
-                            {
-                                _value: 1000501,
-                                _ver: 1
-                            }
-                        ],
-                        event: [
-                            {
-                                _value: 1000511,
-                                _ver: 1
-                            }
-                        ],
-                        thing: [
-                            {
-                                _value: 1000521,
-                                _ver: 1
-                            }
-                        ]
-                    },
-                    {
-                        sourceActorCode: 1000201,
-                        document: [
-                            {
-                                _value: 1000501,
-                                _ver: 1
-                            }
-                        ],
-                        event: [
-                            {
-                                _value: 1000511,
-                                _ver: 1
-                            }
-                        ],
-                        thing: [
-                            {
-                                _value: 1000521,
-                                _ver: 1
-                            }
-                        ]
-                    }
-                ]);
-            });
-            test('正常：同バージョンの共有定義に再同意、データ種の除外指定なし→除外指定あり　不可判定', async () => {
-                // スタブ起動
-                cTokenServer = new StubCTokenLedgerServer(3008, 2, 200);
-                // 送信データを生成
-                const json: PostDataSharePermissionReqDto = {
-                    userId: 'appUser11',
-                    appCode: 1000210,
-                    wfCode: null,
-                    actorCode: 1000201,
-                    sourceActorCode: null,
-                    sourceAssetCode: null,
-                    isTriggerRequest: null,
-                    document: [
-                        {
-                            _value: 1000801,
-                            _ver: 1
-                        }
-                    ],
-                    event: [
-                        {
-                            _value: 1000811,
-                            _ver: 1
-                        }
-                    ],
-                    thing: [
-                        {
-                            _value: 1000821,
-                            _ver: 1
-                        }
-                    ]
-                };
-    
-                // 対象APIに送信
-                const response = await supertest(expressApp).post(Url.dataSharePermissionURI)
-                    .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                    .set({ session: JSON.stringify(Session.dataStoreGetApp) })
-                    .send(json);
-    
-                // レスポンスチェック
-                expect(response.status).toBe(200);
-                expect(response.body.checkResult).toBe(false);
-                expect(response.body.permission).toBe(null);
             });
         });
         describe('異常系', () => {

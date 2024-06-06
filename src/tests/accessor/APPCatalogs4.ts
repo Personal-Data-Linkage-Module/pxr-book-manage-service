@@ -432,57 +432,6 @@ const storeMapApp04: Map<string, IOperationTarget> = new Map()
                     }
                 ] as IStoringDatatype[]
             },
-            {
-                code: {
-                    _value: 1000714,
-                    _ver: 1
-                },
-                requireConsent: true,
-                thing: [
-                    {
-                        code: {
-                            _value: 1000725,
-                            _ver: 1
-                        }
-                    },
-                    {
-                        code: {
-                            _value: 1000726,
-                            _ver: 1
-                        }
-                    }
-                ] as IStoringDatatype[]
-            },
-            {
-                code: {
-                    _value: 1000715,
-                    _ver: 1
-                },
-                requireConsent: true,
-                thing: [
-                    {
-                        code: {
-                            _value: 1000727,
-                            _ver: 1
-                        }
-                    }
-                ] as IStoringDatatype[]
-            },
-            {
-                code: {
-                    _value: 1000716,
-                    _ver: 1
-                },
-                requireConsent: true,
-                thing: [
-                    {
-                        code: {
-                            _value: 1000727,
-                            _ver: 1
-                        }
-                    }
-                ] as IStoringDatatype[]
-            },
         ] as IStoringDatatype[]
     })
     .set('storeUuidApp04-v6', {
@@ -983,60 +932,6 @@ const shareMapByApp04ToApp04: Map<string, IOperationTarget> = new Map()
                         }
                     }
                 ] as ISharingDatatype[]
-            },
-            {
-                code: {
-                    _value: 1000714,
-                    _ver: 1
-                },
-                requireConsent: true,
-                sourceActor: null,
-                thing: [
-                    {
-                        code: {
-                            _value: 1000725,
-                            _ver: 1
-                        }
-                    },
-                    {
-                        code: {
-                            _value: 1000726,
-                            _ver: 1
-                        }
-                    }
-                ] as IStoringDatatype[]
-            },
-            {
-                code: {
-                    _value: 1000715,
-                    _ver: 1
-                },
-                requireConsent: true,
-                sourceActor: null,
-                thing: [
-                    {
-                        code: {
-                            _value: 1000727,
-                            _ver: 1
-                        }
-                    }
-                ] as IStoringDatatype[]
-            },
-            {
-                code: {
-                    _value: 1000716,
-                    _ver: 1
-                },
-                requireConsent: true,
-                sourceActor: null,
-                thing: [
-                    {
-                        code: {
-                            _value: 1000727,
-                            _ver: 1
-                        }
-                    }
-                ] as IStoringDatatype[]
             }
         ] as ISharingDatatype[],
         thing: [

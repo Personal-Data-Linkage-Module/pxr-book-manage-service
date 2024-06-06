@@ -87,7 +87,6 @@ export const changeConsentFlg = (operationDatatypeList: IAgreementForDataType[],
 export const storeDatatype1000220_1: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 1
@@ -96,7 +95,6 @@ export const storeDatatype1000220_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 1
@@ -105,7 +103,6 @@ export const storeDatatype1000220_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 1
@@ -114,7 +111,6 @@ export const storeDatatype1000220_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v1',
-        type: 'document',
         code: {
             _value: 1000801,
             _ver: 1
@@ -123,7 +119,6 @@ export const storeDatatype1000220_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v1',
-        type: 'event',
         code: {
             _value: 1000811,
             _ver: 1
@@ -132,7 +127,6 @@ export const storeDatatype1000220_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v1',
-        type: 'thing',
         code: {
             _value: 1000821,
             _ver: 1
@@ -143,7 +137,6 @@ export const storeDatatype1000220_1: IAgreementForDataType[] = [
 export const storeDatatype1000220_2: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v2',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 2
@@ -152,7 +145,6 @@ export const storeDatatype1000220_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v2',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 2
@@ -161,7 +153,6 @@ export const storeDatatype1000220_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v2',
-        type: 'event',
         code: {
             _value: 1000811,
             _ver: 2
@@ -170,7 +161,6 @@ export const storeDatatype1000220_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v2',
-        type: 'thing',
         code: {
             _value: 1000821,
             _ver: 2
@@ -181,7 +171,6 @@ export const storeDatatype1000220_2: IAgreementForDataType[] = [
 export const storeDatatype1000220_3: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v3',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 2
@@ -190,7 +179,6 @@ export const storeDatatype1000220_3: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v3',
-        type: 'document',
         code: {
             _value: 1000801,
             _ver: 2
@@ -201,7 +189,6 @@ export const storeDatatype1000220_3: IAgreementForDataType[] = [
 export const storeDatatype1000220_4: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'document',
         code: {
             _value: 1000502,
             _ver: 1
@@ -210,7 +197,6 @@ export const storeDatatype1000220_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 1
@@ -219,7 +205,6 @@ export const storeDatatype1000220_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 1
@@ -228,7 +213,6 @@ export const storeDatatype1000220_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v4',
-        type: 'document',
         code: {
             _value: 1000802,
             _ver: 1
@@ -237,7 +221,6 @@ export const storeDatatype1000220_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v4',
-        type: 'event',
         code: {
             _value: 1000812,
             _ver: 1
@@ -246,7 +229,6 @@ export const storeDatatype1000220_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v4',
-        type: 'thing',
         code: {
             _value: 1000822,
             _ver: 1
@@ -257,7 +239,6 @@ export const storeDatatype1000220_4: IAgreementForDataType[] = [
 export const storeDatatype1000220_5: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 1
@@ -266,7 +247,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 2
@@ -275,7 +255,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 1
@@ -284,7 +263,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000514,
             _ver: 1
@@ -293,7 +271,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 2
@@ -302,7 +279,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 1
@@ -311,7 +287,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -320,7 +295,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -329,7 +303,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v5',
-        type: 'document',
         code: {
             _value: 1000803,
             _ver: 1
@@ -338,7 +311,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v5',
-        type: 'event',
         code: {
             _value: 1000812,
             _ver: 2
@@ -347,7 +319,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v5',
-        type: 'event',
         code: {
             _value: 1000813,
             _ver: 1
@@ -356,7 +327,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000822,
             _ver: 2
@@ -365,7 +335,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000823,
             _ver: 1
@@ -374,7 +343,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 1
@@ -383,7 +351,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 1
@@ -394,7 +361,6 @@ export const storeDatatype1000220_5: IAgreementForDataType[] = [
 export const storeDatatype1000220_6: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 2
@@ -403,7 +369,6 @@ export const storeDatatype1000220_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 2
@@ -412,7 +377,6 @@ export const storeDatatype1000220_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 2
@@ -421,7 +385,6 @@ export const storeDatatype1000220_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 2
@@ -430,7 +393,6 @@ export const storeDatatype1000220_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v6',
-        type: 'document',
         code: {
             _value: 1000803,
             _ver: 2
@@ -439,7 +401,6 @@ export const storeDatatype1000220_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v6',
-        type: 'event',
         code: {
             _value: 1000813,
             _ver: 2
@@ -448,7 +409,6 @@ export const storeDatatype1000220_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v6',
-        type: 'thing',
         code: {
             _value: 1000823,
             _ver: 2
@@ -457,7 +417,6 @@ export const storeDatatype1000220_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp01-v6',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 2
@@ -470,7 +429,6 @@ export const storeDatatype1000220_6: IAgreementForDataType[] = [
 export const storeDatatype1000221_1: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 1
@@ -479,7 +437,6 @@ export const storeDatatype1000221_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 1
@@ -488,7 +445,6 @@ export const storeDatatype1000221_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 1
@@ -499,7 +455,6 @@ export const storeDatatype1000221_1: IAgreementForDataType[] = [
 export const storeDatatype1000221_2: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v2',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 2
@@ -508,7 +463,6 @@ export const storeDatatype1000221_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v2',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 2
@@ -519,7 +473,6 @@ export const storeDatatype1000221_2: IAgreementForDataType[] = [
 export const storeDatatype1000221_3: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v3',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 2
@@ -530,7 +483,6 @@ export const storeDatatype1000221_3: IAgreementForDataType[] = [
 export const storeDatatype1000221_4: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'document',
         code: {
             _value: 1000502,
             _ver: 1
@@ -539,7 +491,6 @@ export const storeDatatype1000221_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 1
@@ -548,7 +499,6 @@ export const storeDatatype1000221_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 1
@@ -559,7 +509,6 @@ export const storeDatatype1000221_4: IAgreementForDataType[] = [
 export const storeDatatype1000221_5: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 1
@@ -568,7 +517,6 @@ export const storeDatatype1000221_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 2
@@ -577,7 +525,6 @@ export const storeDatatype1000221_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 1
@@ -586,7 +533,6 @@ export const storeDatatype1000221_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 2
@@ -595,7 +541,6 @@ export const storeDatatype1000221_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 1
@@ -604,7 +549,6 @@ export const storeDatatype1000221_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -613,7 +557,6 @@ export const storeDatatype1000221_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -624,7 +567,6 @@ export const storeDatatype1000221_5: IAgreementForDataType[] = [
 export const storeDatatype1000221_6: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 2
@@ -633,7 +575,6 @@ export const storeDatatype1000221_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 2
@@ -642,7 +583,6 @@ export const storeDatatype1000221_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 2
@@ -651,7 +591,6 @@ export const storeDatatype1000221_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 2
@@ -664,7 +603,6 @@ export const storeDatatype1000221_6: IAgreementForDataType[] = [
 export const storeDatatype1000222_1: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp02-v1',
-        type: 'document',
         code: {
             _value: 1000901,
             _ver: 1
@@ -673,7 +611,6 @@ export const storeDatatype1000222_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v1',
-        type: 'event',
         code: {
             _value: 1000911,
             _ver: 1
@@ -682,7 +619,6 @@ export const storeDatatype1000222_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v1',
-        type: 'thing',
         code: {
             _value: 1000921,
             _ver: 1
@@ -693,7 +629,6 @@ export const storeDatatype1000222_1: IAgreementForDataType[] = [
 export const storeDatatype1000222_2: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp02-v2',
-        type: 'event',
         code: {
             _value: 1000911,
             _ver: 2
@@ -702,7 +637,6 @@ export const storeDatatype1000222_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v2',
-        type: 'thing',
         code: {
             _value: 1000921,
             _ver: 2
@@ -713,7 +647,6 @@ export const storeDatatype1000222_2: IAgreementForDataType[] = [
 export const storeDatatype1000222_3: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp02-v3',
-        type: 'document',
         code: {
             _value: 1000901,
             _ver: 2
@@ -724,7 +657,6 @@ export const storeDatatype1000222_3: IAgreementForDataType[] = [
 export const storeDatatype1000222_4: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp02-v4',
-        type: 'document',
         code: {
             _value: 1000902,
             _ver: 1
@@ -733,7 +665,6 @@ export const storeDatatype1000222_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v4',
-        type: 'event',
         code: {
             _value: 1000912,
             _ver: 1
@@ -742,7 +673,6 @@ export const storeDatatype1000222_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v4',
-        type: 'thing',
         code: {
             _value: 1000922,
             _ver: 1
@@ -753,7 +683,6 @@ export const storeDatatype1000222_4: IAgreementForDataType[] = [
 export const storeDatatype1000222_5: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp02-v5',
-        type: 'document',
         code: {
             _value: 1000903,
             _ver: 1
@@ -762,7 +691,6 @@ export const storeDatatype1000222_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v5',
-        type: 'event',
         code: {
             _value: 1000912,
             _ver: 2
@@ -771,7 +699,6 @@ export const storeDatatype1000222_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v5',
-        type: 'event',
         code: {
             _value: 1000913,
             _ver: 1
@@ -780,7 +707,6 @@ export const storeDatatype1000222_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000922,
             _ver: 2
@@ -789,7 +715,6 @@ export const storeDatatype1000222_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000923,
             _ver: 1
@@ -798,7 +723,6 @@ export const storeDatatype1000222_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000924,
             _ver: 1
@@ -807,7 +731,6 @@ export const storeDatatype1000222_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000924,
             _ver: 1
@@ -818,7 +741,6 @@ export const storeDatatype1000222_5: IAgreementForDataType[] = [
 export const storeDatatype1000222_6: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp02-v6',
-        type: 'document',
         code: {
             _value: 1000903,
             _ver: 2
@@ -827,7 +749,6 @@ export const storeDatatype1000222_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v6',
-        type: 'event',
         code: {
             _value: 1000913,
             _ver: 2
@@ -836,7 +757,6 @@ export const storeDatatype1000222_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v6',
-        type: 'thing',
         code: {
             _value: 1000923,
             _ver: 2
@@ -845,7 +765,6 @@ export const storeDatatype1000222_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp02-v6',
-        type: 'thing',
         code: {
             _value: 1000924,
             _ver: 2
@@ -858,7 +777,6 @@ export const storeDatatype1000222_6: IAgreementForDataType[] = [
 export const storeDatatype1000120_1: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 1
@@ -867,7 +785,6 @@ export const storeDatatype1000120_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 1
@@ -876,7 +793,6 @@ export const storeDatatype1000120_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v1',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 1
@@ -885,7 +801,6 @@ export const storeDatatype1000120_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v1',
-        type: 'document',
         code: {
             _value: 1000601,
             _ver: 1
@@ -894,7 +809,6 @@ export const storeDatatype1000120_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v1',
-        type: 'event',
         code: {
             _value: 1000611,
             _ver: 1
@@ -903,7 +817,6 @@ export const storeDatatype1000120_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v1',
-        type: 'thing',
         code: {
             _value: 1000621,
             _ver: 1
@@ -914,7 +827,6 @@ export const storeDatatype1000120_1: IAgreementForDataType[] = [
 export const storeDatatype1000120_2: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v2',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 2
@@ -923,7 +835,6 @@ export const storeDatatype1000120_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v2',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 2
@@ -932,7 +843,6 @@ export const storeDatatype1000120_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v2',
-        type: 'event',
         code: {
             _value: 1000611,
             _ver: 2
@@ -941,7 +851,6 @@ export const storeDatatype1000120_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v2',
-        type: 'thing',
         code: {
             _value: 1000621,
             _ver: 2
@@ -952,7 +861,6 @@ export const storeDatatype1000120_2: IAgreementForDataType[] = [
 export const storeDatatype1000120_3: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v3',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 2
@@ -961,7 +869,6 @@ export const storeDatatype1000120_3: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v3',
-        type: 'document',
         code: {
             _value: 1000601,
             _ver: 2
@@ -972,7 +879,6 @@ export const storeDatatype1000120_3: IAgreementForDataType[] = [
 export const storeDatatype1000120_4: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'document',
         code: {
             _value: 1000502,
             _ver: 1
@@ -981,7 +887,6 @@ export const storeDatatype1000120_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 1
@@ -990,7 +895,6 @@ export const storeDatatype1000120_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v4',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 1
@@ -999,7 +903,6 @@ export const storeDatatype1000120_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v4',
-        type: 'document',
         code: {
             _value: 1000602,
             _ver: 1
@@ -1008,7 +911,6 @@ export const storeDatatype1000120_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v4',
-        type: 'event',
         code: {
             _value: 1000612,
             _ver: 1
@@ -1017,7 +919,6 @@ export const storeDatatype1000120_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v4',
-        type: 'thing',
         code: {
             _value: 1000622,
             _ver: 1
@@ -1028,7 +929,6 @@ export const storeDatatype1000120_4: IAgreementForDataType[] = [
 export const storeDatatype1000120_5: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 1
@@ -1037,7 +937,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 2
@@ -1046,7 +945,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 1
@@ -1055,7 +953,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 2
@@ -1064,7 +961,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 1
@@ -1073,7 +969,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -1082,7 +977,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -1091,7 +985,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v5',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 1
@@ -1100,7 +993,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v5',
-        type: 'event',
         code: {
             _value: 1000612,
             _ver: 2
@@ -1109,7 +1001,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v5',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 1
@@ -1118,7 +1009,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000622,
             _ver: 2
@@ -1127,7 +1017,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 1
@@ -1136,7 +1025,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 1
@@ -1145,7 +1033,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 1
@@ -1156,7 +1043,6 @@ export const storeDatatype1000120_5: IAgreementForDataType[] = [
 export const storeDatatype1000120_6: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 2
@@ -1165,7 +1051,6 @@ export const storeDatatype1000120_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 2
@@ -1174,7 +1059,6 @@ export const storeDatatype1000120_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 2
@@ -1183,7 +1067,6 @@ export const storeDatatype1000120_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 2
@@ -1192,7 +1075,6 @@ export const storeDatatype1000120_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v6',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 2
@@ -1201,7 +1083,6 @@ export const storeDatatype1000120_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v6',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 2
@@ -1210,7 +1091,6 @@ export const storeDatatype1000120_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v6',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 2
@@ -1219,7 +1099,6 @@ export const storeDatatype1000120_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp03-v6',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 2
@@ -1232,7 +1111,6 @@ export const storeDatatype1000120_6: IAgreementForDataType[] = [
 export const storeDatatype1000122_1: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp04-v1',
-        type: 'document',
         code: {
             _value: 1000701,
             _ver: 1
@@ -1241,7 +1119,6 @@ export const storeDatatype1000122_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v1',
-        type: 'event',
         code: {
             _value: 1000711,
             _ver: 1
@@ -1250,7 +1127,6 @@ export const storeDatatype1000122_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v1',
-        type: 'thing',
         code: {
             _value: 1000721,
             _ver: 1
@@ -1261,7 +1137,6 @@ export const storeDatatype1000122_1: IAgreementForDataType[] = [
 export const storeDatatype1000122_2: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp04-v2',
-        type: 'event',
         code: {
             _value: 1000711,
             _ver: 2
@@ -1270,7 +1145,6 @@ export const storeDatatype1000122_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v2',
-        type: 'thing',
         code: {
             _value: 1000721,
             _ver: 2
@@ -1281,7 +1155,6 @@ export const storeDatatype1000122_2: IAgreementForDataType[] = [
 export const storeDatatype1000122_3: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp04-v3',
-        type: 'document',
         code: {
             _value: 1000701,
             _ver: 2
@@ -1292,7 +1165,6 @@ export const storeDatatype1000122_3: IAgreementForDataType[] = [
 export const storeDatatype1000122_4: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp04-v4',
-        type: 'document',
         code: {
             _value: 1000702,
             _ver: 1
@@ -1301,7 +1173,6 @@ export const storeDatatype1000122_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v4',
-        type: 'event',
         code: {
             _value: 1000712,
             _ver: 1
@@ -1310,7 +1181,6 @@ export const storeDatatype1000122_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v4',
-        type: 'thing',
         code: {
             _value: 1000722,
             _ver: 1
@@ -1321,7 +1191,6 @@ export const storeDatatype1000122_4: IAgreementForDataType[] = [
 export const storeDatatype1000122_5: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp04-v5',
-        type: 'document',
         code: {
             _value: 1000703,
             _ver: 1
@@ -1330,7 +1199,6 @@ export const storeDatatype1000122_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v5',
-        type: 'event',
         code: {
             _value: 1000712,
             _ver: 2
@@ -1339,7 +1207,6 @@ export const storeDatatype1000122_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v5',
-        type: 'event',
         code: {
             _value: 1000713,
             _ver: 1
@@ -1348,7 +1215,6 @@ export const storeDatatype1000122_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000722,
             _ver: 2
@@ -1357,7 +1223,6 @@ export const storeDatatype1000122_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000723,
             _ver: 1
@@ -1366,7 +1231,6 @@ export const storeDatatype1000122_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000724,
             _ver: 1
@@ -1375,90 +1239,16 @@ export const storeDatatype1000122_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000724,
             _ver: 1
         },
         consentFlag: true
-    },
-    {
-        uuid: 'storeUuidApp04-v5',
-        type: 'event',
-        code: {
-            _value: 1000714,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'storeUuidApp04-v5',
-        type: 'thing',
-        code: {
-            _value: 1000725,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'storeUuidApp04-v5',
-        type: 'event',
-        code: {
-            _value: 1000714,
-            _ver: 1
-        },
-        consentFlag: false
-    },
-    {
-        uuid: 'storeUuidApp04-v5',
-        type: 'thing',
-        code: {
-            _value: 1000726,
-            _ver: 1
-        },
-        consentFlag: false
-    },
-    {
-        uuid: 'storeUuidApp04-v5',
-        type: 'event',
-        code: {
-            _value: 1000715,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'storeUuidApp04-v5',
-        type: 'thing',
-        code: {
-            _value: 1000727,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'storeUuidApp04-v5',
-        type: 'event',
-        code: {
-            _value: 1000716,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'storeUuidApp04-v5',
-        type: 'thing',
-        code: {
-            _value: 1000727,
-            _ver: 1
-        },
-        consentFlag: false
     }
 ]
 export const storeDatatype1000122_6: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp04-v6',
-        type: 'document',
         code: {
             _value: 1000703,
             _ver: 2
@@ -1467,7 +1257,6 @@ export const storeDatatype1000122_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v6',
-        type: 'event',
         code: {
             _value: 1000713,
             _ver: 2
@@ -1476,7 +1265,6 @@ export const storeDatatype1000122_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v6',
-        type: 'thing',
         code: {
             _value: 1000723,
             _ver: 2
@@ -1485,7 +1273,6 @@ export const storeDatatype1000122_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v6',
-        type: 'thing',
         code: {
             _value: 1000724,
             _ver: 2
@@ -1498,7 +1285,6 @@ export const storeDatatype1000122_6: IAgreementForDataType[] = [
 export const storeDatatype1000123_6: IAgreementForDataType[] = [
     {
         uuid: 'storeUuidApp04-v6',
-        type: 'document',
         code: {
             _value: 1000703,
             _ver: 2
@@ -1507,7 +1293,6 @@ export const storeDatatype1000123_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v6',
-        type: 'event',
         code: {
             _value: 1000713,
             _ver: 2
@@ -1516,7 +1301,6 @@ export const storeDatatype1000123_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'storeUuidApp04-v6',
-        type: 'thing',
         code: {
             _value: 1000723,
             _ver: 2
@@ -1526,7 +1310,6 @@ export const storeDatatype1000123_6: IAgreementForDataType[] = [
     
     {
         uuid: 'storeUuidApp04-v6',
-        type: 'thing',
         code: {
             _value: 1000724,
             _ver: 2
@@ -1539,7 +1322,6 @@ export const storeDatatype1000123_6: IAgreementForDataType[] = [
 export const shareDatatype1000230_1: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 1
@@ -1548,7 +1330,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 1
@@ -1557,7 +1338,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 1
@@ -1566,7 +1346,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v1',
-        type: 'document',
         code: {
             _value: 1000801,
             _ver: 1
@@ -1575,7 +1354,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v1',
-        type: 'event',
         code: {
             _value: 1000811,
             _ver: 1
@@ -1584,7 +1362,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v1',
-        type: 'thing',
         code: {
             _value: 1000821,
             _ver: 1
@@ -1593,7 +1370,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v1',
-        type: 'document',
         code: {
             _value: 1000601,
             _ver: 1
@@ -1602,7 +1378,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v1',
-        type: 'event',
         code: {
             _value: 1000611,
             _ver: 1
@@ -1611,7 +1386,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v1',
-        type: 'thing',
         code: {
             _value: 1000621,
             _ver: 1
@@ -1622,7 +1396,6 @@ export const shareDatatype1000230_1: IAgreementForDataType[] = [
 export const shareDatatype1000230_2: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v2',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 2
@@ -1631,7 +1404,6 @@ export const shareDatatype1000230_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v2',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 2
@@ -1640,7 +1412,6 @@ export const shareDatatype1000230_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v2',
-        type: 'event',
         code: {
             _value: 1000811,
             _ver: 2
@@ -1649,7 +1420,6 @@ export const shareDatatype1000230_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v2',
-        type: 'thing',
         code: {
             _value: 1000821,
             _ver: 2
@@ -1658,7 +1428,6 @@ export const shareDatatype1000230_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v2',
-        type: 'event',
         code: {
             _value: 1000611,
             _ver: 2
@@ -1667,7 +1436,6 @@ export const shareDatatype1000230_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v2',
-        type: 'thing',
         code: {
             _value: 1000621,
             _ver: 2
@@ -1678,7 +1446,6 @@ export const shareDatatype1000230_2: IAgreementForDataType[] = [
 export const shareDatatype1000230_3: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v3',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 2
@@ -1687,7 +1454,6 @@ export const shareDatatype1000230_3: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v3',
-        type: 'document',
         code: {
             _value: 1000801,
             _ver: 2
@@ -1696,7 +1462,6 @@ export const shareDatatype1000230_3: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v3',
-        type: 'document',
         code: {
             _value: 1000601,
             _ver: 2
@@ -1707,7 +1472,6 @@ export const shareDatatype1000230_3: IAgreementForDataType[] = [
 export const shareDatatype1000230_4: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'document',
         code: {
             _value: 1000502,
             _ver: 1
@@ -1716,7 +1480,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 1
@@ -1725,7 +1488,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 1
@@ -1734,7 +1496,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v4',
-        type: 'document',
         code: {
             _value: 1000802,
             _ver: 1
@@ -1743,7 +1504,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v4',
-        type: 'event',
         code: {
             _value: 1000812,
             _ver: 1
@@ -1752,7 +1512,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v4',
-        type: 'thing',
         code: {
             _value: 1000822,
             _ver: 1
@@ -1761,7 +1520,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v4',
-        type: 'document',
         code: {
             _value: 1000602,
             _ver: 1
@@ -1770,7 +1528,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v4',
-        type: 'event',
         code: {
             _value: 1000612,
             _ver: 1
@@ -1779,7 +1536,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v4',
-        type: 'thing',
         code: {
             _value: 1000622,
             _ver: 1
@@ -1790,7 +1546,6 @@ export const shareDatatype1000230_4: IAgreementForDataType[] = [
 export const shareDatatype1000230_5: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 1
@@ -1799,7 +1554,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 2
@@ -1808,7 +1562,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 1
@@ -1817,7 +1570,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 2
@@ -1826,7 +1578,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 1
@@ -1835,7 +1586,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -1844,7 +1594,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v5',
-        type: 'document',
         code: {
             _value: 1000803,
             _ver: 1
@@ -1853,7 +1602,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v5',
-        type: 'event',
         code: {
             _value: 1000812,
             _ver: 2
@@ -1862,7 +1610,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v5',
-        type: 'event',
         code: {
             _value: 1000813,
             _ver: 1
@@ -1871,7 +1618,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000822,
             _ver: 2
@@ -1880,7 +1626,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000823,
             _ver: 1
@@ -1889,7 +1634,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 1
@@ -1898,7 +1642,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v5',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 1
@@ -1907,7 +1650,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v5',
-        type: 'event',
         code: {
             _value: 1000612,
             _ver: 2
@@ -1916,7 +1658,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v5',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 1
@@ -1925,7 +1666,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000622,
             _ver: 2
@@ -1934,7 +1674,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 1
@@ -1943,7 +1682,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v5',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 1
@@ -1954,7 +1692,6 @@ export const shareDatatype1000230_5: IAgreementForDataType[] = [
 export const shareDatatype1000230_6: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 2
@@ -1963,7 +1700,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 2
@@ -1972,7 +1708,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 2
@@ -1981,7 +1716,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6-2',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 2
@@ -1990,7 +1724,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v6',
-        type: 'document',
         code: {
             _value: 1000803,
             _ver: 2
@@ -1999,7 +1732,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v6',
-        type: 'event',
         code: {
             _value: 1000813,
             _ver: 2
@@ -2008,7 +1740,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v6',
-        type: 'thing',
         code: {
             _value: 1000823,
             _ver: 2
@@ -2017,7 +1748,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp01-v6-2',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 2
@@ -2026,7 +1756,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v6',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 2
@@ -2035,7 +1764,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v6',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 2
@@ -2044,7 +1772,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v6',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 2
@@ -2053,7 +1780,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp01-v6-2',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 2
@@ -2066,7 +1792,6 @@ export const shareDatatype1000230_6: IAgreementForDataType[] = [
 export const shareDatatype1000231_1: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 1
@@ -2075,7 +1800,6 @@ export const shareDatatype1000231_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 1
@@ -2084,7 +1808,6 @@ export const shareDatatype1000231_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 1
@@ -2095,7 +1818,6 @@ export const shareDatatype1000231_1: IAgreementForDataType[] = [
 export const shareDatatype1000231_2: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v2',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 2
@@ -2104,7 +1826,6 @@ export const shareDatatype1000231_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v2',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 2
@@ -2115,7 +1836,6 @@ export const shareDatatype1000231_2: IAgreementForDataType[] = [
 export const shareDatatype1000231_3: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v3',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 2
@@ -2126,7 +1846,6 @@ export const shareDatatype1000231_3: IAgreementForDataType[] = [
 export const shareDatatype1000231_4: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'document',
         code: {
             _value: 1000502,
             _ver: 1
@@ -2135,7 +1854,6 @@ export const shareDatatype1000231_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 1
@@ -2144,7 +1862,6 @@ export const shareDatatype1000231_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 1
@@ -2155,7 +1872,6 @@ export const shareDatatype1000231_4: IAgreementForDataType[] = [
 export const shareDatatype1000231_5: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 1
@@ -2164,7 +1880,6 @@ export const shareDatatype1000231_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 2
@@ -2173,7 +1888,6 @@ export const shareDatatype1000231_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 1
@@ -2182,7 +1896,6 @@ export const shareDatatype1000231_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 2
@@ -2191,7 +1904,6 @@ export const shareDatatype1000231_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 1
@@ -2200,7 +1912,6 @@ export const shareDatatype1000231_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -2211,7 +1922,6 @@ export const shareDatatype1000231_5: IAgreementForDataType[] = [
 export const shareDatatype1000231_6: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 2
@@ -2220,7 +1930,6 @@ export const shareDatatype1000231_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 2
@@ -2229,7 +1938,6 @@ export const shareDatatype1000231_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 2
@@ -2238,7 +1946,6 @@ export const shareDatatype1000231_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6-2',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 2
@@ -2251,7 +1958,6 @@ export const shareDatatype1000231_6: IAgreementForDataType[] = [
 export const shareDatatype1000232_1: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp01ToApp02-v1',
-        type: 'document',
         code: {
             _value: 1000801,
             _ver: 1
@@ -2260,7 +1966,6 @@ export const shareDatatype1000232_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v1',
-        type: 'event',
         code: {
             _value: 1000811,
             _ver: 1
@@ -2269,7 +1974,6 @@ export const shareDatatype1000232_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v1',
-        type: 'thing',
         code: {
             _value: 1000821,
             _ver: 1
@@ -2278,7 +1982,6 @@ export const shareDatatype1000232_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v1',
-        type: 'document',
         code: {
             _value: 1000901,
             _ver: 1
@@ -2287,7 +1990,6 @@ export const shareDatatype1000232_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v1',
-        type: 'event',
         code: {
             _value: 1000911,
             _ver: 1
@@ -2296,7 +1998,6 @@ export const shareDatatype1000232_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v1',
-        type: 'thing',
         code: {
             _value: 1000921,
             _ver: 1
@@ -2307,7 +2008,6 @@ export const shareDatatype1000232_1: IAgreementForDataType[] = [
 export const shareDatatype1000232_2: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp01ToApp02-v2',
-        type: 'event',
         code: {
             _value: 1000811,
             _ver: 2
@@ -2316,7 +2016,6 @@ export const shareDatatype1000232_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v2',
-        type: 'thing',
         code: {
             _value: 1000821,
             _ver: 2
@@ -2325,7 +2024,6 @@ export const shareDatatype1000232_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v2',
-        type: 'event',
         code: {
             _value: 1000911,
             _ver: 2
@@ -2334,7 +2032,6 @@ export const shareDatatype1000232_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v2',
-        type: 'thing',
         code: {
             _value: 1000921,
             _ver: 2
@@ -2345,7 +2042,6 @@ export const shareDatatype1000232_2: IAgreementForDataType[] = [
 export const shareDatatype1000232_3: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp01ToApp02-v3',
-        type: 'document',
         code: {
             _value: 1000801,
             _ver: 2
@@ -2354,7 +2050,6 @@ export const shareDatatype1000232_3: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v3',
-        type: 'document',
         code: {
             _value: 1000901,
             _ver: 2
@@ -2365,7 +2060,6 @@ export const shareDatatype1000232_3: IAgreementForDataType[] = [
 export const shareDatatype1000232_4: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp01ToApp02-v4',
-        type: 'document',
         code: {
             _value: 1000802,
             _ver: 1
@@ -2374,7 +2068,6 @@ export const shareDatatype1000232_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v4',
-        type: 'event',
         code: {
             _value: 1000812,
             _ver: 1
@@ -2383,7 +2076,6 @@ export const shareDatatype1000232_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v4',
-        type: 'thing',
         code: {
             _value: 1000822,
             _ver: 1
@@ -2392,7 +2084,6 @@ export const shareDatatype1000232_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v4',
-        type: 'document',
         code: {
             _value: 1000902,
             _ver: 1
@@ -2401,7 +2092,6 @@ export const shareDatatype1000232_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v4',
-        type: 'event',
         code: {
             _value: 1000912,
             _ver: 1
@@ -2410,7 +2100,6 @@ export const shareDatatype1000232_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v4',
-        type: 'thing',
         code: {
             _value: 1000922,
             _ver: 1
@@ -2421,7 +2110,6 @@ export const shareDatatype1000232_4: IAgreementForDataType[] = [
 export const shareDatatype1000232_5: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp01ToApp02-v5',
-        type: 'document',
         code: {
             _value: 1000803,
             _ver: 1
@@ -2430,7 +2118,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v5',
-        type: 'event',
         code: {
             _value: 1000812,
             _ver: 2
@@ -2439,7 +2126,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v5',
-        type: 'event',
         code: {
             _value: 1000813,
             _ver: 1
@@ -2448,7 +2134,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000822,
             _ver: 2
@@ -2457,7 +2142,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000823,
             _ver: 1
@@ -2466,7 +2150,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 1
@@ -2475,7 +2158,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v5',
-        type: 'document',
         code: {
             _value: 1000903,
             _ver: 1
@@ -2484,7 +2166,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v5',
-        type: 'event',
         code: {
             _value: 1000912,
             _ver: 2
@@ -2493,7 +2174,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v5',
-        type: 'event',
         code: {
             _value: 1000913,
             _ver: 1
@@ -2502,7 +2182,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000922,
             _ver: 2
@@ -2511,7 +2190,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000923,
             _ver: 1
@@ -2520,7 +2198,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v5',
-        type: 'thing',
         code: {
             _value: 1000924,
             _ver: 1
@@ -2531,7 +2208,6 @@ export const shareDatatype1000232_5: IAgreementForDataType[] = [
 export const shareDatatype1000232_6: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp01ToApp02-v6',
-        type: 'document',
         code: {
             _value: 1000803,
             _ver: 2
@@ -2540,7 +2216,6 @@ export const shareDatatype1000232_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v6',
-        type: 'event',
         code: {
             _value: 1000813,
             _ver: 2
@@ -2549,7 +2224,6 @@ export const shareDatatype1000232_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v6',
-        type: 'thing',
         code: {
             _value: 1000823,
             _ver: 2
@@ -2558,7 +2232,6 @@ export const shareDatatype1000232_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp02-v6-2',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 2
@@ -2567,7 +2240,6 @@ export const shareDatatype1000232_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v6',
-        type: 'document',
         code: {
             _value: 1000903,
             _ver: 2
@@ -2576,7 +2248,6 @@ export const shareDatatype1000232_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v6',
-        type: 'event',
         code: {
             _value: 1000913,
             _ver: 2
@@ -2585,7 +2256,6 @@ export const shareDatatype1000232_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v6',
-        type: 'thing',
         code: {
             _value: 1000923,
             _ver: 2
@@ -2594,7 +2264,6 @@ export const shareDatatype1000232_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp02ToApp02-v6-2',
-        type: 'thing',
         code: {
             _value: 1000924,
             _ver: 2
@@ -2607,7 +2276,6 @@ export const shareDatatype1000232_6: IAgreementForDataType[] = [
 export const shareDatatype1000130_1: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 1
@@ -2616,7 +2284,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 1
@@ -2625,7 +2292,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v1',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 1
@@ -2634,7 +2300,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v1',
-        type: 'document',
         code: {
             _value: 1000801,
             _ver: 1
@@ -2643,7 +2308,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v1',
-        type: 'event',
         code: {
             _value: 1000811,
             _ver: 1
@@ -2652,7 +2316,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v1',
-        type: 'thing',
         code: {
             _value: 1000821,
             _ver: 1
@@ -2661,7 +2324,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v1',
-        type: 'document',
         code: {
             _value: 1000601,
             _ver: 1
@@ -2670,7 +2332,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v1',
-        type: 'event',
         code: {
             _value: 1000611,
             _ver: 1
@@ -2679,7 +2340,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v1',
-        type: 'thing',
         code: {
             _value: 1000621,
             _ver: 1
@@ -2690,7 +2350,6 @@ export const shareDatatype1000130_1: IAgreementForDataType[] = [
 export const shareDatatype1000130_2: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v2',
-        type: 'event',
         code: {
             _value: 1000511,
             _ver: 2
@@ -2699,7 +2358,6 @@ export const shareDatatype1000130_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v2',
-        type: 'thing',
         code: {
             _value: 1000521,
             _ver: 2
@@ -2708,7 +2366,6 @@ export const shareDatatype1000130_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v2',
-        type: 'event',
         code: {
             _value: 1000811,
             _ver: 2
@@ -2717,7 +2374,6 @@ export const shareDatatype1000130_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v2',
-        type: 'thing',
         code: {
             _value: 1000821,
             _ver: 2
@@ -2726,7 +2382,6 @@ export const shareDatatype1000130_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v2',
-        type: 'event',
         code: {
             _value: 1000611,
             _ver: 2
@@ -2735,7 +2390,6 @@ export const shareDatatype1000130_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v2',
-        type: 'thing',
         code: {
             _value: 1000621,
             _ver: 2
@@ -2746,7 +2400,6 @@ export const shareDatatype1000130_2: IAgreementForDataType[] = [
 export const shareDatatype1000130_3: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v3',
-        type: 'document',
         code: {
             _value: 1000501,
             _ver: 2
@@ -2755,7 +2408,6 @@ export const shareDatatype1000130_3: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v3',
-        type: 'document',
         code: {
             _value: 1000801,
             _ver: 2
@@ -2764,7 +2416,6 @@ export const shareDatatype1000130_3: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v3',
-        type: 'document',
         code: {
             _value: 1000601,
             _ver: 2
@@ -2775,7 +2426,6 @@ export const shareDatatype1000130_3: IAgreementForDataType[] = [
 export const shareDatatype1000130_4: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'document',
         code: {
             _value: 1000502,
             _ver: 1
@@ -2784,7 +2434,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 1
@@ -2793,7 +2442,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v4',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 1
@@ -2802,7 +2450,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v4',
-        type: 'document',
         code: {
             _value: 1000802,
             _ver: 1
@@ -2811,7 +2458,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v4',
-        type: 'event',
         code: {
             _value: 1000812,
             _ver: 1
@@ -2820,7 +2466,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v4',
-        type: 'thing',
         code: {
             _value: 1000822,
             _ver: 1
@@ -2829,7 +2474,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v4',
-        type: 'document',
         code: {
             _value: 1000602,
             _ver: 1
@@ -2838,7 +2482,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v4',
-        type: 'event',
         code: {
             _value: 1000612,
             _ver: 1
@@ -2847,7 +2490,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v4',
-        type: 'thing',
         code: {
             _value: 1000622,
             _ver: 1
@@ -2858,7 +2500,6 @@ export const shareDatatype1000130_4: IAgreementForDataType[] = [
 export const shareDatatype1000130_5: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 1
@@ -2867,7 +2508,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000512,
             _ver: 2
@@ -2876,7 +2516,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 1
@@ -2885,7 +2524,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000522,
             _ver: 2
@@ -2894,7 +2532,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 1
@@ -2903,7 +2540,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v5',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 1
@@ -2912,7 +2548,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v5',
-        type: 'document',
         code: {
             _value: 1000803,
             _ver: 1
@@ -2921,7 +2556,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v5',
-        type: 'event',
         code: {
             _value: 1000812,
             _ver: 2
@@ -2930,7 +2564,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v5',
-        type: 'event',
         code: {
             _value: 1000813,
             _ver: 1
@@ -2939,7 +2572,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000822,
             _ver: 2
@@ -2948,7 +2580,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000823,
             _ver: 1
@@ -2957,7 +2588,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 1
@@ -2966,7 +2596,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v5',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 1
@@ -2975,7 +2604,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v5',
-        type: 'event',
         code: {
             _value: 1000612,
             _ver: 2
@@ -2984,7 +2612,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v5',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 1
@@ -2993,7 +2620,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000622,
             _ver: 2
@@ -3002,7 +2628,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 1
@@ -3011,7 +2636,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v5',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 1
@@ -3022,7 +2646,6 @@ export const shareDatatype1000130_5: IAgreementForDataType[] = [
 export const shareDatatype1000130_6: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'document',
         code: {
             _value: 1000503,
             _ver: 2
@@ -3031,7 +2654,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'event',
         code: {
             _value: 1000513,
             _ver: 2
@@ -3040,7 +2662,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6',
-        type: 'thing',
         code: {
             _value: 1000523,
             _ver: 2
@@ -3049,7 +2670,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidCommon-v6-2',
-        type: 'thing',
         code: {
             _value: 1000524,
             _ver: 2
@@ -3058,7 +2678,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v6',
-        type: 'document',
         code: {
             _value: 1000803,
             _ver: 2
@@ -3067,7 +2686,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v6',
-        type: 'event',
         code: {
             _value: 1000813,
             _ver: 2
@@ -3076,7 +2694,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v6',
-        type: 'thing',
         code: {
             _value: 1000823,
             _ver: 2
@@ -3085,7 +2702,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp01ToApp03-v6-2',
-        type: 'thing',
         code: {
             _value: 1000824,
             _ver: 2
@@ -3094,7 +2710,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v6',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 2
@@ -3103,7 +2718,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v6',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 2
@@ -3112,7 +2726,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v6',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 2
@@ -3121,7 +2734,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp03-v6-2',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 2
@@ -3134,7 +2746,6 @@ export const shareDatatype1000130_6: IAgreementForDataType[] = [
 export const shareDatatype1000132_1: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp04ToApp04-v1',
-        type: 'document',
         code: {
             _value: 1000701,
             _ver: 1
@@ -3143,7 +2754,6 @@ export const shareDatatype1000132_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v1',
-        type: 'event',
         code: {
             _value: 1000711,
             _ver: 1
@@ -3152,7 +2762,6 @@ export const shareDatatype1000132_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v1',
-        type: 'thing',
         code: {
             _value: 1000721,
             _ver: 1
@@ -3161,7 +2770,6 @@ export const shareDatatype1000132_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v1',
-        type: 'document',
         code: {
             _value: 1000601,
             _ver: 1
@@ -3170,7 +2778,6 @@ export const shareDatatype1000132_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v1',
-        type: 'event',
         code: {
             _value: 1000611,
             _ver: 1
@@ -3179,7 +2786,6 @@ export const shareDatatype1000132_1: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v1',
-        type: 'thing',
         code: {
             _value: 1000621,
             _ver: 1
@@ -3190,7 +2796,6 @@ export const shareDatatype1000132_1: IAgreementForDataType[] = [
 export const shareDatatype1000132_2: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp04ToApp04-v2',
-        type: 'event',
         code: {
             _value: 1000711,
             _ver: 2
@@ -3199,7 +2804,6 @@ export const shareDatatype1000132_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v2',
-        type: 'thing',
         code: {
             _value: 1000721,
             _ver: 2
@@ -3208,7 +2812,6 @@ export const shareDatatype1000132_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v2',
-        type: 'event',
         code: {
             _value: 1000611,
             _ver: 2
@@ -3217,7 +2820,6 @@ export const shareDatatype1000132_2: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v2',
-        type: 'thing',
         code: {
             _value: 1000621,
             _ver: 2
@@ -3228,7 +2830,6 @@ export const shareDatatype1000132_2: IAgreementForDataType[] = [
 export const shareDatatype1000132_3: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp04ToApp04-v3',
-        type: 'document',
         code: {
             _value: 1000701,
             _ver: 2
@@ -3237,7 +2838,6 @@ export const shareDatatype1000132_3: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v3',
-        type: 'document',
         code: {
             _value: 1000601,
             _ver: 2
@@ -3248,7 +2848,6 @@ export const shareDatatype1000132_3: IAgreementForDataType[] = [
 export const shareDatatype1000132_4: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp04ToApp04-v4',
-        type: 'document',
         code: {
             _value: 1000702,
             _ver: 1
@@ -3257,7 +2856,6 @@ export const shareDatatype1000132_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v4',
-        type: 'event',
         code: {
             _value: 1000712,
             _ver: 1
@@ -3266,7 +2864,6 @@ export const shareDatatype1000132_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v4',
-        type: 'thing',
         code: {
             _value: 1000722,
             _ver: 1
@@ -3275,7 +2872,6 @@ export const shareDatatype1000132_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v4',
-        type: 'document',
         code: {
             _value: 1000602,
             _ver: 1
@@ -3284,7 +2880,6 @@ export const shareDatatype1000132_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v4',
-        type: 'event',
         code: {
             _value: 1000612,
             _ver: 1
@@ -3293,7 +2888,6 @@ export const shareDatatype1000132_4: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v4',
-        type: 'thing',
         code: {
             _value: 1000622,
             _ver: 1
@@ -3304,7 +2898,6 @@ export const shareDatatype1000132_4: IAgreementForDataType[] = [
 export const shareDatatype1000132_5: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp04ToApp04-v5',
-        type: 'document',
         code: {
             _value: 1000703,
             _ver: 1
@@ -3313,7 +2906,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v5',
-        type: 'event',
         code: {
             _value: 1000712,
             _ver: 2
@@ -3322,7 +2914,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v5',
-        type: 'event',
         code: {
             _value: 1000713,
             _ver: 1
@@ -3331,7 +2922,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000722,
             _ver: 2
@@ -3340,7 +2930,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000723,
             _ver: 1
@@ -3349,7 +2938,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000724,
             _ver: 1
@@ -3358,7 +2946,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 1
@@ -3367,7 +2954,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'event',
         code: {
             _value: 1000612,
             _ver: 2
@@ -3376,7 +2962,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 1
@@ -3385,7 +2970,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000622,
             _ver: 2
@@ -3394,7 +2978,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 1
@@ -3403,63 +2986,8 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'thing',
         code: {
             _value: 1000624,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'event',
-        code: {
-            _value: 1000714,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'thing',
-        code: {
-            _value: 1000725,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'event',
-        code: {
-            _value: 1000714,
-            _ver: 1
-        },
-        consentFlag: false
-    },
-    {
-        uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'thing',
-        code: {
-            _value: 1000726,
-            _ver: 1
-        },
-        consentFlag: false
-    },
-    {
-        uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'event',
-        code: {
-            _value: 1000715,
-            _ver: 1
-        },
-        consentFlag: true
-    },
-    {
-        uuid: 'shareUuidApp03ToApp04-v5',
-        type: 'thing',
-        code: {
-            _value: 1000726,
             _ver: 1
         },
         consentFlag: true
@@ -3468,7 +2996,6 @@ export const shareDatatype1000132_5: IAgreementForDataType[] = [
 export const shareDatatype1000132_6: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp04ToApp04-v6',
-        type: 'document',
         code: {
             _value: 1000703,
             _ver: 2
@@ -3477,7 +3004,6 @@ export const shareDatatype1000132_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v6',
-        type: 'event',
         code: {
             _value: 1000713,
             _ver: 2
@@ -3486,7 +3012,6 @@ export const shareDatatype1000132_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v6',
-        type: 'thing',
         code: {
             _value: 1000723,
             _ver: 2
@@ -3495,7 +3020,6 @@ export const shareDatatype1000132_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v6-2',
-        type: 'thing',
         code: {
             _value: 1000724,
             _ver: 2
@@ -3504,7 +3028,6 @@ export const shareDatatype1000132_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v6',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 2
@@ -3513,7 +3036,6 @@ export const shareDatatype1000132_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v6',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 2
@@ -3522,7 +3044,6 @@ export const shareDatatype1000132_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v6',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 2
@@ -3531,7 +3052,6 @@ export const shareDatatype1000132_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v6-2',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 2
@@ -3546,7 +3066,6 @@ export const shareDatatype1000132_6: IAgreementForDataType[] = [
 export const shareDatatype1000133_6: IAgreementForDataType[] = [
     {
         uuid: 'shareUuidApp04ToApp04-v6',
-        type: 'document',
         code: {
             _value: 1000703,
             _ver: 2
@@ -3555,7 +3074,6 @@ export const shareDatatype1000133_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v6',
-        type: 'event',
         code: {
             _value: 1000713,
             _ver: 2
@@ -3564,7 +3082,6 @@ export const shareDatatype1000133_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v6',
-        type: 'thing',
         code: {
             _value: 1000723,
             _ver: 2
@@ -3573,7 +3090,6 @@ export const shareDatatype1000133_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp04ToApp04-v6-2',
-        type: 'thing',
         code: {
             _value: 1000724,
             _ver: 2
@@ -3582,7 +3098,6 @@ export const shareDatatype1000133_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v6',
-        type: 'document',
         code: {
             _value: 1000603,
             _ver: 2
@@ -3591,7 +3106,6 @@ export const shareDatatype1000133_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v6',
-        type: 'event',
         code: {
             _value: 1000613,
             _ver: 2
@@ -3600,7 +3114,6 @@ export const shareDatatype1000133_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v6',
-        type: 'thing',
         code: {
             _value: 1000623,
             _ver: 2
@@ -3609,7 +3122,6 @@ export const shareDatatype1000133_6: IAgreementForDataType[] = [
     },
     {
         uuid: 'shareUuidApp03ToApp04-v6-2',
-        type: 'thing',
         code: {
             _value: 1000624,
             _ver: 2

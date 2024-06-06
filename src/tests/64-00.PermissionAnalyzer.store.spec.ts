@@ -6595,14 +6595,12 @@ describe('book-mange API', () => {
                     // 個人同意フラグ変更
                     changeConsentFlg(storeDatatype1000122_1, { _value: 1000701, _ver: 1 }, false);
                     changeConsentFlg(storeDatatype1000122_4, { _value: 1000712, _ver: 1 }, false);
-                    changeConsentFlg(storeDatatype1000122_5, { _value: 1000713, _ver: 1 }, false);
                     changeConsentFlg(storeDatatype1000122_5, { _value: 1000723, _ver: 1 }, false);
                 });
                 afterAll(async () => {
                     // 個人同意フラグ変更
                     changeConsentFlg(storeDatatype1000122_1, { _value: 1000701, _ver: 1 }, true);
                     changeConsentFlg(storeDatatype1000122_4, { _value: 1000712, _ver: 1 }, true);
-                    changeConsentFlg(storeDatatype1000122_5, { _value: 1000713, _ver: 1 }, true);
                     changeConsentFlg(storeDatatype1000122_5, { _value: 1000723, _ver: 1 }, true);
                 });
                 // リクエスト雛形
@@ -6958,7 +6956,7 @@ describe('book-mange API', () => {
                     }
 
                     // レスポンスチェック
-                    expect(result).toBe(false);
+                    expect(result).toBe(true);
                 });
                 test('正常：データ種Cv1 thing', async () => {
                     // 判定対象のリクエスト生成
@@ -7062,7 +7060,7 @@ describe('book-mange API', () => {
                     }
 
                     // レスポンスチェック
-                    expect(result).toBe(false);
+                    expect(result).toBe(true);
                 });
                 test('正常：データ種Cv2 thing', async () => {
                     // 判定対象のリクエスト生成
@@ -7115,60 +7113,6 @@ describe('book-mange API', () => {
 
                     // レスポンスチェック
                     expect(result).toBe(true);
-                });
-                describe('複数event、複数thingで別々に個人同意除外が指定されるケース', () => {
-                        test('正常：複数thingが紐づくデータ種Ev1 event、一方のみ個人同意除外　可判定', async () => {
-                        // 判定対象のリクエスト生成
-                        storeReqApp03.dataType.code._value = 1000714;
-                        storeReqApp03.dataType.code._ver = 1;
-                        // analyzerインスタンス生成
-                        const operator = new Operator();
-                        operator.setFromJson(Session.dataStoreGetApp);
-                        const analyzer = PermissionAnalyzer
-                            .create(operator, getAgreement, getCatalog)
-                            .setDataOperationType('STORE');
-                        await analyzer.setAgreement('pxrId01', 'STORE', null);
-                        await analyzer.setAssetCatalog();
-                        await analyzer.specifyTarget();
-
-                        // 判定
-                        let result: boolean;
-                        let error: AppError;
-                        try {
-                            result = (await analyzer.isPermitted(storeReqApp03)).checkResult;
-                        } catch (err) {
-                            error = err;
-                        }
-
-                        // レスポンスチェック
-                        expect(result).toBe(true);
-                    });
-                    test('正常：複数event配下にあるデータ種Fv1 thing 、一方のイベントでのみ個人同意除外　不可判定', async () => {
-                        // 判定対象のリクエスト生成
-                        storeReqApp03.dataType.code._value = 1000727;
-                        storeReqApp03.dataType.code._ver = 1;
-                        // analyzerインスタンス生成
-                        const operator = new Operator();
-                        operator.setFromJson(Session.dataStoreGetApp);
-                        const analyzer = PermissionAnalyzer
-                            .create(operator, getAgreement, getCatalog)
-                            .setDataOperationType('STORE');
-                        await analyzer.setAgreement('pxrId01', 'STORE', null);
-                        await analyzer.setAssetCatalog();
-                        await analyzer.specifyTarget();
-
-                        // 判定
-                        let result: boolean;
-                        let error: AppError;
-                        try {
-                            result = (await analyzer.isPermitted(storeReqApp03)).checkResult;
-                        } catch (err) {
-                            error = err;
-                        }
-
-                        // レスポンスチェック
-                        expect(result).toBe(false);
-                    });
                 });
             });
         });
