@@ -58,7 +58,7 @@ VALUES
     1000445,1,
     1000601,1,
     null,null,
-    'testuserapp2',
+    'testuserapp',
     1,
     false,
     'pxr_user', NOW(),
@@ -76,6 +76,17 @@ VALUES
     NOW(),
     'pxr_user',
     NOW()
+),
+(
+    2,
+    1000445,1,
+    1000601,1,
+    null,null,
+    'testuserapp2',
+    1,
+    false,
+    'pxr_user', NOW(),
+    'pxr_user', NOW()
 );
 INSERT INTO pxr_book_manage.data_operation
 (

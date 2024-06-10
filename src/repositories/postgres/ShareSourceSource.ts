@@ -69,7 +69,7 @@ export default class ShareSourceSource {
      */
     constructor (entity?: {}) {
         if (entity) {
-            const entityName = 'share_source_source';
+            const entityName = 'share_source_source_';
             this.id = Number(entity[entityName + 'id']);
             this.shareSourceDatatypeId = Number(entity[entityName + 'share_source_datatype_id']);
             this.actorCatalogCode = Number(entity[entityName + 'actor_catalog_code']);

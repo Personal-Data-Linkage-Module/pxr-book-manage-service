@@ -84,6 +84,11 @@ export default class CTokenLedgerDto {
     private dataIdentifier: string[] = null;
 
     /**
+     * PXR-ID
+     */
+    private pxrId: string = null;
+
+    /**
      * オペレータ情報取得
      */
     public getOperator (): Operator {
@@ -261,5 +266,13 @@ export default class CTokenLedgerDto {
      */
     public setDataIdentifier (dataIdentifier: string[]) {
         this.dataIdentifier = dataIdentifier;
+    }
+
+    public getPxrId (): string {
+        return this.pxrId;
+    }
+
+    public setPxrId (pxrId: string) {
+        this.pxrId = pxrId;
     }
 }

@@ -11833,6 +11833,68 @@ export class StubCatalogServerStoreEventNotificateInvalidActor {
                             attribute: null
                         }
                     );
+                } else if (code === 1000445) {
+                    res.status(ResponseCode.OK).json(
+                        {
+                            catalogItem: {
+                                ns: 'catalog/ext/test-org/actor/app',
+                                name: 'Technologies',
+                                _code: {
+                                    _value: 1000445,
+                                    _ver: 1
+                                },
+                                inherit: {
+                                    _value: 42,
+                                    _ver: 1
+                                },
+                                description: 'アプリケーションです。'
+                            },
+                            template: {
+                                _code: {
+                                    _value: 1000445,
+                                    _ver: 1
+                                },
+                                application: [
+                                    {
+                                        _value: 1000471,
+                                        _ver: 1
+                                    }
+                                ],
+                                'breakaway-flg': false,
+                                category: null,
+                                'information-site': null,
+                                'main-block': null,
+                                'other-block': null,
+                                statement: [
+                                    {
+                                        title: '組織ステートメント',
+                                        section: [
+                                            {
+                                                title: 'ご挨拶',
+                                                content: [
+                                                    {
+                                                        sentence: ''
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                status: [
+                                    {
+                                        status: 'certified',
+                                        by: {
+                                            _value: 1000001,
+                                            _ver: 1
+                                        },
+                                        at: '2020-01-01T00:00:00.000+0900'
+                                    }
+                                ]
+                            },
+                            prop: null,
+                            attribute: null
+                        }
+                    );
                 }
                 return;
             }
@@ -12924,6 +12986,8 @@ export class StubCatalogServerDataStore {
         // イベントハンドラー
         const _listener = (req: express.Request, res: express.Response) => {
             const code = Number(req.params.code);
+            const version = req.params.version ? Number(req.params.version) : null;
+            const includeDeleted = req.query && req.query.includeDeleted ? req.query.includeDeleted : 'false';
             if (status === 200) {
                 res.status(200);
                 // アクター確認
@@ -13779,6 +13843,181 @@ export class StubCatalogServerDataStore {
                             store: {}
                         }
                     });
+                } else if (code === 1000101) {
+                    res.json({
+                        catalogItem: {
+                            ns: 'app/actor/1000101',
+                            _code: {
+                                _value: 1000101,
+                                _ver: 1
+                            }
+                        },
+                        template: {
+                            _code: {
+                                _value: 1000101,
+                                _ver: 1
+                            },
+                            workflow: [
+                                {
+                                    _value: 1000110,
+                                    _ver: 1
+                                },
+                                {
+                                    _value: 1000111,
+                                    _ver: 1
+                                },
+                                {
+                                    _value: 1000112,
+                                    _ver: 1
+                                }
+                            ],
+                            application: null
+                        }
+                    });
+                } else if (code === 1000101) {
+                    res.json({
+                        catalogItem: {
+                            ns: 'actor/app/actor_1000101/application',
+                            _code: {
+                                _value: 1000110,
+                                _ver: 1
+                            }
+                        },
+                        template: {
+                            _code: {
+                                _value: 1000110,
+                                _ver: 1
+                            },
+                            'region-alliance': [
+                                {
+                                    _value: 1000310,
+                                    _ver: 1
+                                }
+                            ],
+                            store: [
+                                {
+                                    _value: 1000120,
+                                    _ver: 1
+                                }
+                            ],
+                            share: [
+                                {
+                                    _value: 1000130,
+                                    _ver: 1
+                                }
+                            ]
+                        }
+                    });
+                } else if (code === 1000121) {
+                    res.json();
+                } else if (code === 1000120 && version === 4 && includeDeleted === 'true') {
+                    res.json({
+                        catalogItem: {
+                            ns: 'app/store/actor_1000101',
+                            _code: {
+                                _value: 1000120,
+                                _ver: 4
+                            }
+                        },
+                        template: {
+                            _code: {
+                                _value: 1000120,
+                                _ver: 4
+                            },
+                            store: [
+                                {
+                                    id: 'storeUuidCommon-v1',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: [
+                                        {
+                                            code: {
+                                                _value: 1000501,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true
+                                        }
+                                    ],
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000511,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000521,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'storeUuidCommon-v3',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: [
+                                        {
+                                            code: {
+                                                _value: 1000501,
+                                                _ver: 2
+                                            },
+                                            requireConsent: false
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'storeUuidCommon-v4',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: [
+                                        {
+                                            code: {
+                                                _value: 1000502,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true
+                                        }
+                                    ],
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000512,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000522,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
                 }
                 res.end();
             } else {
@@ -14498,10 +14737,677 @@ export class StubCatalogServerDataStore {
             res.end();
         };
 
+        const _listener2 = (req: express.Request, res: express.Response) => {
+            res.status(status);
+            const code = Number(req.params.code);
+            const minVersion = Number(req.query.min);
+            const maxVersion = Number(req.query.max) || 5;
+            const response: {}[] = [];
+            if (status === ResponseCode.OK) {
+                if (code === 1000120) {
+                    if (minVersion <= 1) {
+                        response.push({
+                            catalogItem: {
+                                ns: 'app/store/actor_1000101',
+                                _code: {
+                                    _value: 1000120,
+                                    _ver: 1
+                                }
+                            },
+                            template: {
+                                _code: {
+                                    _value: 1000120,
+                                    _ver: 1
+                                },
+                                store: [
+                                    {
+                                        id: 'storeUuidCommon-v1',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1000501,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ],
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000511,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000521,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        });
+                    }
+                    if (minVersion <= 2 && maxVersion >= 2) {
+                        response.push({
+                            catalogItem: {
+                                ns: 'app/store/actor_1000101',
+                                _code: {
+                                    _value: 1000120,
+                                    _ver: 2
+                                }
+                            },
+                            template: {
+                                _code: {
+                                    _value: 1000120,
+                                    _ver: 2
+                                },
+                                store: [
+                                    {
+                                        id: 'storeUuidCommon-v1',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1000501,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ],
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000511,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000521,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'storeUuidCommon-v2',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000511,
+                                                    _ver: 2
+                                                },
+                                                requireConsent: false,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000521,
+                                                            _ver: 2
+                                                        },
+                                                        requireConsent: false
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        });
+                    }
+                    if (minVersion <= 3 && maxVersion >= 3) {
+                        response.push({
+                            catalogItem: {
+                                ns: 'app/store/actor_1000101',
+                                _code: {
+                                    _value: 1000120,
+                                    _ver: 3
+                                }
+                            },
+                            template: {
+                                _code: {
+                                    _value: 1000120,
+                                    _ver: 3
+                                },
+                                store: [
+                                    {
+                                        id: 'storeUuidCommon-v1',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1000501,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ],
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000511,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000521,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'storeUuidCommon-v3',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1000501,
+                                                    _ver: 2
+                                                },
+                                                requireConsent: false
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        });
+                    }
+                    if (minVersion <= 4 && maxVersion >= 4) {
+                        // 削除済を想定しレスポンスに加えない
+                    }
+                    if (minVersion <= 5 && maxVersion >= 5) {
+                        response.push({
+                            catalogItem: {
+                                ns: 'app/store/actor_1000101',
+                                _code: {
+                                    _value: 1000120,
+                                    _ver: 5
+                                }
+                            },
+                            template: {
+                                _code: {
+                                    _value: 1000120,
+                                    _ver: 5
+                                },
+                                store: [
+                                    {
+                                        id: 'storeUuidCommon-v1',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1000501,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ],
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000511,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000521,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'storeUuidCommon-v3',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1000501,
+                                                    _ver: 2
+                                                },
+                                                requireConsent: false
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'storeUuidCommon-v4',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1000502,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ],
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000512,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000522,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'storeUuidCommon-v5',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1000503,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ],
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000512,
+                                                    _ver: 2
+                                                },
+                                                requireConsent: false,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000522,
+                                                            _ver: 2
+                                                        },
+                                                        requireConsent: false
+                                                    },
+                                                    {
+                                                        code: {
+                                                            _value: 1000524,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                code: {
+                                                    _value: 1000513,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000523,
+                                                            _ver: 1
+                                                        }
+                                                    },
+                                                    {
+                                                        code: {
+                                                            _value: 1000524,
+                                                            _ver: 1
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        });
+                    }
+                }
+                if (response.length > 0) {
+                    res.json(response);
+                } else {
+                    res.json([]);
+                }
+            }
+            res.end();
+        };
+
+        const _listener3 = (req: express.Request, res: express.Response) => {
+            if (status === ResponseCode.OK) {
+                res.status(200);
+                const ns = req.query['ns'];
+                if (ns === 'catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000201/sharing-restriction') {
+                    // 正常：appアクター1000201の共有制限定義
+                    res.json([{
+                        catalogItem: {
+                            ns: 'catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000201/sharing-restriction',
+                            _code: {
+                                _value: 1000240,
+                                _ver: 1
+                            }
+                        },
+                        template: {
+                            _code: {
+                                _value: 1000240,
+                                _ver: 1
+                            },
+                            document: [
+                                {
+                                    code: {
+                                        _value: 1000501,
+                                        _ver: 1
+                                    },
+                                    permission: [
+                                        {
+                                            region: null,
+                                            service: [
+                                                {
+                                                    _value: 1000110,
+                                                    _ver: 1
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    prohibition: null
+                                }
+                            ],
+                            event: [
+                                {
+                                    code: {
+                                        _value: 1000512,
+                                        _ver: 1
+                                    },
+                                    permission: [
+                                        {
+                                            region: [
+                                                {
+                                                    _value: 1000310,
+                                                    _ver: 1
+                                                }
+                                            ],
+                                            service: null
+                                        }
+                                    ],
+                                    prohibition: null
+                                },
+                                {
+                                    code: {
+                                        _value: 1000511,
+                                        _ver: 1
+                                    },
+                                    permission: [
+                                        {
+                                            region: null,
+                                            service: [
+                                                {
+                                                    _value: 1000110,
+                                                    _ver: 1
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    prohibition: null
+                                }
+                            ],
+                            thing: [
+                                {
+                                    code: {
+                                        _value: 1000523,
+                                        _ver: 1
+                                    },
+                                    permission: null,
+                                    prohibition: [
+                                        {
+                                            region: null,
+                                            service: [
+                                                {
+                                                    _value: 1000210,
+                                                    _ver: 1
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    code: {
+                                        _value: 1000521,
+                                        _ver: 1
+                                    },
+                                    permission: [
+                                        {
+                                            region: null,
+                                            service: [
+                                                {
+                                                    _value: 1000110,
+                                                    _ver: 1
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    prohibition: null
+                                }
+                            ]
+                        }
+                    }]);
+                } else if (ns === 'catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000101/sharing-restriction') {
+                    // 正常：wfアクター1000101の共有制限定義
+                    res.json([{
+                        catalogItem: {
+                            ns: 'catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000101/sharing-restriction',
+                            _code: {
+                                _value: 1000140,
+                                _ver: 1
+                            }
+                        },
+                        template: {
+                            _code: {
+                                _value: 1000140,
+                                _ver: 1
+                            },
+                            document: [
+                                {
+                                    code: {
+                                        _value: 1000501,
+                                        _ver: 1
+                                    },
+                                    permission: [
+                                        {
+                                            region: null,
+                                            service: [
+                                                {
+                                                    _value: 1000110,
+                                                    _ver: 1
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    prohibition: null
+                                },
+                                {
+                                    code: {
+                                        _value: 1000502,
+                                        _ver: 1
+                                    },
+                                    permission: [
+                                        {
+                                            region: null,
+                                            service: null
+                                        }
+                                    ],
+                                    prohibition: []
+                                },
+                                {
+                                    code: {
+                                        _value: 1000503,
+                                        _ver: 1
+                                    },
+                                    permission: null,
+                                    prohibition: [
+                                        {
+                                            region: null,
+                                            service: null
+                                        }
+                                    ]
+                                }
+                            ],
+                            event: [
+                                {
+                                    code: {
+                                        _value: 1000512,
+                                        _ver: 1
+                                    },
+                                    permission: [
+                                        {
+                                            region: [
+                                                {
+                                                    _value: 1000310,
+                                                    _ver: 1
+                                                }
+                                            ],
+                                            service: null
+                                        }
+                                    ],
+                                    prohibition: null
+                                }
+                            ],
+                            thing: [
+                                {
+                                    code: {
+                                        _value: 1000522,
+                                        _ver: 1
+                                    },
+                                    permission: null,
+                                    prohibition: [
+                                        {
+                                            region: null,
+                                            service: [
+                                                {
+                                                    _value: 1000111,
+                                                    _ver: 1
+                                                },
+                                                {
+                                                    _value: 1000210,
+                                                    _ver: 1
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            region: null,
+                                            service: [
+                                                {
+                                                    _value: 1000212,
+                                                    _ver: 1
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    code: {
+                                        _value: 1000523,
+                                        _ver: 2
+                                    },
+                                    permission: null,
+                                    prohibition: [
+                                        {
+                                            region: [
+                                                {
+                                                    _value: 1000311,
+                                                    _ver: 1
+                                                }
+                                            ],
+                                            service: null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }]);
+                } else {
+                    res.status(ResponseCode.NOT_FOUND);
+                    res.json();
+                }
+            } else {
+                res.status(status);
+            }
+            res.end();
+        };
+
         // ハンドラーのイベントリスナーを追加、アプリケーションの起動
         this._app.use(bodyParser.json());
+        this._app.get('/catalog/history/:code', _listener2);
         this._app.get('/catalog/:code/:version', _listener);
         this._app.get('/catalog/:code', _listener);
+        this._app.get('/catalog', _listener3);
         this._app.post('/catalog', _listener1);
         this._server = this._app.listen(3001);
     }
