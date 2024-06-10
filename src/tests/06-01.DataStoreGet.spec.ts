@@ -232,54 +232,6 @@ describe('book-mange API', () => {
             expect(response.status).toBe(400);
             expect(response.body.message).toBe(Message.UNSUPPORTED_ACTOR);
         });
-        test('正常：app（session）', async () => {
-            // スタブを起動
-            operator = new StubOperatorServer06(200, 2, 1000104);
-            catalog = new StubCatalogServerDataStore(200, 1);
-
-            // 送信データを生成
-            const url = Url.dataStoreURI + '/userid05?app=1000107';
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).get(url)
-                .set({ accept: 'application/json' })
-                .set({ session: JSON.stringify(Session.dataStoreGetApp) });
-
-            // レスポンスチェック
-            expect(response.status).toBe(200);
-            expect(response.body.id).toBe(6);
-            expect(response.body.actor._value).toBe(1000104);
-            expect(response.body.actor._ver).toBe(1);
-            expect(response.body.store).toBe(null);
-            expect(response.body.storeCatalogId).toBe(null);
-            expect(response.body.wf).toBe(null);
-            expect(response.body.app._value).toBe(1000107);
-            expect(response.body.app._ver).toBe(1);
-            expect(response.body.document[0]._value).toBe(1001010);
-            expect(response.body.document[0]._ver).toBe(1);
-            expect(response.body.document[1]._value).toBe(1001011);
-            expect(response.body.document[1]._ver).toBe(1);
-            expect(response.body.document[2]._value).toBe(1001012);
-            expect(response.body.document[2]._ver).toBe(1);
-            expect(response.body.event[0]._value).toBe(1000009);
-            expect(response.body.event[0]._ver).toBe(1);
-            expect(response.body.event[1]._value).toBe(1000010);
-            expect(response.body.event[1]._ver).toBe(1);
-            expect(response.body.event[2]._value).toBe(1000011);
-            expect(response.body.event[2]._ver).toBe(1);
-            expect(response.body.event[3]._value).toBe(1000012);
-            expect(response.body.event[3]._ver).toBe(1);
-            expect(response.body.thing[0]._value).toBe(1000014);
-            expect(response.body.thing[0]._ver).toBe(1);
-            expect(response.body.thing[1]._value).toBe(1000819);
-            expect(response.body.thing[1]._ver).toBe(1);
-            expect(response.body.thing[2]._value).toBe(1000820);
-            expect(response.body.thing[2]._ver).toBe(1);
-            expect(response.body.thing[3]._value).toBe(1000821);
-            expect(response.body.thing[3]._ver).toBe(1);
-            expect(response.body.thing[4]._value).toBe(1000822);
-            expect(response.body.thing[4]._ver).toBe(1);
-        });
         test('正常：APP（session）', async () => {
             // スタブを起動
             operator = new StubOperatorServer06(200, 2, 1000104);
@@ -295,38 +247,55 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(200);
-            expect(response.body.id).toBe(2);
-            expect(response.body.actor._value).toBe(1000104);
-            expect(response.body.actor._ver).toBe(1);
-            expect(response.body.store).toBe(null);
-            expect(response.body.storeCatalogId).toBe(null);
-            expect(response.body.app._value).toBe(1000107);
-            expect(response.body.app._ver).toBe(1);
-            expect(response.body.wf).toBe(null);
-            expect(response.body.document[0]._value).toBe(1001010);
-            expect(response.body.document[0]._ver).toBe(1);
-            expect(response.body.event[0]._value).toBe(1000009);
-            expect(response.body.event[0]._ver).toBe(1);
-            expect(response.body.event[1]._value).toBe(1000010);
-            expect(response.body.event[1]._ver).toBe(1);
-            expect(response.body.event[2]._value).toBe(1000011);
-            expect(response.body.event[2]._ver).toBe(1);
-            expect(response.body.event[3]._value).toBe(9999999);
-            expect(response.body.event[3]._ver).toBe(1);
-            expect(response.body.thing[0]._value).toBe(1000014);
-            expect(response.body.thing[0]._ver).toBe(1);
-            expect(response.body.thing[1]._value).toBe(1000015);
-            expect(response.body.thing[1]._ver).toBe(1);
-            expect(response.body.thing[2]._value).toBe(1000016);
-            expect(response.body.thing[2]._ver).toBe(1);
-            expect(response.body.thing[3]._value).toBe(1000017);
-            expect(response.body.thing[3]._ver).toBe(1);
-            expect(response.body.thing[4]._value).toBe(1000018);
-            expect(response.body.thing[4]._ver).toBe(1);
-            expect(response.body.thing[5]._value).toBe(9999999);
-            expect(response.body.thing[5]._ver).toBe(1);
-            expect(response.body.thing[6]._value).toBe(9999999);
-            expect(response.body.thing[6]._ver).toBe(1);
+            expect(response.body[0].id).toBe(2);
+            expect(response.body[0].actor._value).toBe(1000104);
+            expect(response.body[0].actor._ver).toBe(1);
+            expect(response.body[0].store._value).toBe(1001107);
+            expect(response.body[0].store._ver).toBe(1);
+            expect(response.body[0].storeCatalogId).toBe('b87b27c1-5da8-37dd-6ee6-2c7831cf6a09');
+            expect(response.body[0].app._value).toBe(1000107);
+            expect(response.body[0].app._ver).toBe(1);
+            expect(response.body[0].wf).toBe(null);
+            expect(response.body[0].document.length).toBe(0);
+            expect(response.body[0].event[0]._code._value).toBe(1000009);
+            expect(response.body[0].event[0]._code._ver).toBe(1);
+            expect(response.body[0].event[0].thing[0]._code._value).toBe(1000014);
+            expect(response.body[0].event[0].thing[0]._code._ver).toBe(1);
+            expect(response.body[0].event[0].thing[1]._code._value).toBe(1000015);
+            expect(response.body[0].event[0].thing[1]._code._ver).toBe(1);
+            expect(response.body[0].event[1]._code._value).toBe(1000010);
+            expect(response.body[0].event[1]._code._ver).toBe(1);
+            expect(response.body[0].event[1].thing[0]._code._value).toBe(1000017);
+            expect(response.body[0].event[1].thing[0]._code._ver).toBe(1);
+            expect(response.body[0].thing).toBe(null);
+            expect(response.body[1].id).toBe(2);
+            expect(response.body[1].actor._value).toBe(1000104);
+            expect(response.body[1].actor._ver).toBe(1);
+            expect(response.body[1].store._value).toBe(1001107);
+            expect(response.body[1].store._ver).toBe(1);
+            expect(response.body[1].storeCatalogId).toBe('ccc0c076-f73f-7ce1-7c5f-fdc1634aa5c1');
+            expect(response.body[1].app._value).toBe(1000107);
+            expect(response.body[1].app._ver).toBe(1);
+            expect(response.body[1].wf).toBe(null);
+            expect(response.body[1].document.length).toBe(0);
+            expect(response.body[1].event[0]._code._value).toBe(1000011);
+            expect(response.body[1].event[0]._code._ver).toBe(1);
+            expect(response.body[1].event[0].thing[0]._code._value).toBe(1000018);
+            expect(response.body[1].event[0].thing[0]._code._ver).toBe(1);
+            expect(response.body[1].thing).toBe(null);
+            expect(response.body[2].id).toBe(2);
+            expect(response.body[2].actor._value).toBe(1000104);
+            expect(response.body[2].actor._ver).toBe(1);
+            expect(response.body[2].store._value).toBe(1001107);
+            expect(response.body[2].store._ver).toBe(1);
+            expect(response.body[2].storeCatalogId).toBe('69db43f2-6643-19e9-117c-4bdece4bddd7');
+            expect(response.body[2].app._value).toBe(1000107);
+            expect(response.body[2].app._ver).toBe(1);
+            expect(response.body[2].wf).toBe(null);
+            expect(response.body[2].document[0]._code._value).toBe(1001010);
+            expect(response.body[2].document[0]._code._ver).toBe(1);
+            expect(response.body[2].event.length).toBe(0);
+            expect(response.body[2].thing).toBe(null);
         });
         test('正常：個人（cookie）', async () => {
             // スタブを起動
@@ -424,38 +393,55 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(200);
-            expect(response.body.id).toBe(2);
-            expect(response.body.actor._value).toBe(1000104);
-            expect(response.body.actor._ver).toBe(1);
-            expect(response.body.store).toBe(null);
-            expect(response.body.storeCatalogId).toBe(null);
-            expect(response.body.app._value).toBe(1000107);
-            expect(response.body.app._ver).toBe(1);
-            expect(response.body.wf).toBe(null);
-            expect(response.body.document[0]._value).toBe(1001010);
-            expect(response.body.document[0]._ver).toBe(1);
-            expect(response.body.event[0]._value).toBe(1000009);
-            expect(response.body.event[0]._ver).toBe(1);
-            expect(response.body.event[1]._value).toBe(1000010);
-            expect(response.body.event[1]._ver).toBe(1);
-            expect(response.body.event[2]._value).toBe(1000011);
-            expect(response.body.event[2]._ver).toBe(1);
-            expect(response.body.event[3]._value).toBe(9999999);
-            expect(response.body.event[3]._ver).toBe(1);
-            expect(response.body.thing[0]._value).toBe(1000014);
-            expect(response.body.thing[0]._ver).toBe(1);
-            expect(response.body.thing[1]._value).toBe(1000015);
-            expect(response.body.thing[1]._ver).toBe(1);
-            expect(response.body.thing[2]._value).toBe(1000016);
-            expect(response.body.thing[2]._ver).toBe(1);
-            expect(response.body.thing[3]._value).toBe(1000017);
-            expect(response.body.thing[3]._ver).toBe(1);
-            expect(response.body.thing[4]._value).toBe(1000018);
-            expect(response.body.thing[4]._ver).toBe(1);
-            expect(response.body.thing[5]._value).toBe(9999999);
-            expect(response.body.thing[5]._ver).toBe(1);
-            expect(response.body.thing[6]._value).toBe(9999999);
-            expect(response.body.thing[6]._ver).toBe(1);
+            expect(response.body[0].id).toBe(2);
+            expect(response.body[0].actor._value).toBe(1000104);
+            expect(response.body[0].actor._ver).toBe(1);
+            expect(response.body[0].store._value).toBe(1001107);
+            expect(response.body[0].store._ver).toBe(1);
+            expect(response.body[0].storeCatalogId).toBe('b87b27c1-5da8-37dd-6ee6-2c7831cf6a09');
+            expect(response.body[0].app._value).toBe(1000107);
+            expect(response.body[0].app._ver).toBe(1);
+            expect(response.body[0].wf).toBe(null);
+            expect(response.body[0].document.length).toBe(0);
+            expect(response.body[0].event[0]._code._value).toBe(1000009);
+            expect(response.body[0].event[0]._code._ver).toBe(1);
+            expect(response.body[0].event[0].thing[0]._code._value).toBe(1000014);
+            expect(response.body[0].event[0].thing[0]._code._ver).toBe(1);
+            expect(response.body[0].event[0].thing[1]._code._value).toBe(1000015);
+            expect(response.body[0].event[0].thing[1]._code._ver).toBe(1);
+            expect(response.body[0].event[1]._code._value).toBe(1000010);
+            expect(response.body[0].event[1]._code._ver).toBe(1);
+            expect(response.body[0].event[1].thing[0]._code._value).toBe(1000017);
+            expect(response.body[0].event[1].thing[0]._code._ver).toBe(1);
+            expect(response.body[0].thing).toBe(null);
+            expect(response.body[1].id).toBe(2);
+            expect(response.body[1].actor._value).toBe(1000104);
+            expect(response.body[1].actor._ver).toBe(1);
+            expect(response.body[1].store._value).toBe(1001107);
+            expect(response.body[1].store._ver).toBe(1);
+            expect(response.body[1].storeCatalogId).toBe('ccc0c076-f73f-7ce1-7c5f-fdc1634aa5c1');
+            expect(response.body[1].app._value).toBe(1000107);
+            expect(response.body[1].app._ver).toBe(1);
+            expect(response.body[1].wf).toBe(null);
+            expect(response.body[1].document.length).toBe(0);
+            expect(response.body[1].event[0]._code._value).toBe(1000011);
+            expect(response.body[1].event[0]._code._ver).toBe(1);
+            expect(response.body[1].event[0].thing[0]._code._value).toBe(1000018);
+            expect(response.body[1].event[0].thing[0]._code._ver).toBe(1);
+            expect(response.body[1].thing).toBe(null);
+            expect(response.body[2].id).toBe(2);
+            expect(response.body[2].actor._value).toBe(1000104);
+            expect(response.body[2].actor._ver).toBe(1);
+            expect(response.body[2].store._value).toBe(1001107);
+            expect(response.body[2].store._ver).toBe(1);
+            expect(response.body[2].storeCatalogId).toBe('69db43f2-6643-19e9-117c-4bdece4bddd7');
+            expect(response.body[2].app._value).toBe(1000107);
+            expect(response.body[2].app._ver).toBe(1);
+            expect(response.body[2].wf).toBe(null);
+            expect(response.body[2].document[0]._code._value).toBe(1001010);
+            expect(response.body[2].document[0]._code._ver).toBe(1);
+            expect(response.body[2].event.length).toBe(0);
+            expect(response.body[2].thing).toBe(null);
         });
         test('正常：領域運営（actorCode指定actor・session）', async () => {
             // スタブを起動
@@ -472,38 +458,55 @@ describe('book-mange API', () => {
 
             // レスポンスチェック
             expect(response.status).toBe(200);
-            expect(response.body.id).toBe(2);
-            expect(response.body.actor._value).toBe(1000104);
-            expect(response.body.actor._ver).toBe(1);
-            expect(response.body.store).toBe(null);
-            expect(response.body.storeCatalogId).toBe(null);
-            expect(response.body.wf).toBe(null);
-            expect(response.body.app._value).toBe(1000107);
-            expect(response.body.app._ver).toBe(1);
-            expect(response.body.document[0]._value).toBe(1001010);
-            expect(response.body.document[0]._ver).toBe(1);
-            expect(response.body.event[0]._value).toBe(1000009);
-            expect(response.body.event[0]._ver).toBe(1);
-            expect(response.body.event[1]._value).toBe(1000010);
-            expect(response.body.event[1]._ver).toBe(1);
-            expect(response.body.event[2]._value).toBe(1000011);
-            expect(response.body.event[2]._ver).toBe(1);
-            expect(response.body.event[3]._value).toBe(9999999);
-            expect(response.body.event[3]._ver).toBe(1);
-            expect(response.body.thing[0]._value).toBe(1000014);
-            expect(response.body.thing[0]._ver).toBe(1);
-            expect(response.body.thing[1]._value).toBe(1000015);
-            expect(response.body.thing[1]._ver).toBe(1);
-            expect(response.body.thing[2]._value).toBe(1000016);
-            expect(response.body.thing[2]._ver).toBe(1);
-            expect(response.body.thing[3]._value).toBe(1000017);
-            expect(response.body.thing[3]._ver).toBe(1);
-            expect(response.body.thing[4]._value).toBe(1000018);
-            expect(response.body.thing[4]._ver).toBe(1);
-            expect(response.body.thing[5]._value).toBe(9999999);
-            expect(response.body.thing[5]._ver).toBe(1);
-            expect(response.body.thing[6]._value).toBe(9999999);
-            expect(response.body.thing[6]._ver).toBe(1);
+            expect(response.body[0].id).toBe(2);
+            expect(response.body[0].actor._value).toBe(1000104);
+            expect(response.body[0].actor._ver).toBe(1);
+            expect(response.body[0].store._value).toBe(1001107);
+            expect(response.body[0].store._ver).toBe(1);
+            expect(response.body[0].storeCatalogId).toBe('b87b27c1-5da8-37dd-6ee6-2c7831cf6a09');
+            expect(response.body[0].app._value).toBe(1000107);
+            expect(response.body[0].app._ver).toBe(1);
+            expect(response.body[0].wf).toBe(null);
+            expect(response.body[0].document.length).toBe(0);
+            expect(response.body[0].event[0]._code._value).toBe(1000009);
+            expect(response.body[0].event[0]._code._ver).toBe(1);
+            expect(response.body[0].event[0].thing[0]._code._value).toBe(1000014);
+            expect(response.body[0].event[0].thing[0]._code._ver).toBe(1);
+            expect(response.body[0].event[0].thing[1]._code._value).toBe(1000015);
+            expect(response.body[0].event[0].thing[1]._code._ver).toBe(1);
+            expect(response.body[0].event[1]._code._value).toBe(1000010);
+            expect(response.body[0].event[1]._code._ver).toBe(1);
+            expect(response.body[0].event[1].thing[0]._code._value).toBe(1000017);
+            expect(response.body[0].event[1].thing[0]._code._ver).toBe(1);
+            expect(response.body[0].thing).toBe(null);
+            expect(response.body[1].id).toBe(2);
+            expect(response.body[1].actor._value).toBe(1000104);
+            expect(response.body[1].actor._ver).toBe(1);
+            expect(response.body[1].store._value).toBe(1001107);
+            expect(response.body[1].store._ver).toBe(1);
+            expect(response.body[1].storeCatalogId).toBe('ccc0c076-f73f-7ce1-7c5f-fdc1634aa5c1');
+            expect(response.body[1].app._value).toBe(1000107);
+            expect(response.body[1].app._ver).toBe(1);
+            expect(response.body[1].wf).toBe(null);
+            expect(response.body[1].document.length).toBe(0);
+            expect(response.body[1].event[0]._code._value).toBe(1000011);
+            expect(response.body[1].event[0]._code._ver).toBe(1);
+            expect(response.body[1].event[0].thing[0]._code._value).toBe(1000018);
+            expect(response.body[1].event[0].thing[0]._code._ver).toBe(1);
+            expect(response.body[1].thing).toBe(null);
+            expect(response.body[2].id).toBe(2);
+            expect(response.body[2].actor._value).toBe(1000104);
+            expect(response.body[2].actor._ver).toBe(1);
+            expect(response.body[2].store._value).toBe(1001107);
+            expect(response.body[2].store._ver).toBe(1);
+            expect(response.body[2].storeCatalogId).toBe('69db43f2-6643-19e9-117c-4bdece4bddd7');
+            expect(response.body[2].app._value).toBe(1000107);
+            expect(response.body[2].app._ver).toBe(1);
+            expect(response.body[2].wf).toBe(null);
+            expect(response.body[2].document[0]._code._value).toBe(1001010);
+            expect(response.body[2].document[0]._code._ver).toBe(1);
+            expect(response.body[2].event.length).toBe(0);
+            expect(response.body[2].thing).toBe(null);
         });
         test('異常：WF（数値以外）', async () => {
             // スタブを起動
@@ -960,40 +963,6 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(response.status).toBe(503);
             expect(response.body.message).toBe(Message.FAILED_CONNECT_TO_CATALOG);
-        });
-        test('異常：データ蓄積定義が1件も取得できない', async () => {
-            // スタブを起動
-            operator = new StubOperatorServer06(200, 0, 1000004);
-            catalog = new StubCatalogServerDataStore(200);
-
-            // 送信データを生成
-            const url = Url.dataStoreURI + '/userid03?app=1000107';
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).get(url)
-                .set({ accept: 'application/json' })
-                .set({ session: JSON.stringify(Session.dataStoreGetApp) });
-
-            // レスポンスチェック
-            expect(response.status).toBe(404);
-            expect(response.body.message).toBe(Message.NOT_FOUND_DATA_STORE_SETTING);
-        });
-        test('異常：データ種が1件も取得できない', async () => {
-            // スタブを起動
-            operator = new StubOperatorServer06(200, 0, 1000104);
-            catalog = new StubCatalogServerDataStore(200);
-
-            // 送信データを生成
-            const url = Url.dataStoreURI + '/userid04?app=1000107';
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).get(url)
-                .set({ accept: 'application/json' })
-                .set({ session: JSON.stringify(Session.dataStoreNotExistDataType2) });
-
-            // レスポンスチェック
-            expect(response.status).toBe(404);
-            expect(response.body.message).toBe(Message.NOT_FOUND_DATA_TYPE);
         });
         test('パラメータ不足：id', async () => {
             // スタブを起動

@@ -291,6 +291,7 @@ export default class DataStoreService {
         const wfCatalogCode: number = null;
         const operator = dataStoreGetDto.getOperator();
 
+        let bookId: number = null;
         // オペレーター種別が個人の場合
         if (operator.getType() === OperatorType.TYPE_IND) {
             // PXR-IDが取得できているか確認
@@ -303,42 +304,7 @@ export default class DataStoreService {
             if (!book) {
                 throw new AppError(message.NOT_EXIST_BOOK, ResponseCode.UNAUTHORIZED);
             }
-
-            let res: GetDataStoreResDto[] = [];
-            // 対象のデータ操作定義を取得
-            const dataOperations = await EntityOperation.getStoreDataOperationsByBookId(book.id, appCatalogCode, wfCatalogCode);
-            if (!dataOperations || dataOperations.length === 0) {
-                return res;
-            }
-            const dataOperationCatalogCodes: {
-                _code: {
-                    _value: number,
-                    _ver: number
-                }
-            }[] = [];
-            for (const dataOperation of dataOperations) {
-                const reqEle = {
-                    _code: {
-                        _value: dataOperation.operationCatalogCode,
-                        _ver: dataOperation.operationCatalogVersion
-                    }
-                };
-                dataOperationCatalogCodes.push(reqEle);
-            }
-            // カタログ取得データオブジェクトを生成
-            const catalogDto = new CatalogDto();
-            catalogDto.setUrl(config['catalogUrl']);
-            catalogDto.setRequest(dataOperationCatalogCodes);
-            catalogDto.setOperator(operator);
-            catalogDto.setMessage(message);
-            const operationCatalogs = await new CatalogService().getCatalogInfos(catalogDto);
-            if (!operationCatalogs || !Array.isArray(operationCatalogs)) {
-                throw new AppError(message.FAILED_CATALOG_GET, ResponseCode.INTERNAL_SERVER_ERROR);
-            }
-
-            // 取得したデータ種を設定
-            res = await this.setDataTypeForInd(dataOperations, operationCatalogs, res);
-            return res;
+            bookId = book.id;
         } else {
             // オペレーター種別がWF職員、アプリケーションの場合
             // アクターコード、バージョンが存在する場合
@@ -355,253 +321,44 @@ export default class DataStoreService {
             if (userIdResult === null) {
                 throw new AppError(message.NOT_FOUND_BOOK_ID, ResponseCode.BAD_REQUEST);
             }
-
-            // appとwfをオブジェクト化
-            const app = appCatalogCode
-                ? {
-                    _value: appCatalogCode,
-                    _ver: userIdResult.getAppCatalogVersion()
-                }
-                : null;
-            const wf: {} = null;
-
-            // データ蓄積定義を取得
-            const dataStoreSetting = await EntityOperation.getDataOperationDataStoreSetting(userIdResult.getBookId(), actor, app, wf);
-
-            // 取得できなかった場合
-            if (dataStoreSetting === null) {
-                throw new AppError(message.NOT_FOUND_DATA_STORE_SETTING, ResponseCode.NOT_FOUND);
-            }
-
-            // データ種を取得
-            const dataTypes = await EntityOperation.getDataTypes(dataStoreSetting.getId());
-            // 取得できなかった場合
-            if (dataTypes.length <= 0) {
-                throw new AppError(message.NOT_FOUND_DATA_TYPE, ResponseCode.NOT_FOUND);
-            }
-
-            // 取得したデータ種を設定
-            let { documents, events, things }: { documents: any[], events: any[], things: any[] } = this.setDataType(dataTypes);
-
-            // 最新の蓄積カタログを取得
-            const catalogService = new CatalogService();
-            const catalogDto = new CatalogDto();
-            catalogDto.setUrl(config['catalogUrl']);
-            catalogDto.setCode(dataStoreSetting.operationCatalogCode);
-            catalogDto.setOperator(operator);
-            catalogDto.setMessage(message);
-            const newestStoreCatalog = await catalogService.getCatalogInfo(catalogDto);
-            const newestVer = Number(newestStoreCatalog['catalogItem']['_code']['_ver']);
-            if (newestVer > dataStoreSetting.operationCatalogVersion) {
-                // 現在同意している蓄積定義より新しいバージョンが存在する場合、同意とみなすカタログを取得する
-                const consentCatalog = await this.getConsentCatalog(dataStoreSetting, newestVer, catalogDto);
-                // 同意しているとみなしたカタログからデータ種を取得する
-                const { consentDocuments, consentEvents, consentThings } = this.getConsentDataTypes(consentCatalog);
-                // 取得したデータ種を返却する
-                documents = consentDocuments;
-                events = consentEvents;
-                things = consentThings;
-            }
-
-            // レスポンスを生成
-            const response: GetDataStoreResDto = this.createResponse(dataStoreSetting, appCatalogCode, documents, events, things);
-
-            // レスポンスを返す
-            return response.getAsJson();
+            bookId = userIdResult.getBookId();
         }
-    }
 
-    /**
-     * 蓄積定義のカタログからデータ種を取得する
-     * @param consentCatalog
-     */
-    private getConsentDataTypes (consentCatalog: any) {
-        const consentDocuments = [];
-        const consentEvents = [];
-        const consentThings = [];
-        for (const store of consentCatalog['template']['store']) {
-            const { documents, events, things } = this.getDataTypeFromStore(store, false);
-            consentDocuments.push(...documents);
-            consentEvents.push(...events);
-            consentThings.push(...things);
+        let res: GetDataStoreResDto[] = [];
+        // 対象のデータ操作定義を取得
+        const dataOperations = await EntityOperation.getStoreDataOperationsByBookId(bookId, appCatalogCode, wfCatalogCode);
+        if (!dataOperations || dataOperations.length === 0) {
+            return res;
         }
-        return { consentDocuments, consentEvents, consentThings };
-    }
-
-    /**
-     * 同意とみなす蓄積カタログを取得する
-     * @param dataStoreSetting
-     * @param newestVer
-     * @param catalogDto
-     */
-    private async getConsentCatalog (dataStoreSetting: DataOperation, newestVer: number, catalogDto: CatalogDto) {
-        // バージョンが最新ではない場合、最新バージョンまでのカタログを全て取得
-        let currentVersion = dataStoreSetting.operationCatalogVersion;
-        const reqCodes = [];
-        while (true) {
+        const dataOperationCatalogCodes: {
+            _code: {
+                _value: number,
+                _ver: number
+            }
+        }[] = [];
+        for (const dataOperation of dataOperations) {
             const reqEle = {
                 _code: {
-                    _value: dataStoreSetting.operationCatalogCode,
-                    _ver: currentVersion
+                    _value: dataOperation.operationCatalogCode,
+                    _ver: dataOperation.operationCatalogVersion
                 }
             };
-            reqCodes.push(reqEle);
-            if (currentVersion === newestVer) {
-                break;
-            }
-            currentVersion++;
+            dataOperationCatalogCodes.push(reqEle);
         }
-        catalogDto.setRequest(reqCodes);
-        const storeCatalogs = await new CatalogService().getCatalogInfos(catalogDto);
-        if (!storeCatalogs || !Array.isArray(storeCatalogs)) {
+        // カタログ取得データオブジェクトを生成
+        const catalogDto = new CatalogDto();
+        catalogDto.setUrl(config['catalogUrl']);
+        catalogDto.setRequest(dataOperationCatalogCodes);
+        catalogDto.setOperator(operator);
+        catalogDto.setMessage(message);
+        const operationCatalogs = await new CatalogService().getCatalogInfos(catalogDto);
+        if (!operationCatalogs || !Array.isArray(operationCatalogs)) {
             throw new AppError(message.FAILED_CATALOG_GET, ResponseCode.INTERNAL_SERVER_ERROR);
         }
-        // 同意しているバージョンのカタログから同意が必要なデータ種を取得する
-        const currentCatalog = storeCatalogs.find(elem => Number(elem['catalogItem']['_code']['_ver']) === dataStoreSetting.operationCatalogVersion);
-        const template = currentCatalog['template'];
-        const currentStores = [];
-        for (const store of template['store']) {
-            const { documents, events, things } = this.getDataTypeFromStore(store, true);
-            currentStores.push({
-                id: store['id'],
-                document: documents,
-                event: events,
-                thing: things
-            });
-        }
-        let consentCatalog = currentCatalog;
-        for (let ver = dataStoreSetting.operationCatalogVersion + 1; ver <= newestVer; ver++) {
-            let consented = true;
-            const tempCatalog = storeCatalogs.find(elem => Number(elem['catalogItem']['_code']['_ver']) === ver);
-            if (!tempCatalog) {
-                continue;
-            }
-            const tempTemplate = tempCatalog['template'];
-            if (tempTemplate['store'] && Array.isArray(tempTemplate['store'])) {
-                for (const tempStore of tempTemplate['store']) {
-                    // バージョンを上げたカタログの同意が必要なデータ種を取得
-                    const { documents, events, things } = this.getDataTypeFromStore(tempStore, true);
-                    // storeのIDが同意しているバージョンのカタログに存在するか確認する
-                    const currentStore = currentStores.find(elem => elem.id === tempStore['id']);
-                    if (!currentStore && (documents.length > 0 || events.length > 0 || things.length > 0)) {
-                        // 同じIDがないのに同意が必要なものがある
-                        consented = false;
-                        break;
-                    } else if (currentStore) {
-                        // 同意が必要なデータ種が全て含まれるか確認する
-                        for (const doc of documents) {
-                            if (!currentStore.document.some(elem => elem._value === doc._value && elem._ver === doc._ver)) {
-                                consented = false;
-                                break;
-                            }
-                        }
-                        for (const eve of events) {
-                            if (!currentStore.event.some(elem => elem._value === eve._value && elem._ver === eve._ver)) {
-                                consented = false;
-                                break;
-                            }
-                        }
-                        for (const thi of things) {
-                            if (!currentStore.thing.some(elem => elem._value === thi._value && elem._ver === thi._ver)) {
-                                consented = false;
-                                break;
-                            }
-                        }
-                        // 同意が必要なデータ種の数が違う場合
-                        if (currentStore.document.length !== documents.length || currentStore.event.length !== events.length || currentStore.thing.length !== things.length) {
-                            consented = false;
-                            break;
-                        }
-                    }
-                }
-                if (!consented) {
-                    break;
-                } else {
-                    // データ種が全て含まれる場合は、バージョンを上げたカタログを同意しているカタログとする
-                    consentCatalog = tempCatalog;
-                }
-            }
-        }
-        return consentCatalog;
-    }
 
-    /**
-     * 蓄積定義からデータ種を取得する
-     * @param store
-     * @param requireConsent
-     */
-    private getDataTypeFromStore (store: any, requireConsent: boolean) {
-        const documents = [];
-        const events = [];
-        const things = [];
-        if (store['document'] && Array.isArray(store['document'])) {
-            for (const doc of store['document']) {
-                if (!requireConsent || doc['requireConsent']) {
-                    documents.push({
-                        _value: Number(doc['code']['_value']),
-                        _ver: Number(doc['code']['_ver'])
-                    });
-                }
-            }
-        }
-        if (store['event'] && Array.isArray(store['event'])) {
-            for (const eve of store['event']) {
-                if (!requireConsent || eve['requireConsent']) {
-                    events.push({
-                        _value: Number(eve['code']['_value']),
-                        _ver: Number(eve['code']['_ver'])
-                    });
-                }
-                if (eve['thing'] && Array.isArray(eve['thing'])) {
-                    for (const thi of eve['thing']) {
-                        if (!requireConsent || thi['requireConsent']) {
-                            things.push({
-                                _value: Number(thi['code']['_value']),
-                                _ver: Number(thi['code']['_ver'])
-                            });
-                        }
-                    }
-                }
-            }
-        }
-        return { documents, events, things };
-    }
-
-    /**
-     * 蓄積データ種取得（個人）
-     * @param dataTypes
-     * @returns
-     */
-    private setDataType (dataTypes: DataOperationDataType[]) {
-        const documents: any[] = [];
-        const events: any[] = [];
-        const things: any[] = [];
-        for (const dataType of dataTypes) {
-            if (dataType.documentCatalogCode) {
-                documents.push({
-                    _value: dataType.documentCatalogCode,
-                    _ver: dataType.documentCatalogVersion
-                });
-            }
-            if (dataType.eventCatalogCode) {
-                const isExist = events.find(eve => Number(eve._value) === Number(dataType.eventCatalogCode) &&
-                    Number(eve._ver) === Number(dataType.eventCatalogVersion)
-                );
-                if (!isExist) {
-                    events.push({
-                        _value: dataType.eventCatalogCode,
-                        _ver: dataType.eventCatalogVersion
-                    });
-                }
-            }
-            if (dataType.thingCatalogCode) {
-                things.push({
-                    _value: dataType.thingCatalogCode,
-                    _ver: dataType.thingCatalogVersion
-                });
-            }
-        }
-        return { documents, events, things };
+        // 取得したデータ種を設定
+        res = await this.setDataTypeForInd(dataOperations, operationCatalogs, res);
+        return res;
     }
 
     /**
@@ -672,35 +429,6 @@ export default class DataStoreService {
             }
         }
         return res;
-    }
-
-    /**
-     * レスポンス生成
-     * @param dataStoreSetting
-     * @param documents
-     * @param events
-     * @param things
-     * @returns
-     */
-    private createResponse (dataStoreSetting: DataOperation, appCatalogCode: number, documents: any[], events: any[], things: any[]) {
-        const response: GetDataStoreResDto = new GetDataStoreResDto();
-        response.setId(dataStoreSetting.getId());
-        response.setActor({
-            _value: dataStoreSetting.getActorCatalogCode(),
-            _ver: dataStoreSetting.getActorCatalogVersion()
-        });
-        response.setApp(null);
-        response.setWf(null);
-        if (appCatalogCode) {
-            response.setApp({
-                _value: appCatalogCode,
-                _ver: dataStoreSetting.getAppCatalogVersion()
-            });
-        }
-        response.document = documents;
-        response.event = events;
-        response.thing = things;
-        return response;
     }
 
     /**

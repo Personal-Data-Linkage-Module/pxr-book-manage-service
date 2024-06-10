@@ -551,13 +551,18 @@ export default class EntityOperation {
                 .andWhere('data_operation_data_type.is_disabled = :is_disabled', { is_disabled: false });
         } else {
             // 共有の場合、蓄積定義に関しては非同意状態のものも取得する
-            sql = sql.orWhere('data_operation.type = :type', { type: 'store' })
-                .orWhere(
-                    new Brackets(subQb2 => {
-                        subQb2.andWhere('data_operation.type = :type', { type: 'share' })
-                            .andWhere('data_operation.is_disabled = :is_disabled', { is_disabled: false });
-                    })
-                );
+            sql = sql.andWhere(
+                new Brackets(subQb => {
+                    subQb.orWhere('data_operation.type = :type', { type: 'store' });
+                    subQb.orWhere(
+                        new Brackets(subQb2 => {
+                            subQb2.andWhere('data_operation.type = :type2', { type2: 'share' })
+                                .andWhere('data_operation.is_disabled = :is_disabled', { is_disabled: false })
+                                .andWhere('data_operation_data_type.is_disabled = :is_disabled', { is_disabled: false });
+                        })
+                    );
+                })
+            );
         }
         if (assets && assets.length > 0) {
             sql = sql.andWhere(
@@ -671,6 +676,7 @@ export default class EntityOperation {
             // documentのみのパターン
             agreementDataTypeList.push({
                 uuid: dataType.catalogUuid,
+                type: 'document',
                 code: {
                     _value: dataType.documentCatalogCode,
                     _ver: dataType.documentCatalogVersion
@@ -681,6 +687,7 @@ export default class EntityOperation {
             // event + thing のパターン (event単体のパターンは無い)
             agreementDataTypeList.push({
                 uuid: dataType.catalogUuid,
+                type: 'event',
                 code: {
                     _value: dataType.eventCatalogCode,
                     _ver: dataType.eventCatalogVersion
@@ -689,6 +696,7 @@ export default class EntityOperation {
             });
             agreementDataTypeList.push({
                 uuid: dataType.catalogUuid,
+                type: 'thing',
                 code: {
                     _value: dataType.thingCatalogCode,
                     _ver: dataType.thingCatalogVersion
@@ -699,6 +707,7 @@ export default class EntityOperation {
             // thingのみのパターン（共有定義のみ有り得る）
             agreementDataTypeList.push({
                 uuid: dataType.catalogUuid,
+                type: 'thing',
                 code: {
                     _value: dataType.thingCatalogCode,
                     _ver: dataType.thingCatalogVersion
@@ -2498,7 +2507,7 @@ export default class EntityOperation {
                 continue;
             }
             // 共有元指定情報を取得
-            const shareSourceDatatype = await this.getShareSources(notification);
+            const shareSourceDatatype = await EntityOperation.getShareSources(notification);
             const storeEventNotificateEle: IStoreEventNotificate = {
                 type: notification.notificateType,
                 notificationCatalogCode: {
