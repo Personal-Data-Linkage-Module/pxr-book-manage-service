@@ -359,10 +359,7 @@ export default class StubOperatorServer {
                     }
                 });
             } else if (pxrId === '58di2dfse2.test.org2') {
-                res.json({
-                    pxrId: pxrId,
-                    userInfo: null
-                });
+                res.json(null);
             }
             res.end();
         };
@@ -402,10 +399,7 @@ export default class StubOperatorServer {
                         }
                     });
                 } else if (pxrId === '58di2dfse2.test.org2') {
-                    response.push({
-                        pxrId: pxrId,
-                        userInfo: null
-                    });
+                    // responseにpushしない
                 }
             }
             res.json(response);

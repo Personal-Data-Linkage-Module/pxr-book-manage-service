@@ -51,6 +51,16 @@ export default class SearchUserServiceDto {
     private message: any = null;
 
     /**
+     * includeDeleteCoop
+     */
+    private includeDeleteCoop: boolean = null;
+
+    /**
+     * 削除フラグ
+     */
+    private disableFlg: boolean;
+
+    /**
      * 検索開始位置
      */
     public getActor (): number {
@@ -138,5 +148,35 @@ export default class SearchUserServiceDto {
      */
     public setMessage (message: any) {
         this.message = message;
+    }
+
+    /**
+     * includeDeleteCoop
+     */
+    public getIncludeDeleteCoop (): boolean {
+        return this.includeDeleteCoop;
+    }
+
+    /**
+     * includeDeleteCoop
+     * @param limit
+     */
+    public setIncludeDeleteCoop (includeDeleteCoop: boolean) {
+        this.includeDeleteCoop = includeDeleteCoop;
+    }
+
+    /**
+     * 削除フラグ
+     */
+    public getDisableFlg (): boolean {
+        return this.disableFlg;
+    }
+
+    /**
+     * 削除フラグ
+     * @param disableFlg
+     */
+    public setDisableFlg (disableFlg: boolean) {
+        this.disableFlg = disableFlg;
     }
 }

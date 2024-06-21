@@ -61,6 +61,7 @@
     "EMPTY_REGION_AND_APP": "REGION、APPが共に設定されていません",
     "SET_WF_AND_APP": "REGION、APPが共に設定されています",
     "EMPTY_PXR_ID": "PXR-IDが取得できませんでした",
+    "MISSING_LIMIT_AND_PXR_ID": "limit、PXR-IDどちらか設定必須です",
     "ACTOR_CATALOG_INVALID": "指定されたアクターカタログコードは対象アクターのカタログコードではありません",
     "APP_CATALOG_CODE_NOT_EXIST": "指定されたアプリケーションカタログコードがアクターカタログ内にありません",
     "NOT_STORE_CATALOG_CODE": "蓄積可能なデータ定義が見つかりません",

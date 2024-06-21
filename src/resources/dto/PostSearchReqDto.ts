@@ -56,6 +56,17 @@ export default class PostSearchReqDto {
     @ValidateNested()
         createdAt: CreatedAt;
 
+    /** coopStartAt */
+    @Transform(({ value }) => { return transformToDateTime(value); })
+    @IsDate()
+    @IsOptional()
+        coopStartAt: Date;
+
+    /** actor */
+    @IsNumber()
+    @IsOptional()
+        actor: number = null;
+
     /** offset */
     @Min(0)
     @IsNumber()

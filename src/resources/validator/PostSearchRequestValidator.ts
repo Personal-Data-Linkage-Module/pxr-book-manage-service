@@ -38,6 +38,10 @@ export default class PostSearchRequestValidator implements ExpressMiddlewareInte
         if (dto.limit && dto.offset === null) {
             throw new AppError(message.MISSING_OFFSET, 400);
         }
+        // pxrId、limitが両方設定されていない
+        if ((!dto.pxrId || dto.pxrId.length === 0) && !dto.limit) {
+            throw new AppError(message.MISSING_LIMIT_AND_PXR_ID, 400);
+        }
 
         next();
     }
