@@ -619,7 +619,7 @@ export default class DataStoreService {
         const appCode = storePermissionDto.getAppCatalogCode() ? storePermissionDto.getAppCatalogCode() : null;
         const wfCode = storePermissionDto.getWfCatalogCode() ? storePermissionDto.getWfCatalogCode() : null;
         // pxrId取得
-        const book = await EntityOperation.getConditionBookRecordFromUser(storePermissionDto.getUserId(), storePermissionDto.getActorCatalogCode(), appCode, wfCode);
+        const book = await EntityOperation.getConditionBookRecordFromUser(storePermissionDto.getUserId(), storePermissionDto.getActorCatalogCode(), appCode, wfCode, null, null);
         if (!book || book.length === 0) {
             throw new AppError(message.CAN_NOT_FIND_BOOK, ResponseCode.BAD_REQUEST);
         }

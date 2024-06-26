@@ -785,7 +785,7 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "description": "一覧取得のリクエストボディ",
+                                "description": "一覧取得のリクエストボディ PXR-ID、limitはいずれか必須",
                                 "properties": {
                                     "pxrId": {
                                         "type": "array",
@@ -808,6 +808,10 @@
                                                 "description": "終了日"
                                             }
                                         }
+                                    },
+                                    "coopStartAt": {
+                                        "type": "string",
+                                        "description": "連携開始日時"
                                     },
                                     "offset": {
                                         "type": "number",
@@ -867,6 +871,28 @@
                     "ユーザー取得"
                 ],
                 "description": "ユーザーIDからユーザー情報を取得します。",
+                "parameters": [
+                    {
+                        "name": "disableFlg",
+                        "description": "Book削除済みを含む",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": false,
+                        "example": 1
+                    },
+                    {
+                        "name": "includeDeleteCoop",
+                        "description": "削除済み連携情報を含む",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": false,
+                        "example": 1
+                    }
+                ],
                 "requestBody": {
                     "description": "User取得リクエストボディ",
                     "required": true,

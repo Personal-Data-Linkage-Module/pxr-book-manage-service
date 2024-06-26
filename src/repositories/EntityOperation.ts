@@ -179,7 +179,16 @@ export default class EntityOperation {
      * @param start
      * @param end
      */
-    static async getConditionBookRecord (pxrIdList: Array<string>, start: Date, end: Date, includeDisabled?: boolean, offset?: number, limit?: number, includeDeleteCoop?: boolean): Promise<MyConditionBook[]> {
+    static async getConditionBookRecord (
+        pxrIdList: Array<string>,
+        start: Date,
+        end: Date,
+        coopStartAt: Date,
+        includeDisabled?: boolean,
+        offset?: number,
+        limit?: number,
+        includeDeleteCoop?: boolean,
+        actor?: number): Promise<MyConditionBook[]> {
         const connection = await connectDatabase();
         const repository = getRepository(MyConditionBook, connection.name);
         let sql = repository
@@ -187,6 +196,8 @@ export default class EntityOperation {
             .addSelect('user_id_cooperate', 'user_id_cooperate');
         if (includeDeleteCoop) {
             sql = sql.leftJoin(UserIdCooperate, 'user_id_cooperate', 'user_id_cooperate.book_id = my_condition_book.id AND wf_catalog_code IS NULL');
+        } else if (coopStartAt) {
+            sql = sql.innerJoin(UserIdCooperate, 'user_id_cooperate', 'user_id_cooperate.book_id = my_condition_book.id AND user_id_cooperate.is_disabled = :is_disabled', { is_disabled: false });
         } else {
             sql = sql.leftJoin(UserIdCooperate, 'user_id_cooperate', 'user_id_cooperate.book_id = my_condition_book.id AND wf_catalog_code IS NULL AND user_id_cooperate.is_disabled = :is_disabled', { is_disabled: false });
         }
@@ -202,36 +213,51 @@ export default class EntityOperation {
         if (end) {
             sql = sql.andWhere('my_condition_book.created_at <= :end', { end: moment(end).utc().format('YYYY-MM-DD HH:mm:ss') });
         }
-        if (offset !== null && limit) {
-            sql = sql.andWhere(qb => {
-                let subQuery;
-                if (includeDisabled) {
-                    subQuery = qb.subQuery()
-                        .select('my_condition_book_limit.id')
-                        .from(MyConditionBook, 'my_condition_book_limit');
-                } else {
-                    subQuery = qb.subQuery()
-                        .select('my_condition_book_limit.id')
-                        .from(MyConditionBook, 'my_condition_book_limit')
-                        .where('my_condition_book_limit.is_disabled = :is_disabled', { is_disabled: false });
-                }
-                if (pxrIdList) {
-                    subQuery = subQuery.andWhere('my_condition_book_limit.pxr_id IN (:...ids)', { ids: pxrIdList });
-                }
-                if (start) {
-                    subQuery = subQuery.andWhere('my_condition_book_limit.created_at >= :start', { start: moment(start).utc().format('YYYY-MM-DD HH:mm:ss') });
-                }
-                if (end) {
-                    subQuery = subQuery.andWhere('my_condition_book_limit.created_at <= :end', { end: moment(end).utc().format('YYYY-MM-DD HH:mm:ss') });
-                }
-                const subQueryStr = subQuery.orderBy('my_condition_book_limit.id', 'ASC')
-                    .offset(offset).limit(limit)
-                    .getQuery();
-                return 'my_condition_book.id IN ' + subQueryStr;
-            });
+        if (coopStartAt) {
+            sql = sql.andWhere('user_id_cooperate.start_at >= :coopStartAt', { coopStartAt: moment(coopStartAt).utc().format('YYYY-MM-DD HH:mm:ss') });
         }
-        sql = sql.orderBy('my_condition_book.id', 'ASC')
-            .addOrderBy('user_id_cooperate.id', 'ASC');
+        if (actor) {
+            sql = sql.andWhere('user_id_cooperate.actor_catalog_code = :actor', { actor: actor });
+        }
+        if (offset !== null && limit) {
+            if (coopStartAt) {
+                sql = sql.offset(offset).limit(limit);
+            } else {
+                sql = sql.andWhere(qb => {
+                    let subQuery;
+                    if (includeDisabled) {
+                        subQuery = qb.subQuery()
+                            .select('my_condition_book_limit.id')
+                            .from(MyConditionBook, 'my_condition_book_limit');
+                    } else {
+                        subQuery = qb.subQuery()
+                            .select('my_condition_book_limit.id')
+                            .from(MyConditionBook, 'my_condition_book_limit')
+                            .where('my_condition_book_limit.is_disabled = :is_disabled', { is_disabled: false });
+                    }
+                    if (pxrIdList) {
+                        subQuery = subQuery.andWhere('my_condition_book_limit.pxr_id IN (:...ids)', { ids: pxrIdList });
+                    }
+                    if (start) {
+                        subQuery = subQuery.andWhere('my_condition_book_limit.created_at >= :start', { start: moment(start).utc().format('YYYY-MM-DD HH:mm:ss') });
+                    }
+                    if (end) {
+                        subQuery = subQuery.andWhere('my_condition_book_limit.created_at <= :end', { end: moment(end).utc().format('YYYY-MM-DD HH:mm:ss') });
+                    }
+                    const subQueryStr = subQuery.orderBy('my_condition_book_limit.id', 'ASC')
+                        .offset(offset).limit(limit)
+                        .getQuery();
+                    return 'my_condition_book.id IN ' + subQueryStr;
+                });
+            }
+        }
+        if (coopStartAt) {
+            sql = sql.orderBy('user_id_cooperate.start_at', 'ASC')
+                .addOrderBy('my_condition_book.id', 'ASC');
+        } else {
+            sql = sql.orderBy('my_condition_book.id', 'ASC')
+                .addOrderBy('user_id_cooperate.id', 'ASC');
+        }
         const ret = await sql.getRawMany();
         const list: MyConditionBook[] = [];
         ret.forEach(element => {
@@ -242,19 +268,29 @@ export default class EntityOperation {
 
     /**
      * ユーザー情報によるMy-Condition-Bookレコード取得
-     * @param pxrIdList
-     * @param start
-     * @param end
+     * @param userId
+     * @param actor
+     * @param app
+     * @param wf
+     * @param disableFlg
+     * @param inculudeDeleteCoop
      */
-    static async getConditionBookRecordFromUser (userId: string, actor: number, app: number, wf: number): Promise<MyConditionBook[]> {
+    static async getConditionBookRecordFromUser (userId: string, actor: number, app: number, wf: number, disableFlg: boolean, includeDeleteCoop: boolean): Promise<MyConditionBook[]> {
         const connection = await connectDatabase();
         const repository = getRepository(MyConditionBook, connection.name);
         let sql = repository
             .createQueryBuilder('my_condition_book')
-            .addSelect('user_id_cooperate', 'user_id_cooperate')
-            .leftJoin(UserIdCooperate, 'user_id_cooperate', 'user_id_cooperate.book_id = my_condition_book.id AND user_id_cooperate.is_disabled = :is_disabled', { is_disabled: false })
-            .where('my_condition_book.is_disabled = :is_disabled', { is_disabled: false })
-            .andWhere('user_id_cooperate.user_id = :userId', { userId: userId });
+            .addSelect('user_id_cooperate', 'user_id_cooperate');
+        if (includeDeleteCoop) {
+            sql.leftJoin(UserIdCooperate, 'user_id_cooperate', 'user_id_cooperate.book_id = my_condition_book.id');
+        } else {
+            sql.leftJoin(UserIdCooperate, 'user_id_cooperate', 'user_id_cooperate.book_id = my_condition_book.id AND user_id_cooperate.is_disabled = :is_disabled', { is_disabled: false });
+        }
+        sql.where('user_id_cooperate.user_id = :userId', { userId: userId });
+
+        if (!disableFlg) {
+            sql.andWhere('my_condition_book.is_disabled = :is_disabled', { is_disabled: false });
+        }
         if (actor) {
             sql = sql.andWhere('user_id_cooperate.actor_catalog_code = :actor', { actor: actor });
         }

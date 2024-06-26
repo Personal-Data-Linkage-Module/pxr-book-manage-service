@@ -140,9 +140,9 @@ describe('book-mange API', () => {
     });
 
     /**
-     * My-Condition-Book一覧取得
+     * ユーザー覧取得
      */
-    describe('My-Condition-Book一覧取得', () => {
+    describe('ユーザー覧取得', () => {
         test('正常：流通制御、対象データなし', async () => {
             // 送信データを生成
             const json = {
@@ -481,6 +481,81 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(response.status).toBe(400);
             expect(response.body.message).toBe(Message.REQUEST_IS_EMPTY);
+        });
+    });
+
+    describe('ユーザー取得(9097追加分)', () => {
+        test('正常：削除済みの連携情報の取得', async () => {
+            // スタブサーバー起動
+            _operatorServer = new StubOperatorServer(200);
+
+            // 連携を削除済みに変更
+            await common.executeSqlString(`
+                UPDATE pxr_book_manage.user_id_cooperate
+                SET is_disabled = true
+                WHERE id = 1;
+            `);
+
+            // 送信データを生成
+            const json = {
+                userId: 'userid02',
+                actor: 1000104,
+                app: 1000009
+            };
+
+            const url = Url.searchUserURI + '?includeDeleteCoop=1';
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(url)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(response.status).toBe(200);
+            expect(response.body).toMatchObject({
+                pxrId: '58di2dfse2.test.org',
+                attributes: null,
+                cooperation: userIdCooperationApp,
+                userInformation: userInformation,
+                status: 0
+            });
+        });
+        test('正常：削除済みのBookの取得', async () => {
+            // スタブサーバー起動
+            _operatorServer = new StubOperatorServer(200);
+
+            // 連携を削除済みに変更
+            await common.executeSqlString(`
+                UPDATE pxr_book_manage.my_condition_book
+                SET is_disabled = true
+                WHERE id = 1;
+            `);
+
+            // 送信データを生成
+            const json = {
+                userId: 'userid02',
+                actor: 1000104,
+                app: 1000009
+            };
+
+            const url = Url.searchUserURI + '?disableFlg=1&includeDeleteCoop=1';
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(url)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(response.status).toBe(200);
+            expect(response.body).toMatchObject({
+                pxrId: '58di2dfse2.test.org',
+                attributes: null,
+                cooperation: userIdCooperationApp,
+                userInformation: userInformation,
+                status: 0
+            });
         });
     });
 });

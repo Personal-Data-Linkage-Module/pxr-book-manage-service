@@ -59,6 +59,12 @@ export default class SearchController {
             serviceDto.setStart(dto.createdAt.start);
             serviceDto.setEnd(dto.createdAt.end);
         }
+        if (dto.coopStartAt) {
+            serviceDto.setCoopStartAt(dto.coopStartAt);
+        }
+        if (dto.actor) {
+            serviceDto.setActor(dto.actor);
+        }
         serviceDto.setOffset(dto.offset);
         serviceDto.setLimit(dto.limit);
         serviceDto.setIncludeDeleteCoop(dto.includeDeleteCoop);
@@ -77,7 +83,7 @@ export default class SearchController {
     @Header('X-Frame-Options', 'deny')
     @EnableSimpleBackPressure()
     @UseBefore(PostSearchUserRequestValidator)
-    async postSearchUser (@Req() req: Request, @Body() dto: PostSearchUserReqDto) {
+    async postSearchUser (@Req() req: Request, @Body() dto: PostSearchUserReqDto, @QueryParam('disableFlg') disableFlg?: number, @QueryParam('includeDeleteCoop') includeDeleteCoop?: number) {
         const configure = Config.ReadConfig('./config/config.json');
         const message = Config.ReadConfig('./config/message.json');
 
@@ -100,6 +106,8 @@ export default class SearchController {
         serviceDto.setUserId(dto.userId);
         serviceDto.setOperator(operator);
         serviceDto.setMessage(message);
+        serviceDto.setDisableFlg(disableFlg && disableFlg === 1);
+        serviceDto.setIncludeDeleteCoop(includeDeleteCoop && includeDeleteCoop === 1);
         const searchService = new SearchService();
         const resDto: PostSearchUserResDto = await searchService.getMyConditionBookFromUser(serviceDto);
         const resJson = resDto.getAsJson();

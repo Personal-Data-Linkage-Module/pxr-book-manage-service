@@ -46,7 +46,7 @@ export default class SearchService {
         const message = dto.getMessage();
 
         // Book一覧を取得
-        const bookList = await EntityOperation.getConditionBookRecord(dto.getPxrIdList(), dto.getStart(), dto.getEnd(), dto.getDisableFlg(), dto.getOffset(), dto.getLimit(), dto.getIncludeDeleteCoop());
+        const bookList = await EntityOperation.getConditionBookRecord(dto.getPxrIdList(), dto.getStart(), dto.getEnd(), dto.getCoopStartAt(), dto.getDisableFlg(), dto.getOffset(), dto.getLimit(), dto.getIncludeDeleteCoop(), dto.getActor());
         if (!bookList || bookList.length <= 0) {
             // 対象データが存在しない場合、エラーを返す
             throw new AppError(message.TARGET_NO_DATA, ResponseCode.NO_CONTENT);
@@ -56,7 +56,7 @@ export default class SearchService {
         let list = await this.getCooperation(bookList);
 
         // 利用者情報を取得
-        list = await this.getUserInformation(list, dto.getOperator(), dto.getMessage(), dto.getDisableFlg());
+        list = await this.getUserInformation(list, dto.getOperator(), dto.getMessage());
 
         // レスポンスを生成
         const response = new PostSearchResDto();
@@ -74,7 +74,7 @@ export default class SearchService {
         const message = dto.getMessage();
 
         // Book一覧を取得
-        const bookList = await EntityOperation.getConditionBookRecordFromUser(dto.getUserId(), dto.getActor(), dto.getApp(), null);
+        const bookList = await EntityOperation.getConditionBookRecordFromUser(dto.getUserId(), dto.getActor(), dto.getApp(), dto.getWf(), dto.getDisableFlg(), dto.getIncludeDeleteCoop());
         if (!bookList || bookList.length <= 0) {
             // 対象データが存在しない場合、エラーを返す
             throw new AppError(message.TARGET_NO_DATA, ResponseCode.NO_CONTENT);
@@ -179,7 +179,7 @@ export default class SearchService {
      * @param books
      * @param searchDto
      */
-    private async getUserInformation (books: any[], operator: Operator, message: any, includeDeleted: boolean = false): Promise<any[]> {
+    private async getUserInformation (books: any[], operator: Operator, message: any): Promise<any[]> {
         // オペレーターサービスの追加APIを使用し、type0のオペレーターを登録
         const operatorService = new OperatorService();
         const resBooks: any[] = [];
@@ -209,7 +209,7 @@ export default class SearchService {
                     break;
                 }
             }
-            if (includeDeleted && !existsUserInfo) {
+            if (!existsUserInfo) {
                 book['userInformation'] = null;
                 resBooks.push(book);
             }

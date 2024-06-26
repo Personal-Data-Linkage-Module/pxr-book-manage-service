@@ -324,7 +324,7 @@ export default class DataShareService {
         const wfCode = dto.wfCode ? dto.wfCode : null;
         const assetCode = appCode || wfCode;
         // pxrId取得
-        const book = await EntityOperation.getConditionBookRecordFromUser(dto.userId, dto.actorCode, appCode, wfCode);
+        const book = await EntityOperation.getConditionBookRecordFromUser(dto.userId, dto.actorCode, appCode, wfCode, null, null);
         if (!book || book.length === 0) {
             throw new AppError(message.CAN_NOT_FIND_BOOK, ResponseCode.BAD_REQUEST);
         }

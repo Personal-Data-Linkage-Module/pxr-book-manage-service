@@ -169,7 +169,9 @@ describe('book-mange API', () => {
                 createdAt: {
                     start: '2020-01-01T00:00:00.000+0900',
                     end: '2030-12-31T23:59:59.000+0900'
-                }
+                },
+                offset: 0,
+                limit: 1000
             };
 
             // 対象APIに送信
@@ -209,7 +211,9 @@ describe('book-mange API', () => {
                 createdAt: {
                     start: '2020-01-01T00:00:00.000+0900',
                     end: '2030-12-31T23:59:59.000+0900'
-                }
+                },
+                offset: 0,
+                limit: 1000
             };
 
             // 対象APIに送信
@@ -362,7 +366,9 @@ describe('book-mange API', () => {
                 createdAt: {
                     start: '2020-01-01T00:00:00.000+0900',
                     end: '2030-12-31T23:59:59.000+0900'
-                }
+                },
+                offset: 0,
+                limit: 1000
             };
             json['pxrId'] = null;
 
@@ -464,7 +470,9 @@ describe('book-mange API', () => {
                 createdAt: {
                     start: '2020-01-01T00:00:00.000+0900',
                     end: '2030-12-31T23:59:59.000+0900'
-                }
+                },
+                offset: 0,
+                limit: 1000
             };
             json['pxrId'] = null;
 
@@ -1291,6 +1299,645 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(response.status).toBe(400);
             expect(response.body.message).toBe(Message.REQUEST_IS_EMPTY);
+        });
+    });
+
+    describe('My-Condition-Book一覧取得（9097追加分）', () => {
+        test('正常：coopStartAt指定、複数件', async () => {
+            // スタブサーバー起動
+            _catalogServer = new StubCatalogServer(3001, 1000001, 200);
+            _operatorServer = new StubOperatorServer(200);
+
+            // 事前データ準備
+            await common.executeSqlFile('initialData.sql');
+            await common.executeSqlString(`
+                INSERT INTO pxr_book_manage.my_condition_book
+                (
+                    id, pxr_id, attributes,
+                    is_disabled, created_by, created_at, updated_by, updated_at
+                )
+                VALUES
+                (
+                    1, 'pxrid_01', '${JSON.stringify({ test1: 'data1' })}',
+                    false, 'pxr_user', NOW(), 'pxr_user', NOW()
+                ),
+                (
+                    2, 'pxrid_02', '${JSON.stringify({ test1: 'data1' })}',
+                    false, 'pxr_user', NOW(), 'pxr_user', NOW()
+                ),
+                (
+                    3, 'pxrid_03', '${JSON.stringify({ test1: 'data1' })}',
+                    false, 'pxr_user', NOW(), 'pxr_user', NOW()
+                );
+                INSERT INTO pxr_book_manage.USER_ID_COOPERATE
+                (
+                    book_id,
+                    actor_catalog_code, actor_catalog_version,
+                    app_catalog_code, app_catalog_version,
+                    wf_catalog_code, wf_catalog_version,
+                    user_id, status, start_at,
+                    is_disabled, created_by, created_at, updated_by, updated_at
+                )
+                VALUES
+                (
+                    1,
+                    1000004,1, 1000007,1, null,null, 'userid01-01', 1, '2020-07-07T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-07-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    1,
+                    1000004,1, 1000008,1, null,null, 'userid01-02', 1, '2020-07-08T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-08-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    1,
+                    1000004,1, 1000010,1, null,null, 'userid01-03', 1, '2024-03-20T00:00:00.000+0900',
+                    false, 'pxr_user', '2024-03-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    1,
+                    1000009,1, 1000015,1, null,null, 'userid01-04', 1, '2024-03-21T00:00:00.000+0900',
+                    false, 'pxr_user', '2024-03-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    2,
+                    1000004,1, 1000007,1, null,null, 'userid02-01', 1, '2024-07-07T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-07-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    2,
+                    1000004,1, 1000008,1, null,null, 'userid02-02', 1, '2020-08-07T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-08-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    2,
+                    1000004,1, 1000010,1, null,null, 'userid02-03', 1, '2024-03-07T00:00:00.000+0900',
+                    false, 'pxr_user', '2024-03-08T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    3,
+                    1000004,1, 1000007,1, null,null, 'userid03-01', 1, '2020-07-07T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-07-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    3,
+                    1000004,1, 1000008,1, null,null, 'userid03-02', 1, '2020-08-07T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-08-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    3,
+                    1000004,1, 1000010,1, null,null, 'userid03-03', 1, '2020-03-07T00:00:00.000+0900',
+                    false, 'pxr_user', '2024-03-08T00:00:00.000+0900', 'pxr_user', NOW()
+                );
+            `);
+
+            // 送信データを生成
+            const json = {
+                createdAt: {
+                    start: '2020-01-01T00:00:00.000+0900',
+                    end: '2030-12-31T23:59:59.000+0900'
+                },
+                coopStartAt: '2024-01-01T00:00:00.000+0900',
+                offset: 0,
+                limit: 1000
+            };
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(Url.searchURI)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(3);
+            expect(response.body).toMatchObject([
+                {
+                    pxrId: 'pxrid_02',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000010,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid02-03',
+                            startAt: '2024-03-07T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                },
+                {
+                    pxrId: 'pxrid_01',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000010,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid01-03',
+                            startAt: '2024-03-20T00:00:00.000+0900',
+                            status: 1
+                        },
+                        {
+                            actor: {
+                                _value: 1000009,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000015,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid01-04',
+                            startAt: '2024-03-21T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                },
+                {
+                    pxrId: 'pxrid_02',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000007,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid02-01',
+                            startAt: '2024-07-07T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                }
+            ]);
+        });
+        test('正常：coopStartAt指定、連携なしのBook含む', async () => {
+            // スタブサーバー起動
+            _catalogServer = new StubCatalogServer(3001, 1000001, 200);
+            _operatorServer = new StubOperatorServer(200);
+
+            // 事前データ準備
+            await common.executeSqlString(`
+                INSERT INTO pxr_book_manage.my_condition_book
+                (
+                    id, pxr_id, attributes,
+                    is_disabled, created_by, created_at, updated_by, updated_at
+                )
+                VALUES
+                (
+                    4, 'pxrid_04_no_coop', '${JSON.stringify({ test1: 'data1' })}',
+                    false, 'pxr_user', NOW(), 'pxr_user', NOW()
+                );
+            `);
+
+            // 送信データを生成
+            const json = {
+                createdAt: {
+                    start: '2020-01-01T00:00:00.000+0900',
+                    end: '2030-12-31T23:59:59.000+0900'
+                },
+                coopStartAt: '2024-01-01T00:00:00.000+0900',
+                offset: 0,
+                limit: 1000
+            };
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(Url.searchURI)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(3);
+            expect(response.body).toMatchObject([
+                {
+                    pxrId: 'pxrid_02',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000010,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid02-03',
+                            startAt: '2024-03-07T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                },
+                {
+                    pxrId: 'pxrid_01',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000010,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid01-03',
+                            startAt: '2024-03-20T00:00:00.000+0900',
+                            status: 1
+                        },
+                        {
+                            actor: {
+                                _value: 1000009,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000015,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid01-04',
+                            startAt: '2024-03-21T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                },
+                {
+                    pxrId: 'pxrid_02',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000007,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid02-01',
+                            startAt: '2024-07-07T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                }
+            ]);
+        });
+        test('正常：coopStartAt, アクター指定', async () => {
+            // スタブサーバー起動
+            _catalogServer = new StubCatalogServer(3001, 1000001, 200);
+            _operatorServer = new StubOperatorServer(200);
+
+            // 送信データを生成
+            const json = {
+                createdAt: {
+                    start: '2020-01-01T00:00:00.000+0900',
+                    end: '2030-12-31T23:59:59.000+0900'
+                },
+                coopStartAt: '2024-01-01T00:00:00.000+0900',
+                actor: 1000004,
+                offset: 0,
+                limit: 1000
+            };
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(Url.searchURI)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(3);
+            expect(response.body).toMatchObject([
+                {
+                    pxrId: 'pxrid_02',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000010,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid02-03',
+                            startAt: '2024-03-07T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                },
+                {
+                    pxrId: 'pxrid_01',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000010,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid01-03',
+                            startAt: '2024-03-20T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                },
+                {
+                    pxrId: 'pxrid_02',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000007,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid02-01',
+                            startAt: '2024-07-07T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                }
+            ]);
+        });
+        test('正常：coopStartAt,アクター指定、Limitが対象データより少ない場合', async () => {
+            // スタブサーバー起動
+            _catalogServer = new StubCatalogServer(3001, 1000001, 200);
+            _operatorServer = new StubOperatorServer(200);
+
+            // 事前データ準備
+            await common.executeSqlFile('initialData.sql');
+            await common.executeSqlString(`
+                INSERT INTO pxr_book_manage.my_condition_book
+                (
+                    id, pxr_id, attributes,
+                    is_disabled, created_by, created_at, updated_by, updated_at
+                )
+                VALUES
+                (
+                    3, 'pxrid_03', '${JSON.stringify({ test1: 'data1' })}',
+                    false, 'pxr_user', NOW(), 'pxr_user', NOW()
+                ),
+                (
+                    2, 'pxrid_02', '${JSON.stringify({ test1: 'data1' })}',
+                    false, 'pxr_user', NOW(), 'pxr_user', NOW()
+                ),
+                (
+                    1, 'pxrid_01', '${JSON.stringify({ test1: 'data1' })}',
+                    false, 'pxr_user', NOW(), 'pxr_user', NOW()
+                );
+                INSERT INTO pxr_book_manage.USER_ID_COOPERATE
+                (
+                    book_id,
+                    actor_catalog_code, actor_catalog_version,
+                    app_catalog_code, app_catalog_version,
+                    wf_catalog_code, wf_catalog_version,
+                    user_id, status, start_at,
+                    is_disabled, created_by, created_at, updated_by, updated_at
+                )
+                VALUES
+                (
+                    1,
+                    1000004,1, 1000007,1, null,null, 'userid01-01', 1, '2024-02-01T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-07-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    2,
+                    1000004,1, 1000007,1, null,null, 'userid02-01', 1, '2024-02-02T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-07-07T00:00:00.000+0900', 'pxr_user', NOW()
+                ),
+                (
+                    3,
+                    1000004,1, 1000007,1, null,null, 'userid03-01', 1, '2024-02-02T00:00:00.000+0900',
+                    false, 'pxr_user', '2020-07-07T00:00:00.000+0900', 'pxr_user', NOW()
+                );
+            `);
+
+            // 送信データを生成
+            const json: any = {
+                createdAt: null,
+                coopStartAt: '2024-01-01T00:00:00.000+0900',
+                actor: 1000004,
+                offset: 0,
+                limit: 2
+            };
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(Url.searchURI)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(2);
+            expect(response.body).toMatchObject([
+                {
+                    pxrId: 'pxrid_01',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000007,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid01-01',
+                            startAt: '2024-02-01T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                },
+                {
+                    pxrId: 'pxrid_02',
+                    status: 0,
+                    attributes: {
+                        test1: 'data1'
+                    },
+                    cooperation: [
+                        {
+                            actor: {
+                                _value: 1000004,
+                                _ver: 1
+                            },
+                            region: null,
+                            app: {
+                                _value: 1000007,
+                                _ver: 1
+                            },
+                            wf: null,
+                            userId: 'userid02-01',
+                            startAt: '2024-02-02T00:00:00.000+0900',
+                            status: 1
+                        }
+                    ],
+                    userInformation: null
+                }
+            ]);
+        });
+        test('パラメータ異常：coopStartAt、日付以外', async () => {
+            // 送信データを生成
+            const json = {
+                pxrId: [
+                    'dummy.osaka.u.society'
+                ],
+                createdAt: {
+                    start: '2030-12-01T00:00:00.000+0900',
+                    end: '2030-12-31T23:59:59.000+0900'
+                },
+                coopStartAt: 'XXXXXX'
+            };
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(Url.searchURI)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(JSON.stringify(response.body)).toBe(JSON.stringify({
+                status: 400,
+                reasons: [{ property: 'coopStartAt', value: 'XXXXXX', message: '日付型ではありません' }]
+            }));
+            expect(response.status).toBe(400);
+        });
+        test('パラメータ異常：coopStartAt、日付形式エラー', async () => {
+            // 送信データを生成
+            const json = {
+                pxrId: [
+                    'dummy.osaka.u.society'
+                ],
+                createdAt: {
+                    start: '2030-12-01T00:00:00.000+0900',
+                    end: '2020-01-01T00:00:00.000+0900'
+                },
+                coopStartAt: '2020-01-01'
+            };
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(Url.searchURI)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(JSON.stringify(response.body)).toBe(JSON.stringify({
+                status: 400,
+                reasons: [{ property: 'coopStartAt', value: '2020-01-01', message: '日付型ではありません' }]
+            }));
+            expect(response.status).toBe(400);
+        });
+        test('パラメータ不足：PXR-ID、limitが両方設定されていない', async () => {
+            // 送信データを生成
+            const json = {
+                createdAt: {
+                    start: '2030-12-01T00:00:00.000+0900',
+                    end: '2031-01-01T00:00:00.000+0900'
+                }
+            };
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(Url.searchURI)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(json));
+
+            // レスポンスチェック
+            expect(response.status).toBe(400);
+            expect(response.body.message).toBe(Message.MISSING_LIMIT_AND_PXR_ID);
         });
     });
 });

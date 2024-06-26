@@ -36,6 +36,16 @@ export default class SearchServiceDto {
     private end: Date = null;
 
     /**
+     * 連携開始日時
+     */
+    private coopStartAt: Date = null;
+
+    /**
+     * アクターコード
+     */
+    private actor: number = null;
+
+    /**
      * 検索開始位置
      */
     private offset: number = null;
@@ -108,6 +118,36 @@ export default class SearchServiceDto {
      */
     public setEnd (end: Date) {
         this.end = end;
+    }
+
+    /**
+     * 連携開始日時
+     */
+    public getCoopStartAt (): Date {
+        return this.coopStartAt;
+    }
+
+    /**
+     * 連携開始日時
+     * @param start
+     */
+    public setCoopStartAt (coopStartAt: Date) {
+        this.coopStartAt = coopStartAt;
+    }
+
+    /**
+     * アクターコード
+     */
+    public getActor (): number {
+        return this.actor;
+    }
+
+    /**
+     * アクターコード
+     * @param actor
+     */
+    public setActor (actor: number) {
+        this.actor = actor;
     }
 
     /**
