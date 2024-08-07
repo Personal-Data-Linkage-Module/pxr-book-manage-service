@@ -163,6 +163,7 @@
     "INVALID_MIN_AND_MAX_VERSION": "カタログ履歴取得の起点バージョンより小さい終点バージョンは設定できません",
     "REQUIRE_SOURCE_ACTOR_FOR_SHARE_TRIGGER": "共有トリガーからの共有リクエストでは、共有元アクター指定が必須です",
     "REQUIRE_C_MATRIX_EVENT": "通知対象のイベント情報が不足しています",
+    "IDENTIFY_CODE_EXPIRED": "指定された本人性確認コードは、有効期限切れです",
     "validation": {
         "isArray": "配列ではありません",
         "isBoolean": "真偽値ではありません",
