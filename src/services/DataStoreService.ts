@@ -547,7 +547,8 @@ export default class DataStoreService {
         await analyzer.specifyTarget();
 
         // リクエストの各データ種について、蓄積可否判定
-        let isAllPermitted = true;
+        let isPermitted = true;
+        const permittedData: CodeObject[] = [];
         for (const datatype of storePermissionDto.getDatatype()) {
             // リクエスト生成
             const permissionRequest: IDataOperationRequest = {
@@ -567,16 +568,21 @@ export default class DataStoreService {
             const isPermittedResponse = await analyzer.isPermitted(permissionRequest);
             if (!isPermittedResponse.checkResult) {
                 // いずれかのデータ種で蓄積不可判定が出た場合、不可判定にする
-                isAllPermitted = false;
-                break;
+                isPermitted = false;
+            } else {
+                permittedData.push(datatype);
             }
+        }
+        if (storePermissionDto.getAllowPartialStore() === true && permittedData.length > 0) {
+            // 一部蓄積可 かつ 許可されたデータ種がある場合、可判定にする
+            isPermitted = true;
         }
         // レスポンス生成
         const res = new PostDataStorePermissionResDto();
-        if (isAllPermitted) {
+        if (isPermitted) {
             // 可判定
             res.setCheckResult(true);
-            res.setDatatype(storePermissionDto.getDatatype());
+            res.setDatatype(permittedData);
         } else {
             // 不可判定
             res.setCheckResult(false);

@@ -273,6 +273,58 @@ describe('book-mange API', () => {
                 expect(response.body.datatype).toBe(null);
             });
         });
+        test('正常：複数データ種 一部不可判定 一部蓄積可フラグTRUE', async () => {
+            // 送信データを生成
+            const json: PostDataStorePermissionReqDto = {
+                userId: 'appUser01',
+                appCode: 1000110,
+                wfCode: null,
+                actorCode: 1000101,
+                datatype: [
+                    {
+                        _value: 1000501,
+                        _ver: 1
+                    },
+                    {
+                        _value: 1000511,
+                        _ver: 1
+                    },
+                    {
+                        _value: 1000521,
+                        _ver: 1
+                    },
+                    {
+                        _value: 2000521,
+                        _ver: 1
+                    }
+                ]
+            };
+
+            // 対象APIに送信
+            const url = Url.dataStorePermissionURI + '?allowPartialStore=true'
+            const response = await supertest(expressApp).post(url)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.dataStoreGetApp) })
+                .send(json);
+
+            // レスポンスチェック
+            expect(response.status).toBe(200);
+            expect(response.body.checkResult).toBe(true);
+            expect(response.body.datatype).toEqual([
+                {
+                    _value: 1000501,
+                    _ver: 1
+                },
+                {
+                    _value: 1000511,
+                    _ver: 1
+                },
+                {
+                    _value: 1000521,
+                    _ver: 1
+                }
+            ]);
+        });
         describe('アプリケーションによるリクエスト', () => {
             test('正常：document 可判定', async () => {   
                 // 送信データを生成
