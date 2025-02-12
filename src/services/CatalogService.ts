@@ -446,18 +446,6 @@ export default class CatalogService {
             result.push(appResult);
         }
 
-        const wfNs = 'catalog/ext/' + extName + '/actor/wf/actor_' + actorCode + '/sharing-restriction';
-        dto.setNs(wfNs);
-        const wfResult = await newCatalogService.getCatalogInfo(dto, true);
-        // 返却値が配列でない場合は、配列に格納して返却する
-        if (!wfResult || wfResult.length === 0) {
-            // 何もしない
-        } else if (Array.isArray(wfResult)) {
-            result.push(...wfResult);
-        } else {
-            result.push(wfResult);
-        }
-
         return result as ISharingRestrictionCatalog[];
     }
 }

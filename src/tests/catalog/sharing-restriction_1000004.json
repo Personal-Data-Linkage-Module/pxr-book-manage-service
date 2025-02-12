@@ -1,0 +1,22 @@
+[
+    {
+        "catalogItem": {
+            "ns": "catalog/ext/test-org/actor/app/actor_1000004/sharing-restriction",
+            "name": "共有制限",
+            "description": "テスト用共有制限",
+            "_code": {
+                "_value": 1100004,
+                "_var": 1
+            },
+            "inherit": {
+                "_value": 209,
+                "_ver": null
+            }
+        },
+        "template": {
+            "document": [],
+            "event": [],
+            "thing": []
+        }
+    }
+]

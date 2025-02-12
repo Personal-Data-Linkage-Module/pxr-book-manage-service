@@ -15131,6 +15131,585 @@ export class StubCatalogServerDataStore {
                             }
                         });
                     }
+                } else if (code === 1001106) {
+                    response.push({
+                        catalogItem: {
+                            ns: 'wf/store/actor_1000004',
+                            _code: {
+                                _value: 1001106,
+                                _ver: 1
+                            }
+                        },
+                        template: {
+                            _code: {
+                                _value: 1001106,
+                                _ver: 1
+                            },
+                            store: [
+                                {
+                                    id: 'b87b27c1-5da8-37dd-6ee6-2c7831cf6a09',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: null,
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000009,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000014,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                },
+                                                {
+                                                    code: {
+                                                        _value: 1000015,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                },
+                                                {
+                                                    code: {
+                                                        _value: 1000016,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            code: {
+                                                _value: 1000010,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000017,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'ccc0c076-f73f-7ce1-7c5f-fdc1634aa5c1',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: null,
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000011,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000018,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: '69db43f2-6643-19e9-117c-4bdece4bddd7',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: [
+                                        {
+                                            code: {
+                                                _value: 1001010,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true
+                                        }
+                                    ],
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 9999999,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 9999999,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: '6acb33e4-4b6e-1d46-9c11-0fcf8320fb49',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: null,
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 9999999,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 9999999,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
+                    if (type === 1) {
+                        response.push({
+                            catalogItem: {
+                                ns: 'wf/store/actor_1000004',
+                                _code: {
+                                    _value: 1001106,
+                                    _ver: 2
+                                }
+                            },
+                            template: {
+                                _code: {
+                                    _value: 1001106,
+                                    _ver: 2
+                                },
+                                store: [
+                                    {
+                                        id: 'b87b27c1-5da8-37dd-6ee6-2c7831cf6a09',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: null,
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000009,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000014,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    },
+                                                    {
+                                                        code: {
+                                                            _value: 1000015,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    },
+                                                    {
+                                                        code: {
+                                                            _value: 1000016,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                code: {
+                                                    _value: 1000010,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000017,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'ccc0c076-f73f-7ce1-7c5f-fdc1634aa5c1',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: null,
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000011,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000018,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: '69db43f2-6643-19e9-117c-4bdece4bddd7',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: [
+                                            {
+                                                code: {
+                                                    _value: 1001010,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ],
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 9999999,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 9999999,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: '6acb33e4-4b6e-1d46-9c11-0fcf8320fb49',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: null,
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 9999999,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 9999999,
+                                                            _ver: 1
+                                                        },
+                                                        requireConsent: true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'consent-not-required-store',
+                                        role: [
+                                            {
+                                                _value: 1001101,
+                                                _ver: 1
+                                            }
+                                        ],
+                                        document: null,
+                                        event: [
+                                            {
+                                                code: {
+                                                    _value: 1000011,
+                                                    _ver: 2
+                                                },
+                                                requireConsent: false,
+                                                thing: [
+                                                    {
+                                                        code: {
+                                                            _value: 1000018,
+                                                            _ver: 2
+                                                        },
+                                                        requireConsent: false
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        });
+                    }
+                } else if (code === 1001107) {
+                    response.push({
+                        catalogItem: {
+                            ns: 'wf/store/actor_1000004',
+                            _code: {
+                                _value: 1001107,
+                                _ver: 1
+                            }
+                        },
+                        template: {
+                            _code: {
+                                _value: 1001107,
+                                _ver: 1
+                            },
+                            store: [
+                                {
+                                    id: 'b87b27c1-5da8-37dd-6ee6-2c7831cf6a09',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: null,
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000009,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000014,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                },
+                                                {
+                                                    code: {
+                                                        _value: 1000015,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                },
+                                                {
+                                                    code: {
+                                                        _value: 1000016,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            code: {
+                                                _value: 1000010,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000017,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'ccc0c076-f73f-7ce1-7c5f-fdc1634aa5c1',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: null,
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000011,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000018,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: '69db43f2-6643-19e9-117c-4bdece4bddd7',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: [
+                                        {
+                                            code: {
+                                                _value: 1001010,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true
+                                        }
+                                    ],
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 9999999,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 9999999,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: '6acb33e4-4b6e-1d46-9c11-0fcf8320fb49',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: null,
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 9999999,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 9999999,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
+                } else if (code === 1002106) {
+                    response.push({
+                        catalogItem: {
+                            ns: 'wf/store/actor_1000004',
+                            _code: {
+                                _value: 1002106,
+                                _ver: 1
+                            }
+                        },
+                        template: {
+                            _code: {
+                                _value: 1002106,
+                                _ver: 1
+                            },
+                            store: [
+                                {
+                                    id: 'b87b27c1-5da8-37dd-6ee6-2c7831cf6a09',
+                                    role: [
+                                        {
+                                            _value: 1001101,
+                                            _ver: 1
+                                        }
+                                    ],
+                                    document: null,
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000009,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000014,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
                 }
                 if (response.length > 0) {
                     res.json(response);

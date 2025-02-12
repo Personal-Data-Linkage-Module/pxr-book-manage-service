@@ -12,6 +12,8 @@ import Document = require('./catalog/document.json');
 import Event_ = require('./catalog/event.json');
 import Thing = require('./catalog/thing.json');
 import Share = require('./catalog/share.json');
+import ShareRestrinction1000002 = require('./catalog/sharing-restriction_1000002.json');
+import ShareRestrinction1000004 = require('./catalog/sharing-restriction_1000004.json');
 import Trigger = require('./catalog/trigger.json');
 import Catalog1 = require('./catalog/1.json');
 import Catalog30001 = require('./catalog/30001.json');
@@ -301,6 +303,7 @@ export class OperatorServiceNotFound extends OperatorService {
 
 export class CatalogService extends BaseStubServer {
     nsError: boolean = false;
+    mode: number = 0;
     constructor () {
         super(3001);
         const handler = async (req: express.Request, res: express.Response) => {
@@ -2509,10 +2512,201 @@ export class CatalogService extends BaseStubServer {
                 res.status(200).json(Trigger).end();
             } else if (ns === 'catalog/ext/test-org/actor/app/actor_1000104/share/trigger') {
                 res.status(404).json([]).end();
+            } else if (ns === 'catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000002/sharing-restriction') {
+                res.status(200).json(ShareRestrinction1000002).end();
+            } else if (ns === 'catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000004/sharing-restriction') {
+                res.status(200).json(ShareRestrinction1000004).end();
+            } else if (ns === 'catalog/ext/aaa-healthcare-consortium/actor/app/actor_1000104/sharing-restriction') {
+                res.status(200).json(ShareRestrinction1000004).end();
             } else {
                 console.log(`Missing Catalog Service NS Handler: ${ns}`);
                 res.status(204).end();
             }
+        });
+        this.app.get('/catalog/history/:id', async (req, res) => {
+            let response: any = [];
+            const code = parseInt(req.params.id);
+            if (code === 1000022) {
+                response.push(Catalog1000022);
+            } else if (code === 1000023) {
+                response.push(Catalog1000023);
+            } else if (code === 1000501) {
+                response.push(Catalog1000501);
+            } else if (code === 1000502) {
+                response.push(Catalog1000502);
+            } else if (code === 1000511) {
+                response.push(Catalog1000511);
+            } else if (code === 1000512) {
+                response.push(Catalog1000512);
+            } else if (code === 9999999) {
+                response.push(Catalog1000512);
+            } else if (code === 1000601) {
+                response.push({
+                    catalogItem: {
+                        ns: 'catalog/ext/test-org/actor/wf/actor_1000438/share',
+                        name: 'テスト用共有定義',
+                        description: 'テスト用共有定義です。601',
+                        _code: {
+                            _value: 1000601,
+                            _ver: 1
+                        },
+                        inherit: {
+                            _value: 40,
+                            _ver: null
+                        }
+                    },
+                    template: {
+                        prop: null,
+                        share: [
+                            {
+                                id: '1759b38b-214c-45c3-b111-eaeb9a95126c',
+                                event: [
+                                    {
+                                        code: {
+                                            _value: 1000038,
+                                            _ver: 1
+                                        },
+                                        requireConsent: true,
+                                        thing: [
+                                            {
+                                                code: {
+                                                    _value: 1000039,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        code: {
+                                            _value: 1000040,
+                                            _ver: 1
+                                        },
+                                        requireConsent: true,
+                                        thing: [
+                                            {
+                                                code: {
+                                                    _value: 1000041,
+                                                    _ver: 1
+                                                },
+                                                requireConsent: true
+                                            }
+                                        ]
+                                    }
+                                ],
+                                role: [
+                                    {
+                                        _value: 1,
+                                        _ver: 1
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    inner: null,
+                    attribute: null
+                });
+                if (this.mode === 1) {
+                    response.push({
+                        catalogItem: {
+                            ns: 'catalog/ext/test-org/actor/wf/actor_1000438/share',
+                            name: 'テスト用共有定義',
+                            description: 'テスト用共有定義です。601',
+                            _code: {
+                                _value: 1000601,
+                                _ver: 2
+                            },
+                            inherit: {
+                                _value: 40,
+                                _ver: null
+                            }
+                        },
+                        template: {
+                            prop: null,
+                            share: [
+                                {
+                                    id: '1759b38b-214c-45c3-b111-eaeb9a95126c',
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000038,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000039,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            code: {
+                                                _value: 1000040,
+                                                _ver: 1
+                                            },
+                                            requireConsent: true,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000041,
+                                                        _ver: 1
+                                                    },
+                                                    requireConsent: true
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    role: [
+                                        {
+                                            _value: 1,
+                                            _ver: 1
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'b022517b-4a43-40ea-8def-6e5995e14831',
+                                    event: [
+                                        {
+                                            code: {
+                                                _value: 1000040,
+                                                _ver: 2
+                                            },
+                                            requireConsent: false,
+                                            thing: [
+                                                {
+                                                    code: {
+                                                        _value: 1000041,
+                                                        _ver: 2
+                                                    },
+                                                    requireConsent: false
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    role: [
+                                        {
+                                            _value: 1,
+                                            _ver: 1
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        inner: null,
+                        attribute: null
+                    });
+                    this.mode = 0;
+                }
+            }
+
+            if (response.length === 0) {
+                response = {};
+            }
+            res.status(200).json(response).end();
         });
         this.app.get('/catalog/:id', handler);
         this.app.get('/catalog/:id/:ver', handler);
@@ -2542,5 +2736,9 @@ export class CatalogService extends BaseStubServer {
 
     public setNsError (error: boolean) {
         this.nsError = error;
+    }
+
+    public changeMode (mode: number) {
+        this.mode = mode;
     }
 }

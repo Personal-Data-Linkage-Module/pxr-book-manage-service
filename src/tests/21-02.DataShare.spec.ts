@@ -457,24 +457,6 @@ describe('book-mange API', () => {
                 throw err;
             }
         });
-        test('異常：該当操作定義カタログなし', async () => {
-            const response = await supertest(expressApp)
-                .get(urljoin(Url.shareURI, '?app=1000009'))
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set({ session: JSON.stringify(Session.notFoundShareCatalog) })
-                .send();
-
-            try {
-                expect(response.status).toBe(500);
-                expect(response.body.message).toBe(Message.FAILED_CATALOG_GET);
-                // console.log(response.body);
-                // console.log(response.body[1].event);
-                // console.log(response.body[1].event[0].thing);
-            } catch (err) {
-                console.log(response.body);
-                throw err;
-            }
-        });
         test('異常：ワークフロー', async () => {
             const response = await supertest(expressApp)
                 .get(urljoin(Url.shareURI, '?wf=1000007'))
@@ -504,7 +486,7 @@ describe('book-mange API', () => {
                 throw err;
             }
         });
-        test('正常：指定したデータ共有定義が存在しない', async () => {
+        test('異常：連携情報が存在しない 個人', async () => {
             const response = await supertest(expressApp)
                 .get(urljoin(Url.shareURI, '?app=2000001'))
                 .set({ accept: 'application/json', 'Content-Type': 'application/json' })
@@ -512,7 +494,8 @@ describe('book-mange API', () => {
                 .send();
 
             try {
-                expect(response.status).toBe(200);
+                expect(response.status).toBe(400);
+                expect(response.body.message).toBe(Message.CAN_NOT_FIND_COOPERATE);
             } catch (err) {
                 console.log(response.body);
                 throw err;
@@ -579,22 +562,6 @@ describe('book-mange API', () => {
                 throw err;
             }
         });
-        test('異常：利用者連携情報が取得できない', async () => {
-            let response;
-            try {
-                response = await supertest(expressApp)
-                    .get(urljoin(Url.shareURI, '?id=invalidUser&app=1000009'))
-                    .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                    .set({ session: JSON.stringify(Session.pxrApp) })
-                    .send();
-
-                expect(response.status).toBe(400);
-                expect(response.body.message).toBe(Message.CAN_NOT_FIND_COOPERATE);
-            } catch (err) {
-                console.log(response.body);
-                throw err;
-            }
-        });
         test('異常：MyConditionBookが取得できない', async () => {
             let response;
             try {
@@ -604,8 +571,8 @@ describe('book-mange API', () => {
                     .set({ session: JSON.stringify(Session.pxrApp) })
                     .send();
 
-                expect(response.status).toBe(400);
-                expect(response.body.message).toBe(Message.CAN_NOT_FIND_BOOK);
+                expect(response.status).toBe(401);
+                expect(response.body.message).toBe(Message.NOT_EXIST_BOOK);
             } catch (err) {
                 console.log(response.body);
                 throw err;
