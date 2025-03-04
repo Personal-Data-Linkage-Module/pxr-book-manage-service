@@ -60,23 +60,6 @@ export default class {
         return ret;
     }
 
-    // データ共有定義取得
-    // /ind/setting/share 削除時に getSettingShare から呼び出すように修正
-    // @Get('/setting/share')
-    // @Header('X-Content-Type-Options', 'nosniff')
-    // @Header('X-XSS-Protection', '1; mode=block')
-    // @Header('X-Frame-Options', 'deny')
-    // @EnableSimpleBackPressure()
-    // @UseBefore(GetSharedDefinitionValidator)
-    private async getActor (@Req() req: Request, @QueryParams() dto: GetSharedDefinition) {
-        const operator = await OperatorService.authMe(req);
-
-        if (!dto.id) {
-            throw new AppError(message.REQUIRED_USER_ID, 400);
-        }
-        return new DataShareService().getForAny(operator, dto.id, dto.wf, dto.app, dto.actor);
-    }
-
     /**
      * データ共有定義取得
      * @param req
@@ -90,25 +73,19 @@ export default class {
     @EnableSimpleBackPressure()
     @UseBefore(GetSharedDefinitionValidator)
     async getSettingShare (@Req() req: Request, @QueryParams() dto: GetSharedDefinition) {
-        const operator = await OperatorService.authMe(req);
-        let ret;
-        if (operator.type === OperatorType.TYPE_IND) {
-            // セッションチェックデータオブジェクトを生成
-            const sessionCheckDto = new SessionCheckDto();
-            sessionCheckDto.setRequest(req);
-            sessionCheckDto.setCatalogUrl(config['catalogUrl']);
-            sessionCheckDto.setOperatorUrl(config['operatorUrl']);
-            // サービス層のセッションチェックを実行
-            const operator = await new SessionCheckService().isSessionCheck(sessionCheckDto);
+        // セッションチェックデータオブジェクトを生成
+        const sessionCheckDto = new SessionCheckDto();
+        sessionCheckDto.setRequest(req);
+        sessionCheckDto.setCatalogUrl(config['catalogUrl']);
+        sessionCheckDto.setOperatorUrl(config['operatorUrl']);
+        // サービス層のセッションチェックを実行
+        const operator = await new SessionCheckService().isSessionCheck(sessionCheckDto);
 
-            // サービス層のデータ蓄積定義追加処理を実行
-            const serviceDto = new DataShareServiceDto();
-            serviceDto.operator = operator;
-            serviceDto.request = dto;
-            ret = await new DataShareService().getDataShareInd(serviceDto);
-        } else {
-            ret = this.getActor(req, dto);
-        }
+        // サービス層のデータ蓄積定義追加処理を実行
+        const serviceDto = new DataShareServiceDto();
+        serviceDto.operator = operator;
+        serviceDto.request = dto;
+        const ret = await new DataShareService().getDataShareInd(serviceDto);
         return ret;
     }
 

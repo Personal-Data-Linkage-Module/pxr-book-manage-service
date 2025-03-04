@@ -18,6 +18,7 @@ import { Service } from 'typedi';
 import MyConditionBook from '../repositories/postgres/MyConditionBook';
 import DataStoreServiceDto from '../services/dto/DataStoreServiceDto';
 import PostDataStoreReqDto from '../resources/dto/PostDataStoreReqDto';
+import { IDataOperationAsset, IDataOperationRequest } from 'common/DataOperationRequest';
 import Operator from '../resources/dto/OperatorReqDto';
 /* eslint-enable */
 import Config from '../common/Config';
@@ -32,7 +33,8 @@ import AppError from '../common/AppError';
 import { ResponseCode } from '../common/ResponseCode';
 import { connectDatabase } from '../common/Connection';
 import PostDataStorePermissionResDto from '../resources/dto/PostDataStorePermissionResDto';
-import { IDataOperationAsset, IDataOperationRequest } from '../common/DataOperationRequest';
+import UserIdCooperate from 'repositories/postgres/UserIdCooperate';
+import { CodeObject } from 'resources/dto/PostBookOpenReqDto';
 import PermissionAnalyzer from '../common/PermissionAnalyzer';
 const config = Config.ReadConfig('./config/config.json');
 const message = Config.ReadConfig('./config/message.json');
@@ -273,42 +275,38 @@ export default class DataStoreService {
     /**
      * データ蓄積定義取得
      * @param dataStorePostDto
-     * リファクタ履歴
-     *  separate : setEventData（共通処理のため）
-     *  separate : setDocumentData（共通処理のため）
-     *  separate : checkActorCatalogForGetStoreData（アクター別処理）
-     *  separate : createResponseElement（レスポンスデータ作成処理）
-     *  separate : findCatalog（共通処理のため）
-     *  separate : createResponse（レスポンス生成処理）
-     *  separate : setDataTypeForInd（蓄積データ種設定）
-     *  separate : setDataType（蓄積データ種設定）
      */
-    public async getDataStore (dataStoreGetDto: DataStoreServiceDto): Promise<any> {
+    public async getDataStore (dataStoreGetDto: DataStoreServiceDto): Promise<GetDataStoreResDto[]> {
         // dtoから扱いやすいように値を取り出す
         const userId = dataStoreGetDto.getUserId();
         const actor = dataStoreGetDto.getActor();
         const appCatalogCode = dataStoreGetDto.getAppCatalogCode();
         const wfCatalogCode: number = null;
         const operator = dataStoreGetDto.getOperator();
+        let actorCode: number = null;
 
-        let bookId: number = null;
-        // オペレーター種別が個人の場合
+        // PXR-IDの特定
+        let pxrId = null;
         if (operator.getType() === OperatorType.TYPE_IND) {
-            // PXR-IDが取得できているか確認
-            if (!operator.getPxrId()) {
-                throw new AppError(message.EMPTY_PXR_ID, ResponseCode.UNAUTHORIZED);
+            if (operator.getType() === OperatorType.TYPE_IND) {
+                // PXR-IDが取得できているか確認
+                if (!operator.getPxrId()) {
+                    throw new AppError(message.EMPTY_PXR_ID, ResponseCode.UNAUTHORIZED);
+                }
+                pxrId = operator.getPxrId();
+            } else {
+                pxrId = dataStoreGetDto.getPxrId();
             }
             // ブックを取得
-            const book = await EntityOperation.isPxrIdExists(operator.getPxrId());
+            const book = await EntityOperation.isPxrIdExists(pxrId);
             // ブックが取得できなかった場合
             if (!book) {
                 throw new AppError(message.NOT_EXIST_BOOK, ResponseCode.UNAUTHORIZED);
             }
-            bookId = book.id;
         } else {
             // オペレーター種別がWF職員、アプリケーションの場合
             // アクターコード、バージョンが存在する場合
-            const actorCode = Number(actor['_value']);
+            actorCode = Number(actor['_value']);
             if (actorCode) {
                 await this.checkActorCatalogForGetStoreData(actorCode, operator, appCatalogCode);
             } else {
@@ -316,112 +314,113 @@ export default class DataStoreService {
                 throw new AppError(message.REQUEST_UNAUTORIZED, ResponseCode.UNAUTHORIZED);
             }
 
-            // 利用者IDからブックIDを取得する
-            const userIdResult = await EntityOperation.getUserIdCooperateBookId(userId, actor, appCatalogCode, wfCatalogCode);
-            if (userIdResult === null) {
-                throw new AppError(message.NOT_FOUND_BOOK_ID, ResponseCode.BAD_REQUEST);
+            // 利用者IDが設定されていない場合はエラー
+            if (!userId) {
+                throw new AppError(message.REQUIRED_USER_ID, 400);
             }
-            bookId = userIdResult.getBookId();
+            // pxrId取得
+            const book = await EntityOperation.getConditionBookRecordFromUser(userId, actorCode, appCatalogCode, wfCatalogCode, null, null);
+            if (!book || book.length === 0) {
+                throw new AppError(message.NOT_EXIST_BOOK, ResponseCode.UNAUTHORIZED);
+            }
+            pxrId = book[0].pxrId;
         }
 
-        let res: GetDataStoreResDto[] = [];
-        // 対象のデータ操作定義を取得
-        const dataOperations = await EntityOperation.getStoreDataOperationsByBookId(bookId, appCatalogCode, wfCatalogCode);
-        if (!dataOperations || dataOperations.length === 0) {
-            return res;
-        }
-        const dataOperationCatalogCodes: {
-            _code: {
-                _value: number,
-                _ver: number
-            }
-        }[] = [];
-        for (const dataOperation of dataOperations) {
-            const reqEle = {
-                _code: {
-                    _value: dataOperation.operationCatalogCode,
-                    _ver: dataOperation.operationCatalogVersion
-                }
-            };
-            dataOperationCatalogCodes.push(reqEle);
-        }
-        // カタログ取得データオブジェクトを生成
-        const catalogDto = new CatalogDto();
-        catalogDto.setUrl(config['catalogUrl']);
-        catalogDto.setRequest(dataOperationCatalogCodes);
-        catalogDto.setOperator(operator);
-        catalogDto.setMessage(message);
-        const operationCatalogs = await new CatalogService().getCatalogInfos(catalogDto);
-        if (!operationCatalogs || !Array.isArray(operationCatalogs)) {
-            throw new AppError(message.FAILED_CATALOG_GET, ResponseCode.INTERNAL_SERVER_ERROR);
+        const catalogService = new CatalogService();
+        // analyzerインスタンス生成、有効な蓄積定義の特定
+        const analyzer = PermissionAnalyzer
+            .create(operator, EntityOperation.agreementAccessor, catalogService.catalogAccessor)
+            .setDataOperationType('STORE');
+        await analyzer.setAgreement(pxrId, 'STORE', null);
+        await analyzer.setAssetCatalog();
+        await analyzer.specifyTarget();
+
+        // 取得対象のアセットの特定
+        const coops = await EntityOperation.getUserIdByPxrId(pxrId, actorCode, appCatalogCode, wfCatalogCode);
+        if (!coops || coops.length === 0) {
+            throw new AppError(message.CAN_NOT_FIND_COOPERATE, 400);
         }
 
-        // 取得したデータ種を設定
-        res = await this.setDataTypeForInd(dataOperations, operationCatalogs, res);
+        // レスポンスの作成
+        const res: GetDataStoreResDto[] = await this.createGetDataStoreResponse(coops, analyzer);
+        // レスポンスを返す
         return res;
     }
 
     /**
-     * 蓄積データ種取得（個人）
-     * @param dataOperations
-     * @param operationCatalogs
-     * @param res
-     * @returns
+     * 蓄積定義取得のレスポンスを作成する
+     * @param coops 利用者ID連携情報
+     * @param analyzer アナライザ
+     * @returns 蓄積定義取得のレスポンス
      */
-    private async setDataTypeForInd (dataOperations: DataOperation[], operationCatalogs: any[], res: GetDataStoreResDto[]) {
-        for (const dataOperation of dataOperations) {
-            const storeCatalog = operationCatalogs.find(ele =>
-                Number(ele['catalogItem']['_code']['_value']) === dataOperation.operationCatalogCode &&
-                Number(ele['catalogItem']['_code']['_ver']) === dataOperation.operationCatalogVersion
-            );
-            const dataTypes = await EntityOperation.getDataOperationDataTypeByDataOperationId(dataOperation.id);
-            for (const dataType of dataTypes) {
-                if (!dataType.consentFlg) {
-                    continue;
-                }
-                // resに同じuuidが存在するか確認
-                let resEle = res.find(ele =>
-                    ele.storeCatalogId === dataType.catalogUuid
-                );
-                if (resEle) {
-                    // あれば、そのuuidに対して操作
-                    const event = resEle.event.find(ele =>
-                        ele._code._value === dataType.eventCatalogCode &&
-                        ele._code._ver === dataType.eventCatalogVersion
-                    );
-                    if (event) {
-                        await this.setEventData(dataType, storeCatalog, event);
-                    } else {
-                        const resEvent: any = { thing: [] };
-                        await this.setEventData(dataType, storeCatalog, resEvent);
-                        if (resEvent.thing.length > 0) {
-                            resEle.event.push({
-                                _code: {
-                                    _value: dataType.eventCatalogCode,
-                                    _ver: dataType.eventCatalogVersion
-                                },
-                                thing: resEvent.thing
-                            });
+    private async createGetDataStoreResponse (coops: UserIdCooperate[], analyzer: PermissionAnalyzer) {
+        const res: GetDataStoreResDto[] = [];
+        for (const coop of coops) {
+            const assetCode = coop.appCatalogCode ? coop.appCatalogCode : coop.wfCatalogCode;
+            const asset = analyzer.getAsset().get(assetCode);
+            if (!asset) {
+                // アセットが取得できない場合は次の連携情報へ
+                continue;
+            }
+            // 同意情報の取得
+            const agreementForAsset = analyzer.getAgreement().get(assetCode);
+            if (!asset.validStore || !agreementForAsset) {
+                // 有効な定義または同意がない場合は次のasset
+                continue;
+            }
+
+            for (const [storeCode, storeCatalog] of asset.validStore) {
+                // 蓄積同意の抽出
+                const agreement = agreementForAsset.store.find(ele => Number(ele.target._value) === storeCatalog.catalogItem._code._value);
+                // storeの単位に処理
+                for (const store of storeCatalog.template.store) {
+                    const resEle = new GetDataStoreResDto();
+                    resEle.id = agreement.id;
+                    resEle.actor = agreementForAsset.actor;
+                    if (coop.appCatalogCode) {
+                        resEle.app = agreementForAsset.asset;
+                        resEle.wf = null;
+                    }
+                    resEle.store = storeCatalog.catalogItem._code;
+                    resEle.storeCatalogId = store.id;
+                    resEle.document = [];
+                    resEle.event = [];
+
+                    if (store.document) {
+                        for (const doc of store.document) {
+                            // 蓄積可否判定
+                            const isPermitted = await isPermittedDataType(coop, doc.code, analyzer, 'document');
+                            if (isPermitted) {
+                                resEle.document.push({
+                                    _code: doc.code
+                                });
+                            }
                         }
                     }
-                } else {
-                    // なければ新規追加
-                    resEle = this.createResponseElement(resEle, dataOperation, dataType);
-                    await this.setDocumentData(dataType, storeCatalog, resEle);
-                    resEle.document = resEle.document.length > 0 ? resEle.document : [];
-                    const resEvent: any = { thing: [] };
-                    await this.setEventData(dataType, storeCatalog, resEvent);
-                    resEle.event = resEvent.thing.length > 0
-                        ? [
-                            {
-                                _code: {
-                                    _value: dataType.eventCatalogCode,
-                                    _ver: dataType.eventCatalogVersion
-                                },
-                                thing: resEvent.thing
+
+                    if (store.event) {
+                        for (const eve of store.event) {
+                            const resEvent: any = { thing: [] };
+                            if (eve.thing) {
+                                for (const thi of eve.thing) {
+                                    // 蓄積可否判定
+                                    const isPermitted = await isPermittedDataType(coop, thi.code, analyzer, 'thing');
+                                    if (isPermitted) {
+                                        resEvent.thing.push({
+                                            _code: thi.code
+                                        });
+                                    }
+                                }
+                                if (resEvent.thing.length > 0) {
+                                    // イベントに紐づくモノが存在する場合、レスポンスに追加する
+                                    resEle.event.push({
+                                        _code: eve.code,
+                                        thing: resEvent.thing
+                                    });
+                                }
                             }
-                        ]
-                        : [];
+                        }
+                    }
                     if (resEle.event.length > 0 || resEle.document.length > 0) {
                         res.push(resEle);
                     }
@@ -429,6 +428,35 @@ export default class DataStoreService {
             }
         }
         return res;
+
+        /**
+         * 対象のデータ種が蓄積可能かアナライザで判定する
+         * @param coop 連携情報
+         * @param code データ種
+         * @param analyzer アナライザ
+         * @param type データ種別
+         * @returns 蓄積可否
+         */
+        async function isPermittedDataType (coop: UserIdCooperate, code: CodeObject, analyzer: PermissionAnalyzer, type: 'document' | 'event' | 'thing'): Promise<boolean> {
+            // リクエスト生成
+            const permissionRequest: IDataOperationRequest = {
+                pxrId: analyzer.getPxrId(),
+                operationType: 'STORE',
+                storedBy: {
+                    actor: coop.actorCatalogCode,
+                    asset: coop.appCatalogCode || coop.wfCatalogCode
+                },
+                shareTo: null,
+                dataType: {
+                    type: type,
+                    code: code
+                }
+            };
+            // 蓄積可否判定
+            const isPermittedResponse = await analyzer.isPermitted(permissionRequest);
+
+            return isPermittedResponse.checkResult;
+        }
     }
 
     /**
@@ -492,126 +520,6 @@ export default class DataStoreService {
     }
 
     /**
-     * データ種（イベント、モノ）取得
-     * @param dataType
-     * @param storeCatalog
-     * @param event
-     * @returns
-    */
-    private async setEventData (dataType: any, storeCatalog: any, event: any) {
-        let version = dataType.thingCatalogVersion;
-        while (true) {
-            const stores: any[] = storeCatalog['template']['store'];
-            const store = stores.find(ele =>
-                ele['id'] === dataType.catalogUuid
-            ) || {};
-            const catalogEvent = this.findCatalog(store, dataType.eventCatalogCode, dataType.eventCatalogVersion, 'event') || {};
-            const catalogThing = this.findCatalog(catalogEvent, dataType.thingCatalogCode, version, 'thing');
-            if (catalogThing) {
-                if (
-                    version !== dataType.thingCatalogVersion && catalogThing['requireConsent']
-                ) {
-                    break;
-                }
-                event.thing.push({
-                    _code: {
-                        _value: dataType.thingCatalogCode,
-                        _ver: dataType.thingCatalogVersion
-                    }
-                });
-                version++;
-            } else {
-                break;
-            }
-        }
-    }
-
-    /**
-     * データ種（ドキュメント）取得
-     * @param dataType
-     * @param storeCatalog
-     * @param resArray
-     * @returns
-     */
-    private async setDocumentData (dataType: any, storeCatalog: any, resArray: any) {
-        let version = dataType.documentCatalogVersion;
-        while (true) {
-            const stores: any[] = storeCatalog['template']['store'];
-            const store = stores.find(ele =>
-                ele['id'] === dataType.catalogUuid
-            ) || {};
-            const catalogDocument = this.findCatalog(store, dataType.documentCatalogCode, dataType.documentCatalogVersion, 'document');
-            if (catalogDocument) {
-                if (
-                    version !== dataType.documentCatalogVersion && catalogDocument['requireConsent']
-                ) {
-                    break;
-                }
-                resArray.document.push({
-                    _code: {
-                        _value: dataType.documentCatalogCode,
-                        _ver: dataType.documentCatalogVersion
-                    }
-                });
-                version++;
-            } else {
-                break;
-            }
-        }
-        return resArray;
-    }
-
-    /**
-     * レスポンスデータ作成
-     * @param resEle
-     * @param dataOperation
-     * @param dataType
-     * @returns
-     */
-    private createResponseElement (resEle: GetDataStoreResDto, dataOperation: DataOperation, dataType: DataOperationDataType) {
-        resEle = new GetDataStoreResDto();
-        resEle.id = dataOperation.id;
-        resEle.actor = {
-            _value: dataOperation.actorCatalogCode,
-            _ver: dataOperation.actorCatalogVersion
-        };
-        if (dataOperation.appCatalogCode) {
-            resEle.app = {
-                _value: dataOperation.appCatalogCode,
-                _ver: dataOperation.appCatalogVersion
-            };
-            resEle.wf = null;
-        } else {
-            // サポート対象外：WF
-            throw new AppError(message.UNSUPPORTED_ACTOR, ResponseCode.BAD_REQUEST);
-        }
-        resEle.store = {
-            _value: dataOperation.operationCatalogCode,
-            _ver: dataOperation.operationCatalogVersion
-        };
-        resEle.storeCatalogId = dataType.catalogUuid;
-        resEle.document = [];
-        return resEle;
-    }
-
-    /**
-     * カタログのデータ種一覧の中から対象コードのものを返却
-     * @param catalog
-     * @param code
-     * @param version
-     * @param type
-     * @returns
-     */
-    private findCatalog (catalog: any, code: number, version: Number, type: 'document' | 'event' | 'thing') {
-        const dataTypeList: any[] = catalog[type] ? catalog[type] : [];
-        const target = dataTypeList.find(ele =>
-            Number(ele['code']['_value']) === code &&
-            Number(ele['code']['_ver']) === version
-        );
-        return target;
-    }
-
-    /**
      * 蓄積可否判定
      * @param storePermissionDto
      */
@@ -639,7 +547,8 @@ export default class DataStoreService {
         await analyzer.specifyTarget();
 
         // リクエストの各データ種について、蓄積可否判定
-        let isAllPermitted = true;
+        let isPermitted = true;
+        const permittedData: CodeObject[] = [];
         for (const datatype of storePermissionDto.getDatatype()) {
             // リクエスト生成
             const permissionRequest: IDataOperationRequest = {
@@ -659,16 +568,21 @@ export default class DataStoreService {
             const isPermittedResponse = await analyzer.isPermitted(permissionRequest);
             if (!isPermittedResponse.checkResult) {
                 // いずれかのデータ種で蓄積不可判定が出た場合、不可判定にする
-                isAllPermitted = false;
-                break;
+                isPermitted = false;
+            } else {
+                permittedData.push(datatype);
             }
+        }
+        if (storePermissionDto.getAllowPartialStore() === true && permittedData.length > 0) {
+            // 一部蓄積可 かつ 許可されたデータ種がある場合、可判定にする
+            isPermitted = true;
         }
         // レスポンス生成
         const res = new PostDataStorePermissionResDto();
-        if (isAllPermitted) {
+        if (isPermitted) {
             // 可判定
             res.setCheckResult(true);
-            res.setDatatype(storePermissionDto.getDatatype());
+            res.setDatatype(permittedData);
         } else {
             // 不可判定
             res.setCheckResult(false);

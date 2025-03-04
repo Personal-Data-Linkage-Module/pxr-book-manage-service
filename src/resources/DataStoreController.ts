@@ -108,7 +108,7 @@ export default class DataStoreController {
     @Header('X-Frame-Options', 'deny')
     // SDE-MSA-PRIN 過負荷を回避する （MSA-PRIN-ID-02）
     @EnableSimpleBackPressure()
-    async postDataStorePermission (@Req() req: Request, @Body() dto: PostDataStorePermissionReqDto) {
+    async postDataStorePermission (@Req() req: Request, @Body() dto: PostDataStorePermissionReqDto, @QueryParam('allowPartialStore') allowPartialStore: boolean) {
         dto = await transformAndValidate(PostDataStorePermissionReqDto, dto) as PostDataStorePermissionReqDto;
         // セッションチェックデータオブジェクトを生成
         const sessionCheckDto = new SessionCheckDto();
@@ -128,6 +128,7 @@ export default class DataStoreController {
         serviceDto.setActorCatalogCode(dto.actorCode);
         serviceDto.setDatatype(dto.datatype);
         serviceDto.setOperator(operator);
+        serviceDto.setAllowPartialStore(allowPartialStore);
         // サービス層のデータ蓄積可否判定処理を実行
         const ret: PostDataStorePermissionResDto = await new DataStoreService().checkDataStorePermission(serviceDto);
         return ret;

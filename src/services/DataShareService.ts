@@ -20,9 +20,11 @@ import PostDataShareReqDto from '../resources/dto/PostDataShareReqDto';
 import DataShareServiceDto from './dto/DataShareServiceDto';
 import GetSharedDefinition from '../resources/dto/GetSharedDefinition';
 import Operator from '../resources/dto/OperatorReqDto';
-import OperatorDomain from '../domains/OperatorDomain';
-import { getConnection, IsNull } from 'typeorm';
-import UserIdCooperate from '../repositories/postgres/UserIdCooperate';
+import PostDataSharePermissionResDto, { Permission } from '../resources/dto/PostDataSharePermissionResDto';
+import { IDataOperationRequest } from '../common/DataOperationRequest';
+import PermissionAnalyzer, { IDataShareObject } from '../common/PermissionAnalyzer';
+import { CodeObject } from 'resources/dto/PostBookOpenReqDto';
+import { Condition, IShareTriggerCatalog } from 'domains/catalog/Catalogs';
 /* eslint-enable */
 import Config from '../common/Config';
 import CatalogService from './CatalogService';
@@ -35,283 +37,213 @@ import { ResponseCode } from '../common/ResponseCode';
 import { connectDatabase } from '../common/Connection';
 import GetDataShareResDto from '../resources/dto/GetDataShareResDto';
 import { applicationLogger } from '../common/logging';
+import { OperatorType } from '../common/Operator';
 import CTokenLedgerService from './CTokenLedgerService';
 import CTokenLedgerDto from './dto/CTokenLedgerDto';
-import PermissionAnalyzer, { IDataShareObject } from '../common/PermissionAnalyzer';
-import { IDataOperationRequest } from '../common/DataOperationRequest';
-import { CodeObject } from '../resources/dto/PostBookOpenReqDto';
-import { Condition, IShareTriggerCatalog } from '../domains/catalog/Catalogs';
-import PostDataSharePermissionResDto, { Permission } from '../resources/dto/PostDataSharePermissionResDto';
+import UserIdCooperate from 'repositories/postgres/UserIdCooperate';
 const config = Config.ReadConfig('./config/config.json');
 const message = Config.ReadConfig('./config/message.json');
 
 @Service()
 export default class DataShareService {
     /**
-     * データ共有定義取得（個人）
+     * データ共有定義取得
      * @param dto
-     * リファクタ履歴
-     *  separate : setData（共通処理のため）
-     *  separate : createResponseElement（レスポンスデータ作成処理）
-     *  separate : setResEle（レスポンスデータ設定処理）
      */
-    public async getDataShareInd (dto: DataShareServiceDto): Promise<any> {
+    public async getDataShareInd (dto: DataShareServiceDto): Promise<GetDataShareResDto[]> {
         // dtoから扱いやすいように値を取り出す
         const operator = dto.operator;
         const request = dto.request as GetSharedDefinition;
+        const userId = request.id;
+        const appCatalogCode = request.app;
+        const wfCatalogCode = request.wf;
+        let actor = null;
 
-        // ブックを取得
-        const book = await EntityOperation.isPxrIdExists(operator.getPxrId());
-        // ブックが取得できなかった場合
-        if (!book) {
-            throw new AppError(message.NOT_EXIST_BOOK, ResponseCode.UNAUTHORIZED);
-        }
-
-        const res: GetDataShareResDto[] = [];
-        // 対象のデータ操作定義を取得
-        const dataOperations = await EntityOperation.getShareDataOperationsByBookId(book.id, request.app, null);
-        if (!dataOperations || dataOperations.length === 0) {
-            return res;
-        }
-        const dataOperationCatalogCodes: {
-            _code: {
-                _value: number,
-                _ver: number
+        // PXR-IDの特定
+        let pxrId = null;
+        if (operator.getType() === OperatorType.TYPE_IND) {
+            // PXR-IDが取得できているか確認
+            if (!operator.getPxrId()) {
+                throw new AppError(message.EMPTY_PXR_ID, ResponseCode.UNAUTHORIZED);
             }
-        }[] = [];
-        for (const dataOperation of dataOperations) {
-            const reqEle = {
-                _code: {
-                    _value: dataOperation.operationCatalogCode,
-                    _ver: dataOperation.operationCatalogVersion
-                }
-            };
-            dataOperationCatalogCodes.push(reqEle);
-        }
-        // カタログ取得データオブジェクトを生成
-        const catalogDto = new CatalogDto();
-        catalogDto.setUrl(config['catalogUrl']);
-        catalogDto.setRequest(dataOperationCatalogCodes);
-        catalogDto.setOperator(operator);
-        catalogDto.setMessage(message);
-        const operationCatalogs = await new CatalogService().getCatalogInfos(catalogDto);
-        if (!operationCatalogs || !Array.isArray(operationCatalogs)) {
-            throw new AppError(message.FAILED_CATALOG_GET, ResponseCode.INTERNAL_SERVER_ERROR);
+            pxrId = operator.getPxrId();
+
+            // ブックを取得
+            const book = await EntityOperation.isPxrIdExists(pxrId);
+            // ブックが取得できなかった場合
+            if (!book) {
+                throw new AppError(message.NOT_EXIST_BOOK, ResponseCode.UNAUTHORIZED);
+            }
+        } else {
+            // 利用者IDが設定されていない場合はエラー
+            if (!userId) {
+                throw new AppError(message.REQUIRED_USER_ID, 400);
+            }
+            if (request.actor) {
+                actor = request.actor;
+            } else {
+                actor = operator.getActorCode();
+            }
+            // pxrId取得
+            const book = await EntityOperation.getConditionBookRecordFromUser(userId, actor, appCatalogCode, wfCatalogCode, null, null);
+            if (!book || book.length === 0) {
+                throw new AppError(message.NOT_EXIST_BOOK, ResponseCode.UNAUTHORIZED);
+            }
+            pxrId = book[0].pxrId;
         }
 
-        for (const dataOperation of dataOperations) {
-            const shareCatalog = operationCatalogs.find(ele =>
-                Number(ele['catalogItem']['_code']['_value']) === dataOperation.operationCatalogCode &&
-                Number(ele['catalogItem']['_code']['_ver']) === dataOperation.operationCatalogVersion
-            );
-            if (!shareCatalog) {
-                // Shareカタログが取得できなければ次へ
-                continue;
-            }
-            const dataTypes = await EntityOperation.getDataOperationDataTypeByDataOperationId(dataOperation.id);
-            for (const dataType of dataTypes) {
-                if (!dataType.consentFlg) {
-                    continue;
-                }
-                // resに同じuuidが存在するか確認
-                let resEle = res.find(ele =>
-                    ele.shareCatalogId === dataType.catalogUuid
-                );
-                if (resEle) {
-                    // あれば、そのuuidに対して操作
-                    let event;
-                    if (resEle.event && Array.isArray(resEle.event)) {
-                        event = resEle.event.find(ele =>
-                            ele._code._value === dataType.eventCatalogCode &&
-                            ele._code._ver === dataType.eventCatalogVersion
-                        );
-                    }
-                    if (event) {
-                        // レスポンスに設定済みのイベントデータの場合
-                        // 各データを設定する
-                        await this.setData(dataType, shareCatalog, event, resEle);
-                    } else {
-                        // レスポンスに未設定のイベントデータの場合
-                        const resData: any = {
-                            document: [],
-                            thing: []
-                        };
-                        const resEvent: any = {
-                            thing: []
-                        };
-                        // データ取得
-                        await this.setData(dataType, shareCatalog, resEvent, resData);
-                        // 取得したデータをレスポンスに設定
-                        this.setResEle(resData, resEle, resEvent, dataType);
-                    }
-                } else {
-                    // なければ新規追加
-                    resEle = this.createResponseElement(resEle, dataOperation, dataType);
-                    const resData: any = {
-                        document: [],
-                        thing: []
-                    };
-                    const resEvent: any = {
-                        thing: []
-                    };
-                    // データ取得
-                    await this.setData(dataType, shareCatalog, resEvent, resData);
-                    // 取得したデータをレスポンスに設定
-                    this.setResEle(resData, resEle, resEvent, dataType);
-                    res.push(resEle);
-                }
-            }
+        const catalogService = new CatalogService();
+        // analyzerインスタンス生成、有効な共有定義の特定
+        const analyzer = PermissionAnalyzer
+            .create(dto.operator, EntityOperation.agreementAccessor, catalogService.catalogAccessor, catalogService.shareRestrictionAccessor)
+            .setDataOperationType('SHARE_CONTINUOUS');
+        await analyzer.setAgreement(pxrId, 'SHARE_CONTINUOUS', null);
+        await analyzer.setAssetCatalog();
+        await analyzer.specifyTarget();
+
+        // 取得対象のアセットの特定
+        const coops = await EntityOperation.getUserIdByPxrId(pxrId, actor, appCatalogCode, wfCatalogCode);
+        if (!coops || coops.length === 0) {
+            throw new AppError(message.CAN_NOT_FIND_COOPERATE, 400);
         }
+
+        // レスポンスの作成
+        const res: GetDataShareResDto[] = await this.createGetDataShareResponse(coops, analyzer);
+        if (res.length === 0) {
+            throw new AppError('', 204);
+        }
+        // レスポンスを返す
         return res;
     }
 
     /**
-     * レスポンスデータ設定
-     * @param resData
-     * @param resEle
-     * @param resEvent
-     * @param dataType
+     * 共有定義取得のレスポンスを作成する
+     * @param coops 利用者ID連携連携情報
+     * @param analyzer アナライザ
+     * @returns 共有定義取得のレスポンス
      */
-    private setResEle (resData: any, resEle: GetDataShareResDto, resEvent: any, dataType: DataOperationDataType) {
-        if (resData.document.length > 0) {
-            resEle.document = resData.document;
-        }
-        if (resEvent.thing.length > 0) {
-            resEle.event = resEle.event || [];
-            resEle.event.push(
-                {
-                    _code: {
-                        _value: dataType.eventCatalogCode,
-                        _ver: dataType.eventCatalogVersion
-                    },
-                    thing: resEvent.thing
-                }
-            );
-        }
-        if (resData.thing.length > 0) {
-            resEle.thing = resData.thing;
-        }
-    }
+    private async createGetDataShareResponse (coops: UserIdCooperate[], analyzer: PermissionAnalyzer): Promise<GetDataShareResDto[]> {
+        const res: GetDataShareResDto[] = [];
+        for (const coop of coops) {
+            const assetCode = coop.appCatalogCode ? coop.appCatalogCode : coop.wfCatalogCode;
+            const asset = analyzer.getAsset().get(assetCode);
+            if (!asset) {
+                // アセットが取得できない場合は次の連携情報へ
+                continue;
+            }
+            // 同意情報の取得
+            const agreementForAsset = analyzer.getAgreement().get(assetCode);
+            if (!asset.validShare || !agreementForAsset) {
+                // 有効な定義または同意がない場合は次のasset
+                continue;
+            }
 
-    /**
-     * レスポンスデータ作成
-     * @param resEle
-     * @param dataOperation
-     * @param dataType
-     * @returns
-     */
-    private createResponseElement (resEle: GetDataShareResDto, dataOperation: DataOperation, dataType: DataOperationDataType) {
-        resEle = new GetDataShareResDto();
-        resEle.id = dataOperation.id;
-        resEle.actor = {
-            _value: dataOperation.actorCatalogCode,
-            _ver: dataOperation.actorCatalogVersion
-        };
-        if (dataOperation.appCatalogCode) {
-            resEle.app = {
-                _value: dataOperation.appCatalogCode,
-                _ver: dataOperation.appCatalogVersion
-            };
-            resEle.wf = null;
-        }
-        resEle.share = {
-            _value: dataOperation.operationCatalogCode,
-            _ver: dataOperation.operationCatalogVersion
-        };
-        resEle.shareCatalogId = dataType.catalogUuid;
-        return resEle;
-    }
-
-    /**
-     * データ種取得
-     * @param dataType
-     * @param shareCatalog
-     * @param event
-     * @param resEle
-     * @returns
-     * リファクタ履歴
-     *  inner : findCatalog（共通処理のため）
-     *  inner : checkVersionAndRequireConsent（共通処理のため）
-     *  inner : getCodeObj（共通処理のため）
-     */
-    private async setData (dataType: any, shareCatalog: any, event: any, resEle: any) {
-        let docVersion = dataType.documentCatalogVersion;
-        let version = dataType.thingCatalogVersion;
-        while (true) {
-            // 同識別子の共有定義を取得
-            const shares: any[] = shareCatalog['template']['share'];
-            const share = shares.find(ele =>
-                ele['id'] === dataType.catalogUuid
-            );
-            const catalogEvent = findCatalog(share, dataType.eventCatalogCode, dataType.eventCatalogVersion, 'event');
-            if (catalogEvent) {
-                // 対象イベントコードが共有定義内に存在した場合
-                const catalogThing = findCatalog(catalogEvent, dataType.thingCatalogCode, version, 'thing');
-                if (catalogThing) {
-                    // 対象モノコードがイベント内に存在した場合、モノを設定
-                    if (checkVersionAndRequireConsent(version, dataType.thingCatalogVersion, catalogThing['requireConsent'])) {
-                        // 未同意もしくはバージョンが異なる場合、処理を終了する
-                        break;
-                    }
-                    event.thing.push(getCodeObj(dataType.thingCatalogCode, dataType.thingCatalogVersion));
-                    version++;
-                } else {
-                    break;
+            for (const [shareCode, shareCatalog] of asset.validShare) {
+                // 共有同意の抽出
+                const agreement = agreementForAsset.share.find(ele => Number(ele.target._value) === shareCatalog.shareCatalog.catalogItem._code._value
+                );
+                if (!agreement) {
+                    // 対象の定義に同意していない場合は次の定義へ
+                    continue;
                 }
-            } else {
-                const catalogThing = findCatalog(share, dataType.thingCatalogCode, version, 'thing');
-                if (catalogThing) {
-                    // 対象モノコードが共有定義内に存在した場合、モノを設定
-                    if (checkVersionAndRequireConsent(version, dataType.thingCatalogVersion, catalogThing['requireConsent'])) {
-                        // 未同意もしくはバージョンが異なる場合、処理を終了する
-                        break;
+                // shareの単位に処理
+                for (const share of shareCatalog.shareCatalog.template.share) {
+                    const resEle = new GetDataShareResDto();
+                    resEle.id = agreement.id;
+                    resEle.actor = agreementForAsset.actor;
+                    if (coop.appCatalogCode) {
+                        resEle.app = agreementForAsset.asset;
+                        resEle.wf = null;
                     }
-                    if (!resEle.thing || !Array.isArray(resEle.thing)) {
-                        resEle.thing = [];
+                    resEle.share = shareCatalog.shareCatalog.catalogItem._code;
+                    resEle.shareCatalogId = share.id;
+                    resEle.document = [];
+                    resEle.event = [];
+                    resEle.thing = [];
+
+                    if (share.document) {
+                        for (const doc of share.document) {
+                            // 共有可否判定
+                            const isPermitted = await isPermittedDataType(coop, doc.code, analyzer, 'document');
+                            if (isPermitted) {
+                                resEle.document.push({
+                                    _code: doc.code
+                                });
+                            }
+                        }
                     }
-                    resEle.thing.push(getCodeObj(dataType.thingCatalogCode, dataType.thingCatalogVersion));
-                    version++;
-                } else {
-                    const catalogDoc = findCatalog(share, dataType.documentCatalogCode, docVersion, 'document');
-                    if (catalogDoc) {
-                        // 対象ドキュメントコードが共有定義内に存在した場合、ドキュメントを設定
-                        if (checkVersionAndRequireConsent(docVersion, dataType.documentCatalogVersion, catalogDoc['requireConsent'])) {
-                            // 未同意もしくはバージョンが異なる場合、処理を終了する
-                            break;
+
+                    if (share.event) {
+                        for (const eve of share.event) {
+                            const resEvent: any = { thing: [] };
+                            if (eve.thing) {
+                                for (const thi of eve.thing) {
+                                    // 共有可否判定
+                                    const isPermitted = await isPermittedDataType(coop, thi.code, analyzer, 'thing');
+                                    if (isPermitted) {
+                                        resEvent.thing.push({
+                                            _code: thi.code
+                                        });
+                                    }
+                                }
+                                if (resEvent.thing.length > 0) {
+                                    // イベントに紐づくモノが存在する場合、レスポンスに追加する
+                                    resEle.event.push({
+                                        _code: eve.code,
+                                        thing: resEvent.thing
+                                    });
+                                }
+                            }
                         }
-                        if (!resEle.document || !Array.isArray(resEle.document)) {
-                            resEle.document = [];
+                    }
+
+                    if (share.thing) {
+                        for (const thi of share.thing) {
+                            // 共有可否判定
+                            const isPermitted = await isPermittedDataType(coop, thi.code, analyzer, 'thing');
+                            if (isPermitted) {
+                                resEle.thing.push({
+                                    _code: thi.code
+                                });
+                            }
                         }
-                        resEle.document.push(getCodeObj(dataType.documentCatalogCode, dataType.documentCatalogVersion));
-                        docVersion++;
-                    } else {
-                        break;
+                    }
+
+                    if (resEle.event.length > 0 || resEle.document.length > 0 || resEle.thing.length > 0) {
+                        res.push(resEle);
                     }
                 }
             }
         }
-        return event;
-        // バージョン、同意チェック
-        function checkVersionAndRequireConsent (currentVer: number, targetVer: number, requireConsent: boolean) {
-            return currentVer !== targetVer && requireConsent;
-        }
-        // カタログのデータ種一覧の中から対象コードのものを返却
-        function findCatalog (catalog: any, _value: number, _ver: number, type: 'document' | 'event' | 'thing') {
-            const dataTypeList: any[] = catalog[type] ? catalog[type] : [];
-            const target = dataTypeList.find(ele =>
-                Number(ele['code']['_value']) === _value &&
-                Number(ele['code']['_ver']) === _ver
-            );
-            return target;
-        }
-        // コードオブジェクト取得
-        function getCodeObj (_value: number, _ver: number) {
-            return {
-                _code: {
-                    _value: _value,
-                    _ver: _ver
+        return res;
+
+        /**
+         * 対象のデータ種が共有可能かアナライザで判定する
+         * @param coop 連携情報
+         * @param code データ種
+         * @param analyzer アナライザ
+         * @param type データ種別
+         * @returns 共有可否
+         */
+        async function isPermittedDataType (coop: UserIdCooperate, code: CodeObject, analyzer: PermissionAnalyzer, type: 'document' | 'event' | 'thing'): Promise<boolean> {
+            // リクエスト生成
+            const permissionRequest: IDataOperationRequest = {
+                pxrId: analyzer.getPxrId(),
+                operationType: 'SHARE_CONTINUOUS',
+                storedBy: null,
+                shareTo: {
+                    actor: coop.actorCatalogCode,
+                    asset: coop.appCatalogCode || coop.wfCatalogCode
+                },
+                dataType: {
+                    type: type,
+                    code: code
                 }
             };
+            // 蓄積可否判定
+            const isPermittedResponse = await analyzer.isPermitted(permissionRequest);
+
+            return isPermittedResponse.checkResult;
         }
     }
 
@@ -1000,79 +932,5 @@ export default class DataShareService {
         });
 
         return { result: 'success' };
-    }
-
-    /**
-     * 個人用に対し、それ以外でも取得可能な定義の処理
-     * @param operator
-     * @param id
-     * @param wf
-     * @param app
-     */
-    async getForAny (operator: OperatorDomain, id: string, wf?: number, app?: number, actor?: number) {
-        // TODO リレーションの確認処理が必要
-        let actorCode = null;
-        if (actor) {
-            actorCode = actor;
-        } else {
-            actorCode = operator.actorCode;
-        }
-        const cooperate = await (async () => {
-            return getConnection('postgres').getRepository(UserIdCooperate).findOne({
-                select: ['bookId'],
-                where: {
-                    userId: id,
-                    appCatalogCode: app,
-                    actorCatalogCode: actorCode,
-                    isDisabled: false
-                }
-            });
-        })();
-        if (!cooperate) { throw new AppError(message.CAN_NOT_FIND_COOPERATE, 400); }
-        const myBook = await getConnection('postgres').getRepository(MyConditionBook).findOneBy({
-            id: parseInt(cooperate.bookId + ''),
-            isDisabled: false
-        });
-        if (!myBook) { throw new AppError(message.CAN_NOT_FIND_BOOK, 400); }
-        const dataOperateDefinitions = await (async () => {
-            return getConnection('postgres').getRepository(DataOperation).find({
-                where: {
-                    bookId: myBook.id,
-                    type: 'share',
-                    appCatalogCode: app,
-                    wfCatalogCode: IsNull(),
-                    actorCatalogCode: actorCode,
-                    isDisabled: false
-                },
-                order: {
-                    id: 'ASC'
-                }
-            });
-        })();
-        if (!dataOperateDefinitions) { throw new AppError('', 204); }
-
-        const data = [];
-        for (const operateDefinition of dataOperateDefinitions) {
-            const shares: any[] = [];
-            // レスポンス生成
-            const share = {
-                code: {
-                    _value: operateDefinition.operationCatalogCode,
-                    _ver: operateDefinition.operationCatalogVersion
-                }
-            };
-            applicationLogger.info('share: ' + JSON.stringify(share));
-            shares.push(share);
-            // Book運用
-            data.push({
-                id: parseInt(operateDefinition.id + ''),
-                actor: { _value: parseInt(operateDefinition.actorCatalogCode + '') },
-                app: { _value: parseInt(operateDefinition.appCatalogCode + '') },
-                share: shares
-            });
-        }
-
-        if (!data.length) { throw new AppError('', 204); }
-        return data;
     }
 }

@@ -106,6 +106,11 @@ export default class DataStoreServiceDto {
     private storeId: number = null;
 
     /**
+     * 一部蓄積可フラグ
+     */
+    private allowPartialStore: boolean = null;
+
+    /**
      * PXR-ID取得
      */
     public getPxrId (): string {
@@ -343,5 +348,21 @@ export default class DataStoreServiceDto {
      */
     public setStoreId (storeId: number) {
         this.storeId = storeId;
+    }
+
+    /**
+     * allowPartialStore
+     * @returns
+     */
+    public getAllowPartialStore (): boolean {
+        return this.allowPartialStore;
+    }
+
+    /**
+     * allowPartialStore
+     * @param allowPartialStore
+     */
+    public setAllowPartialStore (allowPartialStore: boolean) {
+        this.allowPartialStore = allowPartialStore;
     }
 }

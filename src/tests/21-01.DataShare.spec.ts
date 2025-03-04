@@ -480,11 +480,7 @@ describe('book-mange API', () => {
                 .send();
 
             try {
-                expect(response.status).toBe(500);
-                expect(response.body.message).toBe(Message.FAILED_CATALOG_GET);
-                // console.log(response.body);
-                // console.log(response.body[1].event);
-                // console.log(response.body[1].event[0].thing);
+                expect(response.status).toBe(204);
             } catch (err) {
                 console.log(response.body);
                 throw err;
@@ -514,12 +510,13 @@ describe('book-mange API', () => {
 
             try {
                 expect(response.status).toBe(200);
+                console.log(JSON.stringify(response.body));
             } catch (err) {
                 console.log(response.body);
                 throw err;
             }
         });
-        test('正常：指定したデータ共有定義が存在しない', async () => {
+        test('異常：指定したアプリケーションに利用者ID連携が存在しない', async () => {
             const response = await supertest(expressApp)
                 .get(urljoin(Url.sharePersonURI, '?app=2000001'))
                 .set({ accept: 'application/json', 'Content-Type': 'application/json' })
@@ -527,7 +524,7 @@ describe('book-mange API', () => {
                 .send();
 
             try {
-                expect(response.status).toBe(200);
+                expect(response.status).toBe(400);
             } catch (err) {
                 console.log(response.body);
                 throw err;
@@ -604,13 +601,13 @@ describe('book-mange API', () => {
             let response;
             try {
                 response = await supertest(expressApp)
-                    .get(urljoin(Url.shareURI, '?id=invalidUser&app=1000007'))
+                    .get(urljoin(Url.shareURI, '?id=userid01&app=2000001'))
                     .set({ accept: 'application/json', 'Content-Type': 'application/json' })
                     .set({ session: JSON.stringify(Session.pxrApp) })
                     .send();
 
-                expect(response.status).toBe(400);
-                expect(response.body.message).toBe(Message.CAN_NOT_FIND_COOPERATE);
+                expect(response.status).toBe(401);
+                expect(response.body.message).toBe(Message.NOT_EXIST_BOOK);
             } catch (err) {
                 console.log(response.body);
                 throw err;
@@ -625,8 +622,8 @@ describe('book-mange API', () => {
                     .set({ session: JSON.stringify(Session.pxrApp) })
                     .send();
 
-                expect(response.status).toBe(400);
-                expect(response.body.message).toBe(Message.CAN_NOT_FIND_BOOK);
+                expect(response.status).toBe(401);
+                expect(response.body.message).toBe(Message.NOT_EXIST_BOOK);
             } catch (err) {
                 console.log(response.body);
                 throw err;
