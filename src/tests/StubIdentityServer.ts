@@ -6,6 +6,8 @@ https://opensource.org/licenses/mit-license.php
 import { Server } from 'net';
 /* eslint-enable */
 import * as express from 'express';
+import Config from '../common/Config';
+const Message = Config.ReadConfig('./config/message.json');
 
 /**
  * 本人性確認サービス
@@ -290,6 +292,31 @@ export class StubIdentityServerReleaseCooperate {
                     userId: userId
                 });
             }
+        };
+
+        // ハンドラーのイベントリスナーを追加、アプリケーションの起動
+        this._app.post('/identity-verificate/collate', _listener);
+        this._server = this._app.listen(3007);
+    }
+}
+
+/**
+ * 本人性確認コード期限切れエラー用
+ */
+export class StubIdentityServerCodeExpired {
+    _app: express.Express;
+    _server: Server;
+
+    constructor (status: number) {
+        this._app = express();
+
+        // イベントハンドラー
+        const _listener = (req: express.Request, res: express.Response) => {
+            res.status(status)
+                .json({
+                    status: 400,
+                    message: Message.IDENTIFY_CODE_EXPIRED
+                });
         };
 
         // ハンドラーのイベントリスナーを追加、アプリケーションの起動

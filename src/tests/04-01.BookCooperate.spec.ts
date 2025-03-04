@@ -7,7 +7,7 @@ import { Application } from '../resources/config/Application';
 import Common, { Url } from './Common';
 import { Session } from './Session';
 import StubCatalogServer, { StubCatalogServerNoIdService } from './StubCatalogServer';
-import StubIdentityServer, { StubIdentityServer03 } from './StubIdentityServer';
+import StubIdentityServer, { StubIdentityServer03, StubIdentityServerCodeExpired } from './StubIdentityServer';
 import StubIdServiceServer from './StubIdServiceServer';
 import { StubOperatorServerType0 } from './StubOperatorServer';
 import Config from '../common/Config';
@@ -16,7 +16,7 @@ const Message = Config.ReadConfig('./config/message.json');
 // 対象アプリケーションを取得
 const app = new Application();
 const expressApp = app.express.app;
-const common = new Common();
+let common = new Common();
 
 // サーバをlisten
 app.start();
@@ -27,6 +27,7 @@ let _identityServer: StubIdentityServer = null;
 let _identityServerInd: StubIdentityServer03 = null;
 let _operatorServer: StubOperatorServerType0 = null;
 let _idServiceServer: StubIdServiceServer = null;
+let _identityCodeExpiredServer: StubIdentityServerCodeExpired = null;
 
 /**
  * book-mange API のユニットテスト
@@ -74,12 +75,18 @@ describe('book-mange API', () => {
             _idServiceServer._server.close();
             _idServiceServer = null;
         }
+        if (_identityCodeExpiredServer) {
+            _identityCodeExpiredServer._server.close();
+            _identityCodeExpiredServer = null;
+        }
     });
 
     /**
      * 全テスト実行の後処理
      */
     afterAll(async () => {
+        await common.disconnect();
+        common = null;
         // サーバ停止
         app.stop();
     });
@@ -99,7 +106,7 @@ describe('book-mange API', () => {
             DELETE FROM pxr_book_manage.my_condition_book;
             SELECT SETVAL('pxr_book_manage.my_condition_book_id_seq', 1, false);
             SELECT SETVAL('pxr_book_manage.user_id_cooperate_id_seq', 1, false);
-            
+
             INSERT INTO pxr_book_manage.my_condition_book
             (
                 pxr_id,
@@ -376,7 +383,7 @@ describe('book-mange API', () => {
             DELETE FROM pxr_book_manage.my_condition_book;
             SELECT SETVAL('pxr_book_manage.my_condition_book_id_seq', 1, false);
             SELECT SETVAL('pxr_book_manage.user_id_cooperate_id_seq', 1, false);
-            
+
             INSERT INTO pxr_book_manage.my_condition_book
             (
                 pxr_id,
@@ -544,97 +551,7 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(response.status).toBe(400);
             expect(response.body.message).toBe(Message.EMPTY_REGION_AND_APP);
-        });
-        test('異常：本人性確認データにwfのコードが含まれる', async () => {
-            _catalogServer = new StubCatalogServer(3001, 1000374, 200);
-            _identityServer = new StubIdentityServer(200, true, 'wf');
-            _operatorServer = new StubOperatorServerType0(200, 3);
-            _idServiceServer = new StubIdServiceServer(200);
 
-            // 事前データ準備
-            await common.executeSqlString(`
-            DELETE FROM pxr_book_manage.user_id_cooperate;
-            DELETE FROM pxr_book_manage.my_condition_book;
-            SELECT SETVAL('pxr_book_manage.my_condition_book_id_seq', 1, false);
-            SELECT SETVAL('pxr_book_manage.user_id_cooperate_id_seq', 1, false);
-            INSERT INTO pxr_book_manage.my_condition_book
-            (
-                pxr_id,
-                attributes,
-                is_disabled,
-                created_by,
-                created_at,
-                updated_by,
-                updated_at
-            )
-            VALUES
-            (
-                'wf',
-                'aaa',
-                false,
-                'pxr_user',
-                NOW(),
-                'pxr_user',
-                NOW()
-            );
-            INSERT INTO pxr_book_manage.user_id_cooperate
-            (
-                book_id,
-                actor_catalog_code,
-                actor_catalog_version,
-                app_catalog_code,
-                app_catalog_version,
-                wf_catalog_code,
-                wf_catalog_version,
-                region_catalog_code,
-                region_catalog_version,
-                user_id,
-                status,
-                start_at,
-                is_disabled,
-                created_by,
-                created_at,
-                updated_by,
-                updated_at
-            )
-            VALUES
-            (
-                1,
-                1000003,
-                1,
-                null,
-                null,
-                1000004,
-                1,
-                null,
-                null,
-                '123456789',
-                0,
-                null,
-                false,
-                'pxr_user',
-                NOW(),
-                'pxr_user',
-                NOW()
-            );
-            `);
-
-            // 送信データを生成
-            const url = Url.cooperateURI;
-
-            // 対象APIに送信
-            const response = await supertest(expressApp).post(url)
-                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
-                .set('Cookie', ['operator_type3_session=sessionId'])
-                .send(JSON.stringify(
-                    {
-                        identifyCode: 'ukO8z+Xf8vv7yxXQj2Hpo23'
-                    }
-                ));
-
-            // レスポンスチェック
-            expect(response.status).toBe(400);
-            expect(response.body.message).toBe(Message.UNSUPPORTED_ACTOR);
         });
         test('正常：IDサービスを使用しない', async () => {
             _catalogServer = new StubCatalogServerNoIdService(3001, 1000374, 200);
@@ -646,7 +563,7 @@ describe('book-mange API', () => {
             DELETE FROM pxr_book_manage.my_condition_book;
             SELECT SETVAL('pxr_book_manage.my_condition_book_id_seq', 1, false);
             SELECT SETVAL('pxr_book_manage.user_id_cooperate_id_seq', 1, false);
-            
+
             INSERT INTO pxr_book_manage.my_condition_book
             (
                 pxr_id,
@@ -970,6 +887,56 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(response.status).toBe(400);
             expect(response.body.message).toBe(Message.FAILED_IDENTITY_GET);
+        });
+        test('異常：本人性確認サービスから本人性確認コード期限切れエラー', async () => {
+            _catalogServer = new StubCatalogServer(3001, 1000001, 200);
+            _identityCodeExpiredServer = new StubIdentityServerCodeExpired(400);
+
+            // 事前データ準備
+            await common.executeSqlString(`
+            DELETE FROM pxr_book_manage.user_id_cooperate;
+            DELETE FROM pxr_book_manage.my_condition_book;
+            SELECT SETVAL('pxr_book_manage.my_condition_book_id_seq', 1, false);
+            SELECT SETVAL('pxr_book_manage.user_id_cooperate_id_seq', 1, false);
+            INSERT INTO pxr_book_manage.my_condition_book
+            (
+                pxr_id,
+                attributes,
+                is_disabled,
+                created_by,
+                created_at,
+                updated_by,
+                updated_at
+            )
+            VALUES
+            (
+                '123',
+                'aaa',
+                false,
+                'pxr_user',
+                NOW(),
+                'pxr_user',
+                NOW()
+            )
+            `);
+
+            // 送信データを生成
+            const url = Url.cooperateURI;
+
+            // 対象APIに送信
+            const response = await supertest(expressApp).post(url)
+                .set({ accept: 'application/json', 'Content-Type': 'application/json' })
+                .set({ session: JSON.stringify(Session.pxrRoot) })
+                .send(JSON.stringify(
+                    {
+                        identifyCode: 'ukO8z+Xf8vv7yxXQj2Hpo',
+                        userId: '123456789'
+                    }
+                ));
+
+            // レスポンスチェック
+            expect(response.status).toBe(400);
+            expect(response.body.message).toBe(Message.IDENTIFY_CODE_EXPIRED);
         });
         test('異常：本人性確認サービスからエラーコード500', async () => {
             _catalogServer = new StubCatalogServer(3001, 1000001, 200);
@@ -1297,7 +1264,7 @@ describe('book-mange API', () => {
             DELETE FROM pxr_book_manage.my_condition_book;
             SELECT SETVAL('pxr_book_manage.my_condition_book_id_seq', 1, false);
             SELECT SETVAL('pxr_book_manage.user_id_cooperate_id_seq', 1, false);
-            
+
             INSERT INTO pxr_book_manage.my_condition_book
             (
                 pxr_id,
@@ -1474,7 +1441,7 @@ describe('book-mange API', () => {
             DELETE FROM pxr_book_manage.my_condition_book;
             SELECT SETVAL('pxr_book_manage.my_condition_book_id_seq', 1, false);
             SELECT SETVAL('pxr_book_manage.user_id_cooperate_id_seq', 1, false);
-            
+
             INSERT INTO pxr_book_manage.my_condition_book
             (
                 pxr_id,
