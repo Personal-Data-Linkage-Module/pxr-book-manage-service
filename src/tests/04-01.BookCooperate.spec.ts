@@ -551,7 +551,6 @@ describe('book-mange API', () => {
             // レスポンスチェック
             expect(response.status).toBe(400);
             expect(response.body.message).toBe(Message.EMPTY_REGION_AND_APP);
-
         });
         test('正常：IDサービスを使用しない', async () => {
             _catalogServer = new StubCatalogServerNoIdService(3001, 1000374, 200);
